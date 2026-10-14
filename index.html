@@ -63,7 +63,8 @@
 
     /* Hero */
     .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
-    .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding-top: 72px; padding-bottom: 72px; }
+    .hero .wrap { padding-top: 64px; padding-bottom: 80px; }
+    .intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: end; margin-bottom: 48px; }
     .hero h1 {
       font-size: clamp(2.6rem, 6vw, 4.6rem);
       font-weight: 800;
@@ -71,7 +72,7 @@
       letter-spacing: -0.02em;
       margin-bottom: 20px;
     }
-    .hero .role { font-size: 1.25rem; color: var(--ink-soft); margin-bottom: 28px; max-width: 34ch; }
+    .hero .role { font-size: 1.2rem; color: var(--ink-soft); margin-bottom: 28px; max-width: 46ch; }
     .status {
       display: inline-flex; align-items: center; gap: 10px;
       background: var(--polder-soft); color: var(--polder);
@@ -89,42 +90,73 @@
     .btn-ghost { color: var(--ink); }
     .btn-ghost:hover { background: var(--white); }
 
-    /* Map drawing */
-    .map { width: 100%; height: auto; display: block; }
+    /* Viewer */
+    .viewer { margin: 0; background: var(--white); border: 1px solid var(--ink); border-radius: 12px; overflow: hidden; box-shadow: 12px 12px 0 var(--ink); }
+    .viewer-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 10px 16px; border-bottom: 1px solid var(--ink); background: var(--ink); color: var(--white); }
+    .viewer-title { font-weight: 700; font-size: 0.92rem; font-variation-settings: "wdth" 115; }
+    .coords { font-size: 0.85rem; color: #b9c2d6; font-variant-numeric: tabular-nums; white-space: pre; }
+    .viewer-body { display: grid; grid-template-columns: 210px 1fr; }
+    .panel { border-right: 1px solid var(--line); padding: 14px 14px 16px; background: var(--paper); display: flex; flex-direction: column; gap: 14px; }
+    .panel h3 { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
+    .panel-group { display: flex; flex-direction: column; gap: 6px; }
+    .layer { font: inherit; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--white); color: var(--ink-soft); cursor: pointer; text-align: left; }
+    .layer i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--ink); opacity: 0.3; flex: none; }
+    .layer.on { border-color: var(--ink); color: var(--ink); box-shadow: inset 3px 0 0 var(--ink); }
+    .layer.on i { opacity: 1; }
+    .ai-btn { font: inherit; font-size: 0.88rem; font-weight: 700; padding: 8px 10px; border-radius: 6px; border: 0; background: var(--polder); color: var(--white); cursor: pointer; }
+    .ai-btn:hover { background: #255b3f; }
+    .ai-btn[disabled] { opacity: 0.6; cursor: progress; }
+    .layer:focus-visible, .ai-btn:focus-visible { outline: 3px solid var(--polder); outline-offset: 2px; }
+    .legend { list-style: none; margin: 4px 0 0; padding: 0; font-size: 0.82rem; display: grid; gap: 3px; }
+    .legend[hidden] { display: none; }
+    .legend li { display: flex; align-items: center; gap: 6px; }
+    .legend i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .legend b { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 600; }
+    .map-wrap { position: relative; }
+    .map { width: 100%; height: auto; display: block; cursor: crosshair; }
     .map .parcel { fill: var(--polder-soft); stroke: var(--ink); stroke-width: 1; }
+    .map .bare { fill: #ece7dc; stroke: var(--ink); stroke-width: 1; }
     .map .road { fill: var(--road); stroke: var(--ink); stroke-width: 1; }
     .map .water { fill: var(--water); stroke: var(--ink); stroke-width: 1; }
     .map .pand { fill: var(--build); stroke: var(--ink); stroke-width: 1.2; }
+    .map .pand.new { fill: #efe3df; stroke-dasharray: 5 3; }
+    .map .tree { fill: var(--polder); stroke: var(--white); stroke-width: 2; }
+    .map .lamp { fill: var(--ink); }
+    .map .bank { fill: #8a6a45; }
+    .map .pipe { fill: none; stroke: #2b6cb0; stroke-width: 3; stroke-dasharray: 10 5; }
+    .map .pipe:hover, .map .pipe.sel { stroke: #e3b505; fill: none; }
+    .map .valve { fill: #2b6cb0; stroke: var(--white); stroke-width: 1.5; }
+    .map .stake { stroke: #c0392b; stroke-width: 2; }
+    .map .stake-hit { fill: transparent; }
+    .map .stake-lbl { fill: #c0392b; font-weight: 700; font-size: 11px; }
     .map .dim { stroke: var(--ink); stroke-width: 1; fill: none; }
     .map text { font-family: "Archivo", sans-serif; font-size: 12px; fill: var(--ink); }
-    .map .lbl { fill: var(--ink-soft); font-size: 11px; }
+    .map .sm { font-size: 10px; font-weight: 600; }
+    .map .hn { font-size: 13px; font-weight: 700; pointer-events: none; }
     .map .draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: draw 2.4s ease-out 0.2s forwards; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
-    @media (prefers-reduced-motion: reduce) { .map .draw { animation: none; stroke-dashoffset: 0; } }
-    .viewer { margin: 0; background: var(--white); border: 1px solid var(--ink); border-radius: 10px; overflow: hidden; box-shadow: 10px 10px 0 var(--ink); }
-    .viewer-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--ink); background: var(--paper); }
-    .viewer-title { font-weight: 700; font-size: 0.9rem; font-variation-settings: "wdth" 115; }
-    .layers { display: flex; flex-wrap: wrap; gap: 6px; }
-    .layer { font: inherit; font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--ink-soft); cursor: pointer; }
-    .layer i { width: 10px; height: 10px; border-radius: 2px; border: 1px solid var(--ink); opacity: 0.35; }
-    .layer.on { border-color: var(--ink); color: var(--ink); }
-    .layer.on i { opacity: 1; }
-    .layer:focus-visible { outline: 3px solid var(--polder); outline-offset: 2px; }
     .map [data-group] { transition: opacity 0.3s; }
     .map [data-group].off { opacity: 0; pointer-events: none; }
     .map .obj { cursor: pointer; transition: fill 0.15s; }
-    .map .obj:hover, .map .obj.sel { fill: #f3e27a; }
-    .map .tree { fill: var(--polder); stroke: var(--white); stroke-width: 2; }
-    .map .lamp { fill: var(--ink); }
-    .map .hn { font-size: 13px; font-weight: 700; pointer-events: none; }
-    .identify { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 10px 14px; border-top: 1px solid var(--ink); font-size: 0.88rem; min-height: 46px; }
+    .map .obj:not(.pipe):hover, .map .obj.sel:not(.pipe) { fill: #f3e27a; }
+    .map #pc circle { pointer-events: none; transition: fill 0.5s; }
+    .map .hud { pointer-events: none; }
+    .identify { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; padding: 12px 16px; border-top: 1px solid var(--ink); font-size: 0.9rem; min-height: 48px; }
     .identify span { color: var(--ink-soft); }
     .identify .src { font-size: 0.75rem; font-weight: 700; padding: 1px 8px; border-radius: 4px; background: var(--polder-soft); color: var(--polder); }
-    @media (prefers-reduced-motion: reduce) { .map [data-group], .map .obj { transition: none; } }
-
+    @media (prefers-reduced-motion: reduce) {
+      .map .draw { animation: none; stroke-dashoffset: 0; }
+      .map [data-group], .map .obj, .map #pc circle { transition: none; }
+    }
     @media (max-width: 860px) {
-      .hero .wrap { grid-template-columns: 1fr; padding-top: 48px; padding-bottom: 48px; gap: 32px; }
+      .hero .wrap { padding-top: 48px; padding-bottom: 56px; }
+      .intro { grid-template-columns: 1fr; gap: 20px; }
       .viewer { box-shadow: 6px 6px 0 var(--ink); margin-right: 6px; }
+      .viewer-body { grid-template-columns: 1fr; }
+      .panel { border-right: 0; border-bottom: 1px solid var(--line); flex-direction: row; flex-wrap: wrap; gap: 10px 16px; }
+      .panel-group { flex-direction: row; flex-wrap: wrap; align-items: center; }
+      .panel h3 { width: 100%; margin: 0; }
+      .coords { display: none; }
     }
 
     /* Sections */
@@ -218,74 +250,124 @@
 
   <header class="hero" id="top">
     <div class="wrap">
-      <div>
+      <div class="intro">
         <h1>Geodata waar je op kunt bouwen.</h1>
-        <p class="role">Enes Demir, freelance geo-specialist en landmeetkundig CAD-operator. Ik help gemeenten, netbeheerders en ingenieursbureaus met BAG, BGT, BOR en GIS.</p>
-        <div class="status">Beschikbaar voor opdrachten, 15–20 uur per week</div>
-        <div class="actions">
-          <a class="btn btn-primary" href="mailto:enesdemirpersonal@gmail.com?subject=Aanvraag%20opdracht">Stuur een aanvraag</a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/enesdemirln">Bekijk LinkedIn</a>
+        <div>
+          <p class="role">Enes Demir, freelance geo-specialist en landmeetkundig CAD-operator. Van inmeting en pointcloud tot BAG, BGT en BOR: ik zorg dat je ruimtelijke data klopt en bruikbaar is.</p>
+          <div class="status">Beschikbaar voor opdrachten, 15–20 uur per week</div>
+          <div class="actions">
+            <a class="btn btn-primary" href="mailto:enesdemirpersonal@gmail.com?subject=Aanvraag%20opdracht">Stuur een aanvraag</a>
+            <a class="btn btn-ghost" href="https://www.linkedin.com/in/enesdemirln">Bekijk LinkedIn</a>
+          </div>
         </div>
       </div>
 
       <figure class="viewer" aria-label="Interactieve kaartviewer">
         <div class="viewer-bar">
-          <span class="viewer-title">Kaartviewer</span>
-          <div class="layers" role="group" aria-label="Kaartlagen">
-            <button type="button" class="layer on" data-layer="bgt" aria-pressed="true"><i style="background:var(--polder-soft)"></i>BGT</button>
-            <button type="button" class="layer on" data-layer="bag" aria-pressed="true"><i style="background:var(--build)"></i>BAG</button>
-            <button type="button" class="layer on" data-layer="bor" aria-pressed="true"><i style="background:var(--polder)"></i>BOR</button>
-            <button type="button" class="layer on" data-layer="cad" aria-pressed="true"><i style="background:var(--ink)"></i>Maatvoering</button>
+          <span class="viewer-title">Kaartviewer, projectgebied Noord</span>
+          <span class="coords" id="coords" aria-live="off">RD X 233.000,0  Y 557.460,0</span>
+        </div>
+        <div class="viewer-body">
+          <aside class="panel" aria-label="Kaartlagen">
+            <div class="panel-group">
+              <h3>Basisregistraties</h3>
+              <button type="button" class="layer on" data-layer="bgt" aria-pressed="true"><i style="background:var(--polder-soft)"></i>BGT</button>
+              <button type="button" class="layer on" data-layer="bag" aria-pressed="true"><i style="background:var(--build)"></i>BAG</button>
+            </div>
+            <div class="panel-group">
+              <h3>Beheer</h3>
+              <button type="button" class="layer on" data-layer="bor" aria-pressed="true"><i style="background:var(--polder)"></i>BOR</button>
+              <button type="button" class="layer" data-layer="kl" aria-pressed="false"><i style="background:#2b6cb0"></i>Leidingen</button>
+            </div>
+            <div class="panel-group">
+              <h3>Veld en CAD</h3>
+              <button type="button" class="layer on" data-layer="cad" aria-pressed="true"><i style="background:var(--ink)"></i>Maatvoering</button>
+              <button type="button" class="layer" data-layer="uitzet" aria-pressed="false"><i style="background:#c0392b"></i>Uitzetpunten</button>
+            </div>
+            <div class="panel-group">
+              <h3>3D en AI</h3>
+              <button type="button" class="layer" data-layer="pc" aria-pressed="false"><i style="background:#8a8f99"></i>Pointcloud</button>
+              <button type="button" class="ai-btn" id="classify">Classificeer met AI</button>
+              <ul class="legend" id="legend" hidden>
+                <li><i style="background:#c8553d"></i>Gebouw <b data-c="gebouw">0</b></li>
+                <li><i style="background:#3c8d5a"></i>Vegetatie <b data-c="vegetatie">0</b></li>
+                <li><i style="background:#b38b59"></i>Maaiveld <b data-c="maaiveld">0</b></li>
+                <li><i style="background:#3a86c8"></i>Water <b data-c="water">0</b></li>
+              </ul>
+            </div>
+          </aside>
+
+          <div class="map-wrap">
+            <svg class="map" id="map" viewBox="0 0 800 560" role="img" aria-label="Kaartuitsnede met BGT-vlakken, BAG-panden, BOR-beheerobjecten, leidingen, uitzetpunten en een pointcloud">
+              <rect x="0" y="0" width="800" height="560" fill="var(--white)" />
+              <path stroke="var(--line)" stroke-width="0.5" d="M0 100H800M0 200H800M0 300H800M0 400H800M0 500H800M100 0V560M200 0V560M300 0V560M400 0V560M500 0V560M600 0V560M700 0V560" />
+              <g data-group="bgt">
+                <path class="obj water" data-cls="water" data-info="Waterdeel|BGT|Type: watergang|Status: bestaand" d="M0 372 C 160 356, 320 392, 480 374 S 700 352, 800 364 L800 452 C 640 466, 400 444, 200 462 S 40 452, 0 458 Z" />
+                <path class="obj road" data-cls="maaiveld" data-info="Wegdeel|BGT|Functie: fietspad|Fysiek voorkomen: open verharding" d="M0 470 C 200 474, 400 456, 800 464 L800 490 C 400 482, 200 500, 0 496 Z" />
+                <path class="obj parcel" data-cls="vegetatie" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: grasland agrarisch|Status: bestaand" d="M0 506 C 200 510, 400 492, 800 500 L800 560 L0 560 Z" />
+                <path class="obj parcel" data-cls="vegetatie" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: grasland overig|Status: bestaand" d="M16 16 L404 16 L402 240 L16 256 Z" />
+                <path class="obj parcel" data-cls="vegetatie" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: groenvoorziening|Status: bestaand" d="M472 16 L784 16 L784 222 L470 236 Z" />
+                <path class="obj parcel" data-cls="vegetatie" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: struiken|Status: bestaand" d="M16 318 L380 304 L380 340 C 260 344, 120 336, 16 350 Z" />
+                <path class="obj bare" data-cls="maaiveld" data-info="Onbegroeid terreindeel|BGT|Fysiek voorkomen: erf|Status: bestaand" d="M400 302 L784 290 L784 330 C 600 348, 500 346, 400 342 Z" />
+                <path class="obj road" data-cls="maaiveld" data-info="Wegdeel|BGT|Functie: rijbaan lokale weg|Fysiek voorkomen: gesloten verharding" d="M0 262 L800 236 L800 276 L0 302 Z" />
+                <path class="obj road" data-cls="maaiveld" data-info="Wegdeel|BGT|Functie: fietspad|Fysiek voorkomen: open verharding" d="M420 0 L456 0 L454 240 L418 244 Z" />
+              </g>
+              <g data-group="bag">
+                <path class="obj pand" data-cls="gebouw" data-info="Pand|BAG|Bouwjaar: 1998|Status: pand in gebruik|Adres: Kanaalweg 12" d="M60 60 L210 60 L210 170 L60 170 Z" />
+                <path class="obj pand" data-cls="gebouw" data-info="Pand|BAG|Bouwjaar: 2004|Status: pand in gebruik|Adres: Kanaalweg 14" d="M240 80 L330 80 L330 190 L240 190 Z" />
+                <path class="obj pand" data-cls="gebouw" data-info="Pand|BAG|Bouwjaar: 2021|Status: pand in gebruik|Adres: Polderlaan 3" d="M520 50 L660 50 L660 150 L520 150 Z" />
+                <path class="obj pand" data-cls="gebouw" data-info="Pand|BAG|Bouwjaar: 2019|Status: pand in gebruik|Adres: Polderlaan 5" d="M690 70 L760 70 L760 160 L690 160 Z" />
+                <path class="obj pand new" data-cls="gebouw" data-info="Pand|BAG|Bouwjaar: 2026|Status: bouw gestart|Adres: Polderlaan 7" d="M520 296 L640 292 L640 330 L520 334 Z" />
+                <text class="hn" x="128" y="120">12</text>
+                <text class="hn" x="277" y="140">14</text>
+                <text class="hn" x="586" y="105">3</text>
+                <text class="hn" x="720" y="120">5</text>
+                <text class="hn" x="574" y="318">7</text>
+              </g>
+              <g data-group="bor">
+                <circle class="obj tree" data-info="Boom|BOR|Soort: Tilia cordata|Conditie: goed|Snoeicyclus: 3 jaar" cx="50" cy="326" r="9" />
+                <circle class="obj tree" data-info="Boom|BOR|Soort: Acer campestre|Conditie: redelijk|Snoeicyclus: 3 jaar" cx="125" cy="322" r="9" />
+                <circle class="obj tree" data-info="Boom|BOR|Soort: Quercus robur|Conditie: goed|Snoeicyclus: 4 jaar" cx="200" cy="318" r="9" />
+                <circle class="obj tree" data-info="Boom|BOR|Soort: Tilia cordata|Conditie: goed|Snoeicyclus: 3 jaar" cx="275" cy="315" r="9" />
+                <circle class="obj tree" data-info="Boom|BOR|Soort: Betula pendula|Conditie: matig|Snoeicyclus: 2 jaar" cx="740" cy="196" r="9" />
+                <circle class="obj tree" data-info="Boom|BOR|Soort: Betula pendula|Conditie: goed|Snoeicyclus: 2 jaar" cx="500" cy="200" r="9" />
+                <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 6 m|Armatuur: LED|Beheerder: gemeente" x="96" y="250" width="9" height="9" />
+                <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 6 m|Armatuur: LED|Beheerder: gemeente" x="296" y="245" width="9" height="9" />
+                <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 8 m|Armatuur: LED|Beheerder: gemeente" x="516" y="239" width="9" height="9" />
+                <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 8 m|Armatuur: LED|Beheerder: gemeente" x="716" y="234" width="9" height="9" />
+                <rect class="obj bank" data-info="Zitbank|BOR|Materiaal: hardhout|Conditie: goed" x="150" y="350" width="22" height="7" />
+              </g>
+              <g data-group="kl" class="off">
+                <path class="obj pipe" data-info="Waterleiding|Leidingen|Materiaal: PE 110|Diepte: 1,0 m -mv|Beheerder: waterbedrijf" d="M0 285 L800 259" />
+                <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Polderlaan 3" d="M590 263 L590 150" />
+                <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 12" d="M135 281 L135 170" />
+                <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 14" d="M285 276 L285 190" />
+                <rect class="obj valve" data-info="Afsluiter|Leidingen|Type: schuifafsluiter|Diameter: 110 mm" x="381" y="268" width="10" height="10" transform="rotate(45 386 273)" />
+              </g>
+              <g data-group="cad">
+                <g class="dim">
+                  <path class="draw" d="M60 186 L210 186" /><path d="M60 178 L60 194 M210 178 L210 194" />
+                  <path class="draw" d="M346 80 L346 190" /><path d="M338 80 L354 80 M338 190 L354 190" />
+                  <path class="draw" d="M520 36 L660 36" /><path d="M520 28 L520 44 M660 28 L660 44" />
+                </g>
+                <text x="117" y="204">15,00 m</text>
+                <text x="352" y="140">11,00 m</text>
+                <text x="568" y="26">14,00 m</text>
+              </g>
+              <g data-group="uitzet" class="off" id="uitzet"></g>
+              <g data-group="pc" class="off" id="pc"></g>
+              <g class="hud" aria-hidden="true">
+                <rect x="16" y="536" width="100" height="6" fill="var(--ink)" />
+                <rect x="66" y="536" width="50" height="6" fill="var(--white)" stroke="var(--ink)" />
+                <text x="16" y="530" class="sm">0</text><text x="104" y="530" class="sm">10 m</text>
+                <g transform="translate(770 540)"><path d="M0 -26 L8 0 L0 -6 L-8 0 Z" fill="var(--ink)" /><text x="-4" y="14" class="sm">N</text></g>
+              </g>
+            </svg>
           </div>
         </div>
-        <svg class="map" viewBox="0 0 520 400" role="img" aria-label="Kaartuitsnede met BGT-vlakken, BAG-panden, BOR-beheerobjecten en maatvoering">
-          <rect x="0" y="0" width="520" height="400" fill="var(--white)" />
-          <g id="grid" stroke="var(--line)" stroke-width="0.5">
-            <path d="M0 100H520M0 200H520M0 300H520M130 0V400M260 0V400M390 0V400" />
-          </g>
-          <g data-group="bgt">
-            <path class="obj water" data-info="Waterdeel|BGT|Type: watergang|Status: bestaand" d="M0 300 C 90 280, 160 330, 260 312 S 430 280, 520 300 L520 400 L0 400 Z" />
-            <path class="obj road" data-info="Wegdeel|BGT|Functie: rijbaan lokale weg|Fysiek voorkomen: gesloten verharding" d="M0 200 L520 170 L520 205 L0 236 Z" />
-            <path class="obj road" data-info="Wegdeel|BGT|Functie: fietspad|Fysiek voorkomen: open verharding" d="M300 0 L336 0 L332 182 L296 184 Z" />
-            <path class="obj parcel" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: grasland overig|Status: bestaand" d="M20 20 L280 20 L276 186 L20 198 Z" />
-            <path class="obj parcel" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: groenvoorziening|Status: bestaand" d="M352 20 L500 20 L500 166 L348 176 Z" />
-            <path class="obj parcel" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: struiken|Status: bestaand" d="M20 248 L250 234 L250 284 C 170 296, 90 282, 20 290 Z" />
-            <path class="obj parcel" data-info="Onbegroeid terreindeel|BGT|Fysiek voorkomen: erf|Status: bestaand" d="M276 232 L500 218 L500 280 C 430 276, 360 300, 280 302 Z" />
-          </g>
-          <g data-group="bag">
-            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 1998|Status: pand in gebruik" d="M60 60 L170 60 L170 140 L60 140 Z" />
-            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 2004|Status: pand in gebruik" d="M190 80 L250 80 L250 150 L190 150 Z" />
-            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 2021|Status: pand in gebruik" d="M380 50 L470 50 L470 120 L380 120 Z" />
-            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 2026|Status: bouw gestart" d="M320 246 L400 242 L400 280 L320 284 Z" />
-            <text class="hn" x="108" y="104">12</text>
-            <text class="hn" x="214" y="119">14</text>
-            <text class="hn" x="418" y="89">3</text>
-          </g>
-          <g data-group="bor">
-            <circle class="obj tree" data-info="Boom|BOR|Soort: Tilia cordata|Conditie: goed" cx="40" cy="250" r="9" />
-            <circle class="obj tree" data-info="Boom|BOR|Soort: Acer campestre|Conditie: redelijk" cx="110" cy="252" r="9" />
-            <circle class="obj tree" data-info="Boom|BOR|Soort: Quercus robur|Conditie: goed" cx="180" cy="248" r="9" />
-            <circle class="obj tree" data-info="Boom|BOR|Soort: Betula pendula|Conditie: goed" cx="460" cy="146" r="9" />
-            <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 6 m|Armatuur: LED" x="282" y="160" width="9" height="9" />
-            <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 6 m|Armatuur: LED" x="282" y="70" width="9" height="9" />
-          </g>
-          <g data-group="cad">
-            <g class="dim">
-              <path class="draw" d="M60 160 L170 160" />
-              <path d="M60 152 L60 168 M170 152 L170 168" />
-              <path class="draw" d="M484 50 L484 120" />
-              <path d="M476 50 L492 50 M476 120 L492 120" />
-              <path class="draw" d="M190 66 L250 66" />
-              <path d="M190 60 L190 72 M250 60 L250 72" />
-            </g>
-            <text x="98" y="178">12,40 m</text>
-            <text x="440" y="140">7,05 m</text>
-            <text x="204" y="58">6,80 m</text>
-          </g>
-        </svg>
         <div class="identify" id="identify" aria-live="polite">
           <strong>Klik op een object</strong>
-          <span>om de kenmerken te bekijken</span>
+          <span>of zet een laag aan om te ontdekken wat ik met geodata doe</span>
         </div>
       </figure>
     </div>
@@ -494,9 +576,54 @@
 
   <script>
     (function () {
-      var svg = document.querySelector('.map');
+      var NS = 'http://www.w3.org/2000/svg';
+      var svg = document.getElementById('map');
       var box = document.getElementById('identify');
+      var coords = document.getElementById('coords');
+      var X0 = 233000, Y0 = 557460, S = 0.1;
       var current = null;
+      function fmt(n) { return n.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+      function rd(x, y) { return { x: X0 + x * S, y: Y0 - y * S }; }
+      function show(parts) {
+        box.innerHTML = '';
+        var t = document.createElement('strong'); t.textContent = parts[0]; box.appendChild(t);
+        var b = document.createElement('span'); b.className = 'src'; b.textContent = parts[1]; box.appendChild(b);
+        parts.slice(2).forEach(function (x) { var s = document.createElement('span'); s.textContent = x; box.appendChild(s); });
+      }
+      function makePickable(el) {
+        el.setAttribute('tabindex', '0');
+        function pick() {
+          if (current) current.classList.remove('sel');
+          current = el; el.classList.add('sel');
+          show(el.dataset.info.split('|'));
+        }
+        el.addEventListener('click', pick);
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      }
+
+      // Uitzetpunten op de hoeken van de panden
+      var uitzet = document.getElementById('uitzet');
+      var pts = [[60,60],[210,60],[210,170],[60,170],[520,50],[660,50],[660,150],[520,150]];
+      pts.forEach(function (p, i) {
+        var g = document.createElementNS(NS, 'g');
+        var c = rd(p[0], p[1]);
+        var hit = document.createElementNS(NS, 'circle');
+        hit.setAttribute('cx', p[0]); hit.setAttribute('cy', p[1]); hit.setAttribute('r', 9);
+        hit.setAttribute('class', 'obj stake-hit');
+        hit.dataset.info = 'Uitzetpunt P' + (i + 1) + '|Uitzetten|X ' + fmt(c.x) + '|Y ' + fmt(c.y) + '|Stelsel: RD New';
+        var cross = document.createElementNS(NS, 'path');
+        cross.setAttribute('d', 'M' + (p[0]-6) + ' ' + (p[1]-6) + 'L' + (p[0]+6) + ' ' + (p[1]+6) + 'M' + (p[0]+6) + ' ' + (p[1]-6) + 'L' + (p[0]-6) + ' ' + (p[1]+6));
+        cross.setAttribute('class', 'stake');
+        var lbl = document.createElementNS(NS, 'text');
+        lbl.setAttribute('x', p[0] + 7); lbl.setAttribute('y', p[1] - 6);
+        lbl.setAttribute('class', 'stake-lbl'); lbl.textContent = 'P' + (i + 1);
+        g.appendChild(cross); g.appendChild(lbl); g.appendChild(hit);
+        uitzet.appendChild(g);
+      });
+
+      svg.querySelectorAll('.obj').forEach(makePickable);
+
+      // Laagbediening
       document.querySelectorAll('.layer').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var on = btn.classList.toggle('on');
@@ -504,19 +631,66 @@
           svg.querySelector('[data-group="' + btn.dataset.layer + '"]').classList.toggle('off', !on);
         });
       });
-      svg.querySelectorAll('.obj').forEach(function (el) {
-        el.setAttribute('tabindex', '0');
-        function pick() {
-          if (current) current.classList.remove('sel');
-          current = el; el.classList.add('sel');
-          var p = el.dataset.info.split('|');
-          box.innerHTML = '';
-          var t = document.createElement('strong'); t.textContent = p[0]; box.appendChild(t);
-          var b = document.createElement('span'); b.className = 'src'; b.textContent = p[1]; box.appendChild(b);
-          p.slice(2).forEach(function (x) { var s = document.createElement('span'); s.textContent = x; box.appendChild(s); });
+      function setLayer(name, on) {
+        var btn = document.querySelector('.layer[data-layer="' + name + '"]');
+        if (btn.classList.contains('on') !== on) btn.click();
+      }
+
+      // Coördinaten onder de muis
+      svg.addEventListener('mousemove', function (e) {
+        var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+        var m = pt.matrixTransform(svg.getScreenCTM().inverse());
+        var c = rd(m.x, m.y);
+        coords.textContent = 'RD X ' + fmt(c.x) + '  Y ' + fmt(c.y);
+      });
+
+      // Pointcloud: deterministische punten, klasse via de BGT/BAG-vlakken
+      var pc = document.getElementById('pc');
+      var colors = { gebouw: '#c8553d', vegetatie: '#3c8d5a', maaiveld: '#b38b59', water: '#3a86c8' };
+      var shapes = Array.prototype.slice.call(svg.querySelectorAll('[data-cls]')).reverse();
+      var seed = 7;
+      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      var points = [];
+      for (var i = 0; i < 1900; i++) {
+        var x = rnd() * 800, y = rnd() * 560, cls = 'maaiveld';
+        var dp = new DOMPoint(x, y);
+        for (var k = 0; k < shapes.length; k++) {
+          try { if (shapes[k].isPointInFill(dp)) { cls = shapes[k].dataset.cls; break; } } catch (err) {}
         }
-        el.addEventListener('click', pick);
-        el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+        var c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1));
+        c.setAttribute('r', cls === 'gebouw' ? 2 : 1.6);
+        c.setAttribute('fill', '#8a8f99');
+        pc.appendChild(c);
+        points.push({ el: c, x: x, cls: cls });
+      }
+
+      var btn = document.getElementById('classify');
+      var legend = document.getElementById('legend');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      btn.addEventListener('click', function () {
+        setLayer('pc', true);
+        btn.disabled = true; btn.textContent = 'Bezig met classificeren…';
+        legend.hidden = false;
+        var counts = { gebouw: 0, vegetatie: 0, maaiveld: 0, water: 0 };
+        legend.querySelectorAll('b').forEach(function (b) { b.textContent = '0'; });
+        points.forEach(function (p) { p.el.setAttribute('fill', '#8a8f99'); });
+        var sorted = points.slice().sort(function (a, b) { return a.x - b.x; });
+        var idx = 0, step = reduce ? sorted.length : 40;
+        function tick() {
+          for (var n = 0; n < step && idx < sorted.length; n++, idx++) {
+            var p = sorted[idx];
+            p.el.setAttribute('fill', colors[p.cls]);
+            counts[p.cls]++;
+          }
+          legend.querySelectorAll('b').forEach(function (b) { b.textContent = counts[b.dataset.c].toLocaleString('nl-NL'); });
+          if (idx < sorted.length) { requestAnimationFrame(tick); }
+          else {
+            btn.disabled = false; btn.textContent = 'Opnieuw classificeren';
+            show(['Pointcloud geclassificeerd', 'AI', points.length.toLocaleString('nl-NL') + ' punten', 'Klassen: gebouw, vegetatie, maaiveld, water', 'Demo van automatische labeling zoals in het 3D BAG-labproject']);
+          }
+        }
+        requestAnimationFrame(tick);
       });
     })();
   </script>
