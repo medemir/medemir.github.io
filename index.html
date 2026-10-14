@@ -1,265 +1,524 @@
-<!DOCTYPE HTML>
-
-<html>
-
+<!DOCTYPE html>
+<html lang="nl">
 <head>
-  <title>Hi! </title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enes Demir, freelance geo-specialist</title>
+  <meta name="description" content="Enes Demir, freelance geo-specialist en technisch tekenaar. BAG, BGT, BOR (I-Asset), GIS-analyses, FME, Python en AutoCAD voor gemeenten, netbeheerders en ingenieursbureaus." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f6f7f4;
+      --ink: #14213d;
+      --ink-soft: #46506a;
+      --line: #cdd4d6;
+      --polder: #2f6f4e;
+      --polder-soft: #dfeae2;
+      --water: #a9cbe0;
+      --road: #e9d9b8;
+      --build: #d9c6c2;
+      --white: #ffffff;
+      --wrap: 1120px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Archivo", system-ui, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      font-variation-settings: "wdth" 100;
+    }
+    a { color: var(--polder); text-underline-offset: 3px; }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--polder); outline-offset: 3px; }
+    .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+    h1, h2, h3 { line-height: 1.12; margin: 0; }
+    h2 {
+      font-size: clamp(1.75rem, 3vw, 2.4rem);
+      font-weight: 700;
+      font-stretch: 112%;
+      font-variation-settings: "wdth" 112;
+      letter-spacing: -0.01em;
+    }
+    p { margin: 0 0 1em; max-width: 68ch; }
 
+    /* Nav */
+    .nav {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--paper) 92%, transparent);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .brand { font-weight: 700; color: var(--ink); text-decoration: none; font-variation-settings: "wdth" 115; }
+    .nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; font-size: 0.95rem; }
+    .nav ul a { color: var(--ink-soft); text-decoration: none; }
+    .nav ul a:hover { color: var(--ink); }
+    @media (max-width: 720px) { .nav ul li:not(:last-child) { display: none; } }
 
-  <link rel="stylesheet" href="assets/css/main.css" />
+    /* Hero */
+    .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+    .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding-top: 72px; padding-bottom: 72px; }
+    .hero h1 {
+      font-size: clamp(2.6rem, 6vw, 4.6rem);
+      font-weight: 800;
+      font-variation-settings: "wdth" 120;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .hero .role { font-size: 1.25rem; color: var(--ink-soft); margin-bottom: 28px; max-width: 34ch; }
+    .status {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--polder-soft); color: var(--polder);
+      padding: 8px 14px; border-radius: 999px; font-size: 0.95rem; font-weight: 600;
+      margin-bottom: 28px;
+    }
+    .status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--polder); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-block; padding: 13px 22px; border-radius: 6px; font-weight: 600;
+      text-decoration: none; border: 2px solid var(--ink);
+    }
+    .btn-primary { background: var(--ink); color: var(--white); }
+    .btn-primary:hover { background: #22325a; border-color: #22325a; }
+    .btn-ghost { color: var(--ink); }
+    .btn-ghost:hover { background: var(--white); }
+
+    /* Map drawing */
+    .map { width: 100%; height: auto; display: block; }
+    .map .parcel { fill: var(--polder-soft); stroke: var(--ink); stroke-width: 1; }
+    .map .road { fill: var(--road); stroke: var(--ink); stroke-width: 1; }
+    .map .water { fill: var(--water); stroke: var(--ink); stroke-width: 1; }
+    .map .pand { fill: var(--build); stroke: var(--ink); stroke-width: 1.2; }
+    .map .dim { stroke: var(--ink); stroke-width: 1; fill: none; }
+    .map text { font-family: "Archivo", sans-serif; font-size: 12px; fill: var(--ink); }
+    .map .lbl { fill: var(--ink-soft); font-size: 11px; }
+    .map .draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: draw 2.4s ease-out 0.2s forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @media (prefers-reduced-motion: reduce) { .map .draw { animation: none; stroke-dashoffset: 0; } }
+    .viewer { margin: 0; background: var(--white); border: 1px solid var(--ink); border-radius: 10px; overflow: hidden; box-shadow: 10px 10px 0 var(--ink); }
+    .viewer-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--ink); background: var(--paper); }
+    .viewer-title { font-weight: 700; font-size: 0.9rem; font-variation-settings: "wdth" 115; }
+    .layers { display: flex; flex-wrap: wrap; gap: 6px; }
+    .layer { font: inherit; font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); color: var(--ink-soft); cursor: pointer; }
+    .layer i { width: 10px; height: 10px; border-radius: 2px; border: 1px solid var(--ink); opacity: 0.35; }
+    .layer.on { border-color: var(--ink); color: var(--ink); }
+    .layer.on i { opacity: 1; }
+    .layer:focus-visible { outline: 3px solid var(--polder); outline-offset: 2px; }
+    .map [data-group] { transition: opacity 0.3s; }
+    .map [data-group].off { opacity: 0; pointer-events: none; }
+    .map .obj { cursor: pointer; transition: fill 0.15s; }
+    .map .obj:hover, .map .obj.sel { fill: #f3e27a; }
+    .map .tree { fill: var(--polder); stroke: var(--white); stroke-width: 2; }
+    .map .lamp { fill: var(--ink); }
+    .map .hn { font-size: 13px; font-weight: 700; pointer-events: none; }
+    .identify { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 10px 14px; border-top: 1px solid var(--ink); font-size: 0.88rem; min-height: 46px; }
+    .identify span { color: var(--ink-soft); }
+    .identify .src { font-size: 0.75rem; font-weight: 700; padding: 1px 8px; border-radius: 4px; background: var(--polder-soft); color: var(--polder); }
+    @media (prefers-reduced-motion: reduce) { .map [data-group], .map .obj { transition: none; } }
+
+    @media (max-width: 860px) {
+      .hero .wrap { grid-template-columns: 1fr; padding-top: 48px; padding-bottom: 48px; gap: 32px; }
+      .viewer { box-shadow: 6px 6px 0 var(--ink); margin-right: 6px; }
+    }
+
+    /* Sections */
+    section { padding: 88px 0; }
+    section + section { border-top: 1px solid var(--line); }
+    .section-head { display: grid; grid-template-columns: 1fr 2fr; gap: 48px; margin-bottom: 48px; align-items: end; }
+    .section-head p { color: var(--ink-soft); margin: 0; }
+    @media (max-width: 860px) { .section-head { grid-template-columns: 1fr; gap: 12px; } section { padding: 64px 0; } }
+
+    /* Services */
+    .services { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--ink); }
+    .service { padding: 28px 32px 28px 0; border-bottom: 1px solid var(--line); }
+    .service:nth-child(even) { padding-left: 32px; padding-right: 0; border-left: 1px solid var(--line); }
+    .service h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; font-variation-settings: "wdth" 108; }
+    .service p { color: var(--ink-soft); margin-bottom: 12px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
+    .tags li { font-size: 0.85rem; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--white); }
+    @media (max-width: 760px) {
+      .services { grid-template-columns: 1fr; }
+      .service, .service:nth-child(even) { padding: 24px 0; border-left: 0; }
+    }
+
+    /* Clients strip */
+    .clients { background: var(--ink); color: var(--white); padding: 40px 0; }
+    .clients .wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 36px; }
+    .clients p { margin: 0; color: #b9c2d6; font-size: 0.95rem; }
+    .clients ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; padding: 0; font-weight: 600; font-variation-settings: "wdth" 110; font-size: 1.1rem; }
+
+    /* Timeline */
+    .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+    .timeline::before { content: ""; position: absolute; left: 150px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+    .job { display: grid; grid-template-columns: 150px 1fr; gap: 0 40px; padding-bottom: 44px; position: relative; }
+    .job::after { content: ""; position: absolute; left: 145px; top: 7px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--polder); }
+    .job .when { font-weight: 600; color: var(--ink-soft); font-size: 0.95rem; padding-top: 2px; }
+    .job .body { padding-left: 32px; }
+    .job h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+    .job .where { color: var(--ink-soft); margin-bottom: 12px; }
+    .job ul { margin: 0; padding-left: 1.1em; max-width: 68ch; }
+    .job li { margin-bottom: 6px; }
+    @media (max-width: 680px) {
+      .timeline::before { left: 5px; }
+      .job { grid-template-columns: 1fr; }
+      .job::after { left: 0; }
+      .job .when, .job .body { padding-left: 28px; }
+    }
+
+    /* About */
+    .about { display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: start; }
+    .about img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 45%; border-radius: 8px; display: block; }
+    .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; margin-top: 32px; }
+    .facts h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .facts p, .facts ul { color: var(--ink-soft); font-size: 0.97rem; margin: 0; }
+    .facts ul { padding-left: 1.1em; }
+    @media (max-width: 860px) { .about { grid-template-columns: 1fr; } .about img { max-width: 280px; } .facts { grid-template-columns: 1fr; } }
+
+    /* Projects */
+    .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .project img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 6px; display: block; margin-bottom: 14px; }
+    .project h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+    .project p { color: var(--ink-soft); font-size: 0.97rem; margin-bottom: 8px; }
+    @media (max-width: 860px) { .projects { grid-template-columns: 1fr; } }
+
+    /* Contact */
+    .contact { background: var(--polder); color: var(--white); }
+    .contact h2 { color: var(--white); margin-bottom: 16px; }
+    .contact p { color: #dfeee5; }
+    .contact .btn-primary { background: var(--white); color: var(--polder); border-color: var(--white); }
+    .contact .btn-primary:hover { background: var(--polder-soft); }
+    .contact .btn-ghost { color: var(--white); border-color: var(--white); }
+    .contact .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+    .contact a:focus-visible { outline-color: var(--white); }
+
+    footer { padding: 28px 0; font-size: 0.9rem; color: var(--ink-soft); }
+    footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+    footer ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+  </style>
 </head>
+<body>
 
-<style>
-  .contain {
-    object-fit: contain;
-  }
-</style>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="#top">Enes Demir</a>
+      <ul>
+        <li><a href="#diensten">Diensten</a></li>
+        <li><a href="#ervaring">Ervaring</a></li>
+        <li><a href="#over">Over mij</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
 
-<body class="is-preload">
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div>
+        <h1>Geodata waar je op kunt bouwen.</h1>
+        <p class="role">Enes Demir, freelance geo-specialist en technisch tekenaar. Ik help gemeenten, netbeheerders en ingenieursbureaus met BAG, BGT, BOR en GIS.</p>
+        <div class="status">Beschikbaar voor opdrachten, 15–20 uur per week</div>
+        <div class="actions">
+          <a class="btn btn-primary" href="mailto:enesdemirpersonal@gmail.com?subject=Aanvraag%20opdracht">Stuur een aanvraag</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/enesdemirln">Bekijk LinkedIn</a>
+        </div>
+      </div>
 
-  <!-- Wrapper -->
-  <div id="wrapper">
-
-    <!-- Main -->
-    <div id="main">
-      <div class="inner">
-
-        <!-- Header -->
-        <header id="header">
-          <!--tag-->
-          <a href="index.html" class="logo"><strong>Enes Demir</strong> <br /> Geomatics and Smart Systems</a>
-          <ul class="icons">
-            <li><a href="https://github.com/medemir?tab=repositories"><span
-                  class="icon brands fa-github">Github</span></a></li>
-
-            <li><a href="https://replit.com/@medemir" class="icon brands fa-">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M7 5.5C7 4.67157 7.67157 4 8.5 4H15.5C16.3284 4 17 4.67157 17 5.5V12H8.5C7.67157 12 7 11.3284 7 10.5V5.5Z"
-                    fill="#F26207"></path>
-                  <path d="M17 12H25.5C26.3284 12 27 12.6716 27 13.5V18.5C27 19.3284 26.3284 20 25.5 20H17V12Z"
-                    fill="#F26207"></path>
-                  <path
-                    d="M7 21.5C7 20.6716 7.67157 20 8.5 20H17V26.5C17 27.3284 16.3284 28 15.5 28H8.5C7.67157 28 7 27.3284 7 26.5V21.5Z"
-                    fill="#F26207"></path>
-                </svg>
-                <span class="label">Replit</span></a></li>
-            <li><a href="https://medium.com/@enesdemirpersonal" class="icon brands fa-medium-m"><span
-                  class="label">Medium</span></a></li>
-            <li><a href="index _dutch.html" class="fa fa-language fa-2x">Dutch</a></li>
-          </ul>
-          <script data-name="BMC-Widget" data-cfasync="false"
-            src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="enesdemir"
-            data-description="Support me on Buy me a coffee!" data-message="" data-color="#ff813f" data-position="Right"
-            data-x_margin="18" data-y_margin="18"></script>
-        </header>
-
-        <!-- Banner -->
-        <section id="banner">
-          <div class="content">
-            <header>
-              <h1>
-                     Welcome!</h1>
-              <p></p>
-            </header>
-
-            <p></p>
-            <!--             <ul class="actions">
-              <li><a href="generic.html" class="button big">Learn More</a></li>
-            </ul> -->
+      <figure class="viewer" aria-label="Interactieve kaartviewer">
+        <div class="viewer-bar">
+          <span class="viewer-title">Kaartviewer</span>
+          <div class="layers" role="group" aria-label="Kaartlagen">
+            <button type="button" class="layer on" data-layer="bgt" aria-pressed="true"><i style="background:var(--polder-soft)"></i>BGT</button>
+            <button type="button" class="layer on" data-layer="bag" aria-pressed="true"><i style="background:var(--build)"></i>BAG</button>
+            <button type="button" class="layer on" data-layer="bor" aria-pressed="true"><i style="background:var(--polder)"></i>BOR</button>
+            <button type="button" class="layer on" data-layer="cad" aria-pressed="true"><i style="background:var(--ink)"></i>Maatvoering</button>
           </div>
-          <span class="image object">
-            <div class="container">
-              <div class="avatar">
-                <a href="https://medemir.github.io/">
-                  <img class="contain"
-                    src="https://images.unsplash.com/photo-1589519160142-7d1a51b43eaf?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Enes" style="width:400px;height:300px" />
-                </a>
-              </div>
-              <div class="content">
-                <!-- <img src="images/IMG_20190618_173501609.jpg" alt="" />-->
-          </span>
-        </section>
+        </div>
+        <svg class="map" viewBox="0 0 520 400" role="img" aria-label="Kaartuitsnede met BGT-vlakken, BAG-panden, BOR-beheerobjecten en maatvoering">
+          <rect x="0" y="0" width="520" height="400" fill="var(--white)" />
+          <g id="grid" stroke="var(--line)" stroke-width="0.5">
+            <path d="M0 100H520M0 200H520M0 300H520M130 0V400M260 0V400M390 0V400" />
+          </g>
+          <g data-group="bgt">
+            <path class="obj water" data-info="Waterdeel|BGT|Type: watergang|Status: bestaand" d="M0 300 C 90 280, 160 330, 260 312 S 430 280, 520 300 L520 400 L0 400 Z" />
+            <path class="obj road" data-info="Wegdeel|BGT|Functie: rijbaan lokale weg|Fysiek voorkomen: gesloten verharding" d="M0 200 L520 170 L520 205 L0 236 Z" />
+            <path class="obj road" data-info="Wegdeel|BGT|Functie: fietspad|Fysiek voorkomen: open verharding" d="M300 0 L336 0 L332 182 L296 184 Z" />
+            <path class="obj parcel" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: grasland overig|Status: bestaand" d="M20 20 L280 20 L276 186 L20 198 Z" />
+            <path class="obj parcel" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: groenvoorziening|Status: bestaand" d="M352 20 L500 20 L500 166 L348 176 Z" />
+            <path class="obj parcel" data-info="Begroeid terreindeel|BGT|Fysiek voorkomen: struiken|Status: bestaand" d="M20 248 L250 234 L250 284 C 170 296, 90 282, 20 290 Z" />
+            <path class="obj parcel" data-info="Onbegroeid terreindeel|BGT|Fysiek voorkomen: erf|Status: bestaand" d="M276 232 L500 218 L500 280 C 430 276, 360 300, 280 302 Z" />
+          </g>
+          <g data-group="bag">
+            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 1998|Status: pand in gebruik" d="M60 60 L170 60 L170 140 L60 140 Z" />
+            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 2004|Status: pand in gebruik" d="M190 80 L250 80 L250 150 L190 150 Z" />
+            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 2021|Status: pand in gebruik" d="M380 50 L470 50 L470 120 L380 120 Z" />
+            <path class="obj pand" data-info="Pand|BAG|Bouwjaar: 2026|Status: bouw gestart" d="M320 246 L400 242 L400 280 L320 284 Z" />
+            <text class="hn" x="108" y="104">12</text>
+            <text class="hn" x="214" y="119">14</text>
+            <text class="hn" x="418" y="89">3</text>
+          </g>
+          <g data-group="bor">
+            <circle class="obj tree" data-info="Boom|BOR|Soort: Tilia cordata|Conditie: goed" cx="40" cy="250" r="9" />
+            <circle class="obj tree" data-info="Boom|BOR|Soort: Acer campestre|Conditie: redelijk" cx="110" cy="252" r="9" />
+            <circle class="obj tree" data-info="Boom|BOR|Soort: Quercus robur|Conditie: goed" cx="180" cy="248" r="9" />
+            <circle class="obj tree" data-info="Boom|BOR|Soort: Betula pendula|Conditie: goed" cx="460" cy="146" r="9" />
+            <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 6 m|Armatuur: LED" x="282" y="160" width="9" height="9" />
+            <rect class="obj lamp" data-info="Lichtmast|BOR|Hoogte: 6 m|Armatuur: LED" x="282" y="70" width="9" height="9" />
+          </g>
+          <g data-group="cad">
+            <g class="dim">
+              <path class="draw" d="M60 160 L170 160" />
+              <path d="M60 152 L60 168 M170 152 L170 168" />
+              <path class="draw" d="M484 50 L484 120" />
+              <path d="M476 50 L492 50 M476 120 L492 120" />
+              <path class="draw" d="M190 66 L250 66" />
+              <path d="M190 60 L190 72 M250 60 L250 72" />
+            </g>
+            <text x="98" y="178">12,40 m</text>
+            <text x="440" y="140">7,05 m</text>
+            <text x="204" y="58">6,80 m</text>
+          </g>
+        </svg>
+        <div class="identify" id="identify" aria-live="polite">
+          <strong>Klik op een object</strong>
+          <span>om de kenmerken te bekijken</span>
+        </div>
+      </figure>
+    </div>
+  </header>
 
-        <!-- Section -->
+  <main>
+    <section id="diensten">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Wat ik voor je doe</h2>
+          <p>Ik werk mee in je team of neem een afgebakende klus over. Op locatie of op afstand, in overleg.</p>
+        </div>
+        <div class="services">
+          <article class="service">
+            <h3>BAG en BGT</h3>
+            <p>Controle van BAG- en BGT-gegevens op ligging, juistheid en volledigheid. Afwijkingen signaleren, mutaties verwerken en overleg met het geo-team.</p>
+            <ul class="tags"><li>BAG</li><li>BGT</li><li>Kwaliteitscontrole</li></ul>
+          </article>
+          <article class="service">
+            <h3>BOR en beheerdata</h3>
+            <p>Beheerpaspoorten vullen voor grijs en groen, dataconversie en het afstemmen van conversietabellen in I-Asset.</p>
+            <ul class="tags"><li>I-Asset</li><li>Dataconversie</li><li>Areaalgegevens</li></ul>
+          </article>
+          <article class="service">
+            <h3>GIS-analyse en kaarten</h3>
+            <p>Informatievragen van beheerders en beleid vertalen naar kaarten, analyses en dashboards. Van thematische kaart tot WebGIS.</p>
+            <ul class="tags"><li>ArcGIS Pro</li><li>ArcGIS Online</li><li>QGIS</li><li>Field Maps</li></ul>
+          </article>
+          <article class="service">
+            <h3>Technisch tekenen en maatvoering</h3>
+            <p>Matenplannen, uitzet- en uitgiftetekeningen, objectkaarten en volumeberekeningen. Ook ingemeten situaties omzetten naar GIS.</p>
+            <ul class="tags"><li>AutoCAD</li><li>Civil 3D</li><li>OpenRoads</li></ul>
+          </article>
+          <article class="service">
+            <h3>Automatisering en datastromen</h3>
+            <p>ETL-processen en controles in FME en Python, zodat terugkerend werk sneller en foutloos gaat.</p>
+            <ul class="tags"><li>FME</li><li>Python</li><li>SQL</li><li>PostgreSQL</li></ul>
+          </article>
+          <article class="service">
+            <h3>Publicatie en databeheer</h3>
+            <p>Geodata ontsluiten via WMS/WFS en beheren in enterprise-geodatabases, met documentatie die je team kan overnemen.</p>
+            <ul class="tags"><li>WMS/WFS</li><li>ArcGIS Enterprise</li><li>Oracle</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
 
-
-        <!-- Section -->
-        <section>
-          <header class="major">
-            <h2>Completed Projects</h2>
-          </header>
-          <div class="posts">
-            <article>
-              <!-- <div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div> -->
-              <a href="#" class="image fit"><img src="images/roof.jpg" alt="" /></a>
-              <h3>Izmir Hilltown Shopping Center Skylight Installation</h3>
-              <p>As a chief land surveyor of this project, about two thousand glass and carrying aluminum components
-                were installed.</p>
-              <!--               <ul class="actions">
-                <li><a href="#" class="button">More</a></li>
-              </ul> -->
-            </article>
-            <article>
-              <a href="#" class="image"><img src="images/learningmachine.jpg" alt="" /></a>
-              <h3>Applied Machine Learning Project</h3>
-              <p> Two thousand sound records classification</p>
-              <ul class="actions">
-                <li><a href="machine_learning.html" class="button">More</a></li>
-              </ul>
-            </article>
-
-          </div>
-        </section>
-                <section>
-                  <header class="major">
-                    <h2>Useful Links</h2>
-                  </header>
-                  <div class="posts">
-                    <article>
-                      <a href="usemacefficiently.html" class="image"><img src="Görüntü.png" alt="" /></a>
-                      <h3>Here are some useful shortcut tips to use your MacBook efficiently.</h3>
-                      <!-- <p>I travel to work from home every one or two days a week, and it takes about two hours. Even though I
-                        don't get to explore exotic nature or new cultures during these trips, they help me learn more about
-                        myself and here I share narratives of my own self-discovery.</p> -->
-                      <ul class="actions">
-                        <li><a href="usemacefficiently.html" class="button">More</a></li>
-                      </ul>
-                    </article>
-                </section>
-        <section>
-          <header class="major">
-            <h2>Readings - Lezingen</h2>
-          </header>
-          <div class="posts">
-            <article>
-              <a href="#" class="image"><img src="images/tom-arrowsmith-EMiuWAkOvaU-unsplash.jpg" alt="" /></a>
-              <h3>Feelings during travel for work - Gevoelens tijdens reis voor het werk</h3>
-              <p>I travel to work from home every one or two days a week, and it takes about two hours. Even though I
-                don't get to explore exotic nature or new cultures during these trips, they help me learn more about
-                myself and here I share narratives of my own self-discovery.</p>
-              <ul class="actions">
-                <li><a href="travel.html" class="button">More</a></li>
-              </ul>
-            </article>
-            <article>
-              <a href="#" class="image"><img src="images/noah-naf-NWl8AEXry0Y-unsplash.jpg" alt="" /></a>
-              <h3>AI and Music will change and bring our lives together.</h3>
-              <p>I m a big fan of Freddie Mercury. Recently I stumbeld upon an AI-generated turkish song(<a
-                  href="https://www.youtube.com/watch?v=JEQh_spbzj4">Yalanci Bahar</a>) performed flawlessly by the
-                legend. I couldnt believe my ears. So here I share the music I love with it's story.</p>
-              <!-- <ul class="actions">
-                        <li><a href="machine_learning.html" class="button">More</a></li>
-                      </ul> -->
-            </article>
-
-          </div>
-        </section>
+    <div class="clients" aria-label="Organisaties waar ik heb gewerkt">
+      <div class="wrap">
+        <p>Ervaring opgedaan bij onder andere</p>
+        <ul>
+          <li>Gemeente Almere</li>
+          <li>Gemeente Zevenaar</li>
+          <li>Gemeente Rotterdam</li>
+          <li>Utrechtse Heuvelrug</li>
+          <li>WMD</li>
+          <li>Gasunie</li>
+        </ul>
       </div>
     </div>
 
-    <div id="sidebar">
-      <div class="inner">
-
-
-        <nav id="menu">
-          <header class="major">
-            <h2>Menu</h2>
-          </header>
-          <ul>
-
-            <li>
-              <span class="opener">Readings</span>
+    <section id="ervaring">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Ervaring</h2>
+          <p>Bijna 8 jaar in het geodata-domein, bij gemeenten, infrastructuur en bouw.</p>
+        </div>
+        <ol class="timeline" reversed>
+          <li class="job">
+            <div class="when">2026 – heden</div>
+            <div class="body">
+              <h3>Geo/GIS-specialist</h3>
+              <p class="where">Gemeente Zevenaar, WMD, Gemeente Rotterdam, Utrechtse Heuvelrug</p>
               <ul>
-                <li><a href="geoai.html">My Notes from GeoAI Paper</a></li>
-
-
+                <li>Kaarten, analyses en beheerdata voor de openbare ruimte (team Beheer Fysieke Leefomgeving)</li>
+                <li>Beheerpaspoorten en conversietabellen in I-Asset voor grijs en groen</li>
+                <li>Ingemeten areaal van WMD verwerkt in AutoCAD en omgezet naar GIS</li>
+                <li>Kwaliteitscontroles en automatisering met Python</li>
               </ul>
-            </li>
-            <li>
-              <span class="opener">Software</span>
+            </div>
+          </li>
+          <li class="job">
+            <div class="when">2023 – 2026</div>
+            <div class="body">
+              <h3>Geo/GIS-specialist</h3>
+              <p class="where">Gemeente Almere, Geo Data Team</p>
               <ul>
-                <li><a href="openroads.html">Openroads Designer</a></li>
-
+                <li>Uitzet-, uitgifte-, matenplan- en huisnummertekeningen</li>
+                <li>Controle van BAG- en BGT-gegevens; deelname aan een 3D BAG-labproject met pointclouddata</li>
+                <li>FME-processen voor controles op veldmapping en geometrie</li>
+                <li>WebGIS-dashboard in Leaflet voor analyse van bijgebouw-aanvragen</li>
               </ul>
-            </li>
-            <li>
-              <span class="opener">About My Skills</span>
+            </div>
+          </li>
+          <li class="job">
+            <div class="when">2020 – 2023</div>
+            <div class="body">
+              <h3>Geo-specialist</h3>
+              <p class="where">Gasunie, De Romein, WMD</p>
               <ul>
-                <li><a href="generic.html">Portfolio</a></li>
-
-                <li><a href="mygoals.html">My Goals</a></li>
-
-
+                <li>Volumeberekeningen in Civil 3D op basis van drone- en lidardata</li>
+                <li>Objectkaarten voor WMD als landmeter en AutoCAD-tekenaar</li>
               </ul>
-
-            </li>
-
-            <li>
-              <span class="opener">Recommended Videos</span>
+            </div>
+          </li>
+          <li class="job">
+            <div class="when">2018 – 2020</div>
+            <div class="body">
+              <h3>Landmeter en technisch tekenaar</h3>
+              <p class="where">Karşıyaka Hilltown Mall, Izmir</p>
               <ul>
-                <li><a href="https://www.youtube.com/watch?v=X8FGbZdJ7HU">1. Meeting with students by Yann LeCun and
-                    Demis Hassabis</a></li>
-
-                <!--                 <li><a href="#">Goals</a></li>
-                <li><a href="#">Math Projects</a></li>
-                <li><a href="#">Creativity</a></li> -->
+                <li>Maatvoering en tekenwerk voor 2000+ aluminium kozijnen en 6 glazen gevelconstructies</li>
+                <li>Laatste 6 maanden als site manager</li>
               </ul>
-            </li>
-          </ul>
-        </nav>
-
-        <!-- Section -->
-        <section>
-          <header class="major">
-            <h2>Information Center</h2>
-          </header>
-          <div class="mini-posts">
-            <article>
-              <a href="https://medemir.github.io/geoai.html#:~:text=and%20geomatics%20data%3F-,What%20is%20Geomatics%3F,-Geomatics%20is%20a"
-                class="image"><img src="images/thisisengineering-raeng-mWc8xsxFCLc-unsplash.jpg" alt="" /></a>
-              <p>What is Geomatics Engineering?</p>
-        </section>
-
-        <!-- Section -->
-        <section>
-          <header class="major">
-            <h2>Get in touch</h2>
-          </header>
-          <p>If you have any questions, please don't hesitate to get contact with me! </p>
-          <ul class="contact">
-            <li class="icon solid fa-envelope"><a
-                href="mailto:enesdemirpersonal@gmail.com">enesdemirpersonal@gmail.com</a></li>
-            <!--<li class="icon solid fa-phone"><a href=""></a></li>
-            <li class="icon solid fa-home"> --> <br />
-            </li>
-          </ul>
-        </section>
-
-        <!-- Footer -->
-        <footer id="footer">
-          <p class="copyright">&copy; 2022 enesdemir. All rights reserved. Images: <a
-              href="https://unsplash.com">Unsplash</a>.
-        </footer>
-
+            </div>
+          </li>
+        </ol>
       </div>
-    </div>
+    </section>
 
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/browser.min.js"></script>
-    <script src="assets/js/breakpoints.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script> $(function () {
-        $('#sidebar').css('display', 'block');
-        // or $('#id_of_your_sidebar').show(); 
+    <section id="over">
+      <div class="wrap about">
+        <img src="images/enes_sun.jpeg" alt="Portret van Enes Demir" />
+        <div>
+          <h2 style="margin-bottom:20px">Over mij</h2>
+          <p>Ik vertaal functionele wensen naar werkende geo-oplossingen. Gestructureerd, met oog voor datakwaliteit en documentatie, zodat je team er na mijn inzet zelf mee verder kan.</p>
+          <p>Ik heb een bachelor Geomatics Engineering en een master Smart Systems Engineering. Daardoor combineer ik landmeetkunde en tekenwerk met data-analyse en automatisering.</p>
+          <div class="facts">
+            <div>
+              <h3>Opleiding</h3>
+              <ul>
+                <li>MSc Smart Systems Engineering, Hanze Groningen (2022)</li>
+                <li>BSc Geomatics Engineering, Izmir Katip Çelebi University (2019)</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Cursussen</h3>
+              <ul>
+                <li>Esri: Cartography, Data Management, GIS Basics (2025)</li>
+                <li>Spatial Databases met PostGIS en QGIS (2023)</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Talen</h3>
+              <p>Nederlands en Engels zeer goed, Turks moedertaal</p>
+            </div>
+            <div>
+              <h3>Werkgebied</h3>
+              <p>Op afstand of op locatie, in overleg. Rijbewijs B.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projecten">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Projecten en notities</h2>
+          <p>Een paar uitgewerkte projecten en dingen die ik heb geleerd.</p>
+        </div>
+        <div class="projects">
+          <article class="project">
+            <img src="images/roof.jpg" alt="Glazen dakconstructie van Hilltown Mall" loading="lazy" />
+            <h3>Glazen dak Hilltown Mall</h3>
+            <p>Maatvoering van zo'n 2000 glas- en aluminium onderdelen als hoofdlandmeter.</p>
+          </article>
+          <article class="project">
+            <img src="images/bentley.jpg" alt="OpenRoads Designer" loading="lazy" />
+            <h3>OpenRoads Designer</h3>
+            <p>Notities en werkwijze voor wegontwerp in OpenRoads.</p>
+            <a href="openroads.html">Lees meer</a>
+          </article>
+          <article class="project">
+            <img src="images/thisisengineering-raeng-mWc8xsxFCLc-unsplash.jpg" alt="Werkplek met kaarten" loading="lazy" />
+            <h3>GeoAI</h3>
+            <p>Mijn aantekeningen bij onderzoek naar AI in de geomatica.</p>
+            <a href="geoai.html">Lees meer</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="wrap">
+        <h2>Een klus in BAG, BGT, BOR of GIS?</h2>
+        <p>Stuur me een korte omschrijving van de opdracht. Ik reageer snel met mijn beschikbaarheid en tarief.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="mailto:enesdemirpersonal@gmail.com?subject=Aanvraag%20opdracht">enesdemirpersonal@gmail.com</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir, freelance geo-specialist</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://medium.com/@enesdemirpersonal">Medium</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var svg = document.querySelector('.map');
+      var box = document.getElementById('identify');
+      var current = null;
+      document.querySelectorAll('.layer').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var on = btn.classList.toggle('on');
+          btn.setAttribute('aria-pressed', on);
+          svg.querySelector('[data-group="' + btn.dataset.layer + '"]').classList.toggle('off', !on);
+        });
       });
-    </script>
-
+      svg.querySelectorAll('.obj').forEach(function (el) {
+        el.setAttribute('tabindex', '0');
+        function pick() {
+          if (current) current.classList.remove('sel');
+          current = el; el.classList.add('sel');
+          var p = el.dataset.info.split('|');
+          box.innerHTML = '';
+          var t = document.createElement('strong'); t.textContent = p[0]; box.appendChild(t);
+          var b = document.createElement('span'); b.className = 'src'; b.textContent = p[1]; box.appendChild(b);
+          p.slice(2).forEach(function (x) { var s = document.createElement('span'); s.textContent = x; box.appendChild(s); });
+        }
+        el.addEventListener('click', pick);
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      });
+    })();
+  </script>
 </body>
-
 </html>
