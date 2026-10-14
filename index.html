@@ -55,12 +55,9 @@
       backdrop-filter: blur(6px);
       border-bottom: 1px solid var(--line);
     }
-    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
-    .brand .mark { width: 34px; height: 34px; flex: none; }
-    .brand span { display: flex; flex-direction: column; line-height: 1.15; }
-    .brand b { font-weight: 600; font-size: 1.05rem; letter-spacing: 0.01em; }
-    .brand small { font-size: 0.74rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 16px; }
+    .brand { display: flex; align-items: center; }
+    .brand img { height: 56px; width: auto; display: block; }
     .nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; font-size: 0.95rem; }
     .nav ul a { color: var(--ink-soft); text-decoration: none; }
     .nav ul a:hover { color: var(--ink); }
@@ -250,10 +247,7 @@
 
   <nav class="nav" aria-label="Hoofdmenu">
     <div class="wrap">
-      <a class="brand" href="#top" aria-label="Enes Demir, naar boven">
-        <svg class="mark" viewBox="0 0 72 72" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="36" cy="36" r="26" stroke-width="2.4"/><path d="M36 4v7M36 61v7M4 36h7M61 36h7" stroke-width="2.4"/><path d="M36 20.5 49.5 44H22.5Z" stroke-width="2.8"/></g><circle cx="36" cy="36.2" r="3.4" fill="var(--polder)"/></svg>
-        <span><b>Enes Demir</b><small>Landmeetkunde &amp; geo-informatie</small></span>
-      </a>
+      <a class="brand" href="#top" aria-label="Enes Demir, naar boven"><img src="logo.svg" alt="Enes Demir, landmeetkunde en geo-informatie" width="194" height="50" /></a>
       <ul>
         <li><a href="#diensten">Diensten</a></li>
         <li><a href="#ervaring">Ervaring</a></li>
@@ -429,6 +423,8 @@
           <li>Utrechtse Heuvelrug</li>
           <li>WMD</li>
           <li>Gasunie</li>
+          <li>De Romein, Veendam</li>
+          <li>Renaissance Construction</li>
         </ul>
       </div>
     </div>
@@ -470,9 +466,10 @@
             <div class="when">2020 – 2023</div>
             <div class="body">
               <h3>Geo-specialist</h3>
-              <p class="where">Gasunie, De Romein, WMD</p>
+              <p class="where">Gasunie, De Romein (Veendam), WMD</p>
               <ul>
-                <li>Volumeberekeningen in Civil 3D op basis van drone- en lidardata</li>
+                <li>Gasunie: volumeberekeningen in Civil 3D op basis van drone- en lidardata</li>
+                <li>De Romein, Veendam: volumeberekeningen van graafwerk in Civil 3D</li>
                 <li>Objectkaarten voor WMD als landmeter en AutoCAD-tekenaar</li>
               </ul>
             </div>
@@ -481,7 +478,7 @@
             <div class="when">2018 – 2020</div>
             <div class="body">
               <h3>Landmeter en technisch tekenaar</h3>
-              <p class="where">Karşıyaka Hilltown Mall, Izmir</p>
+              <p class="where">Onderaannemers van Renaissance Construction, Izmir en Marmaris</p>
               <ul>
                 <li>Maatvoering en tekenwerk voor 2000+ aluminium kozijnen en 6 glazen gevelconstructies</li>
                 <li>Laatste 6 maanden als site manager</li>
@@ -589,7 +586,7 @@
 
   <footer>
     <div class="wrap">
-      <span>&copy; 2026 Enes Demir</span>
+      <span><img src="logo-mark.svg" alt="" width="22" height="22" style="vertical-align:-6px;margin-right:8px" />&copy; 2026 Enes Demir</span>
       <ul>
         <li><a href="https://github.com/medemir">GitHub</a></li>
         <li><a href="https://medium.com/@enesdemirpersonal">Medium</a></li>
