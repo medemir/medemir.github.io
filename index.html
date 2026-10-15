@@ -128,14 +128,29 @@
     .map .tree { fill: var(--polder); stroke: var(--white); stroke-width: 2; }
     .map .lamp { fill: var(--ink); }
     .map .bank { fill: #8a6a45; }
-    .map .pipe { fill: none; stroke: #2b6cb0; stroke-width: 3; stroke-dasharray: 10 5; }
-    .map .pipe:hover, .map .pipe.sel { stroke: #e3b505; fill: none; }
     .map .obj:focus:not(:focus-visible) { outline: none; }
-    .map .sewer { fill: none; stroke: #7a4a2a; stroke-width: 3.5; }
-    .map .sewer:hover, .map .sewer.sel { stroke: #e3b505; fill: none; }
-    .map .manhole { fill: var(--white); stroke: #7a4a2a; stroke-width: 2.5; }
-    .map .sewer-lbl { fill: #7a4a2a; font-size: 10px; font-weight: 700; pointer-events: none; }
+    .map .pipe { fill: none; stroke-width: 2.5; }
+    .map .pipe-thin { stroke-width: 1.6; }
+    .map .pipe-elec { stroke: #c0392b; stroke-dasharray: 2 4; stroke-linecap: round; }
+    .map .pipe-gas { stroke: #d39e00; stroke-dasharray: 10 4; }
+    .map .pipe-water { stroke: #2b6cb0; }
+    .map .pipe-warmte { stroke: #8e44ad; stroke-dasharray: 14 3 3 3; }
+    .map .pipe:hover, .map .pipe.sel, .map .sewer:hover, .map .sewer.sel { stroke-width: 5; fill: none; }
     .map .valve { fill: #2b6cb0; stroke: var(--white); stroke-width: 1.5; }
+    .map .sewer { fill: none; stroke-width: 3.5; }
+    .map .sewer-dwa { stroke: #7a4a2a; }
+    .map .sewer-hwa { stroke: #3a9cc4; }
+    .map .sewer-lead { stroke: #3a9cc4; stroke-width: 1.5; fill: none; pointer-events: none; }
+    .map .manhole { fill: var(--white); stroke-width: 2.5; }
+    .map .manhole-dwa { stroke: #7a4a2a; }
+    .map .manhole-hwa { stroke: #3a9cc4; }
+    .map .kolk { fill: #555; stroke: var(--white); stroke-width: 1; }
+    .map .outlet { fill: #3a9cc4; stroke: var(--ink); stroke-width: 1; }
+    .mini-legend { list-style: none; margin: -2px 0 4px; padding: 0 0 0 4px; font-size: 0.78rem; color: var(--ink-soft); display: grid; gap: 2px; width: 100%; }
+    .mini-legend li { display: flex; align-items: center; gap: 6px; }
+    .mini-legend i { width: 14px; height: 3px; border-radius: 2px; flex: none; }
+    .mini-legend i.sq { width: 7px; height: 7px; border-radius: 1px; }
+    .layer:not(.on) + .mini-legend { display: none; }
     .map .stake { stroke: #c0392b; stroke-width: 2; }
     .map .stake-hit { fill: transparent; }
     .map .stake-lbl { fill: #c0392b; font-weight: 700; font-size: 11px; }
@@ -301,7 +316,9 @@
               <h3>Beheer</h3>
               <button type="button" class="layer on" data-layer="bor" aria-pressed="true"><i style="background:var(--polder)"></i>BOR</button>
               <button type="button" class="layer" data-layer="kl" aria-pressed="false"><i style="background:#2b6cb0"></i>Leidingen</button>
+              <ul class="mini-legend"><li><i style="background:#c0392b"></i>Elektriciteit</li><li><i style="background:#d39e00"></i>Gas</li><li><i style="background:#2b6cb0"></i>Drinkwater</li><li><i style="background:#8e44ad"></i>Warmte</li></ul>
               <button type="button" class="layer" data-layer="riool" aria-pressed="false"><i style="background:#7a4a2a"></i>Riolering</button>
+              <ul class="mini-legend"><li><i style="background:#7a4a2a"></i>Afvalwater (DWA)</li><li><i style="background:#3a9cc4"></i>Hemelwater (HWA)</li><li><i class="sq" style="background:#555"></i>Kolk</li></ul>
             </div>
             <div class="panel-group">
               <h3>Tekenen</h3>
@@ -351,24 +368,40 @@
                 <rect class="obj bank" data-info="Zitbank|BOR|Materiaal: hardhout|Conditie: goed" x="150" y="350" width="22" height="7" />
               </g>
               <g data-group="kl" class="off">
-                <path class="obj pipe" data-info="Waterleiding|Leidingen|Materiaal: PE 110|Diepte: 1,0 m -mv|Beheerder: waterbedrijf" d="M0 285 L800 259" />
-                <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Polderlaan 3" d="M590 263 L590 150" />
-                <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 12" d="M135 281 L135 170" />
-                <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 14" d="M285 276 L285 190" />
-                <rect class="obj valve" data-info="Afsluiter|Leidingen|Type: schuifafsluiter|Diameter: 110 mm" x="381" y="268" width="10" height="10" transform="rotate(45 386 273)" />
+                <path class="obj pipe pipe-elec" data-info="Elektriciteitskabel|Leidingen|Soort: middenspanning 10 kV|Diepte: 0,8 m -mv|Beheerder: netbeheerder" d="M0 265.0 L800 239.0" />
+                <path class="obj pipe pipe-gas" data-info="Gasleiding|Leidingen|Materiaal: PE 110, 100 mbar|Diepte: 0,8 m -mv|Beheerder: netbeheerder" d="M0 270.0 L800 244.0" />
+                <path class="obj pipe pipe-water" data-info="Drinkwaterleiding|Leidingen|Materiaal: PVC 110|Diepte: 1,0 m -mv|Beheerder: waterbedrijf" d="M0 291.0 L800 265.0" />
+                <path class="obj pipe pipe-warmte" data-info="Warmteleiding|Leidingen|Soort: aanvoer en retour, DN 80|Diepte: 0,9 m -mv|Beheerder: warmtenet" d="M0 297.0 L800 271.0" />
+                <path class="obj pipe pipe-water pipe-thin" data-info="Huisaansluiting drinkwater|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 12" d="M135 286.6 L135 170" />
+                <path class="obj pipe pipe-water pipe-thin" data-info="Huisaansluiting drinkwater|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 14" d="M285 281.7 L285 190" />
+                <path class="obj pipe pipe-water pipe-thin" data-info="Huisaansluiting drinkwater|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Polderlaan 3" d="M590 271.8 L590 150" />
+                <path class="obj pipe pipe-gas pipe-thin" data-info="Huisaansluiting gas|Leidingen|Materiaal: PE 32|Diepte: 0,6 m -mv|Adres: Kanaalweg 12" d="M110 266.4 L110 170" />
+                <path class="obj pipe pipe-gas pipe-thin" data-info="Huisaansluiting gas|Leidingen|Materiaal: PE 32|Diepte: 0,6 m -mv|Adres: Polderlaan 3" d="M560 251.8 L560 150" />
+                <rect class="obj valve" data-info="Afsluiter|Leidingen|Drinkwater, schuifafsluiter|Diameter: 110 mm" x="381" y="273.5" width="10" height="10" transform="rotate(45 386 278.5)" />
               </g>
               <g data-group="riool" class="off">
-                <path class="obj sewer" data-info="Streng P01–P02|Riolering|Type: gemengd riool, beton 400 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M60 272.1 L260 265.6" />
-                <path class="obj sewer" data-info="Streng P02–P03|Riolering|Type: gemengd riool, beton 400 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M260 265.6 L460 259.1" />
-                <path class="obj sewer" data-info="Streng P03–P04|Riolering|Type: gemengd riool, beton 400 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M460 259.1 L660 252.6" />
-                <circle class="obj manhole" data-info="Put P01|Riolering|Maaiveld: +0,42 m NAP|BOB: -1,18 m NAP|Diepte: 1,60 m" cx="60" cy="272.1" r="7" />
-                <text class="sewer-lbl" x="48" y="294.1">P01</text>
-                <circle class="obj manhole" data-info="Put P02|Riolering|Maaiveld: +0,38 m NAP|BOB: -1,31 m NAP|Diepte: 1,69 m" cx="260" cy="265.6" r="7" />
-                <text class="sewer-lbl" x="248" y="287.6">P02</text>
-                <circle class="obj manhole" data-info="Put P03|Riolering|Maaiveld: +0,35 m NAP|BOB: -1,44 m NAP|Diepte: 1,79 m" cx="460" cy="259.1" r="7" />
-                <text class="sewer-lbl" x="448" y="281.1">P03</text>
-                <circle class="obj manhole" data-info="Put P04|Riolering|Maaiveld: +0,31 m NAP|BOB: -1,57 m NAP|Diepte: 1,88 m" cx="660" cy="252.6" r="7" />
-                <text class="sewer-lbl" x="648" y="274.6">P04</text>
+                <path class="obj sewer sewer-dwa" data-info="Streng D01–D02|Riolering|Afvalwater (DWA), beton 300 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M60 275.1 L260 268.6" />
+                <path class="obj sewer sewer-dwa" data-info="Streng D02–D03|Riolering|Afvalwater (DWA), beton 300 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M260 268.6 L460 262.1" />
+                <path class="obj sewer sewer-dwa" data-info="Streng D03–D04|Riolering|Afvalwater (DWA), beton 300 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M460 262.1 L660 255.6" />
+                <path class="obj sewer sewer-hwa" data-info="Streng H01–H02|Riolering|Hemelwater (HWA), PVC 400 mm|Lengte: 20,0 m|Verhang: 4,0 mm/m" d="M160 278.8 L360 272.3" />
+                <path class="obj sewer sewer-hwa" data-info="Streng H02–H03|Riolering|Hemelwater (HWA), PVC 400 mm|Lengte: 20,0 m|Verhang: 4,0 mm/m" d="M360 272.3 L560 265.8" />
+                <path class="obj sewer sewer-hwa" data-info="Streng H03–H04|Riolering|Hemelwater (HWA), PVC 400 mm|Lengte: 20,0 m|Verhang: 4,0 mm/m" d="M560 265.8 L760 259.3" />
+                <path class="obj sewer sewer-hwa" data-info="Uitlaatleiding|Riolering|Hemelwater naar oppervlaktewater|Materiaal: PVC 400 mm" d="M760 259.3 L760 352" />
+                <path class="obj outlet" data-info="Uitlaat|Riolering|Hemelwater loost op de watergang|BOB: -1,22 m NAP" d="M752 352 L768 352 L760 364 Z" />
+                <path class="sewer-lead" d="M210 293.2 L210 277.2" />
+                <rect class="obj kolk" data-info="Kolk|Riolering|Straatkolk, vangt regenwater op|Aangesloten op: hemelwaterriool" x="206" y="289.2" width="8" height="8" />
+                <path class="sewer-lead" d="M410 286.7 L410 270.7" />
+                <rect class="obj kolk" data-info="Kolk|Riolering|Straatkolk, vangt regenwater op|Aangesloten op: hemelwaterriool" x="406" y="282.7" width="8" height="8" />
+                <path class="sewer-lead" d="M610 280.2 L610 264.2" />
+                <rect class="obj kolk" data-info="Kolk|Riolering|Straatkolk, vangt regenwater op|Aangesloten op: hemelwaterriool" x="606" y="276.2" width="8" height="8" />
+                <circle class="obj manhole manhole-dwa" data-info="Put D01|Riolering|Afvalwater (DWA)|Maaiveld: +0,42 m NAP|BOB: -1,18 m NAP|Diepte: 1,60 m" cx="60" cy="275.1" r="5.5" />
+                <circle class="obj manhole manhole-dwa" data-info="Put D02|Riolering|Afvalwater (DWA)|Maaiveld: +0,38 m NAP|BOB: -1,31 m NAP|Diepte: 1,69 m" cx="260" cy="268.6" r="5.5" />
+                <circle class="obj manhole manhole-dwa" data-info="Put D03|Riolering|Afvalwater (DWA)|Maaiveld: +0,35 m NAP|BOB: -1,44 m NAP|Diepte: 1,79 m" cx="460" cy="262.1" r="5.5" />
+                <circle class="obj manhole manhole-dwa" data-info="Put D04|Riolering|Afvalwater (DWA)|Maaiveld: +0,31 m NAP|BOB: -1,57 m NAP|Diepte: 1,88 m" cx="660" cy="255.6" r="5.5" />
+                <circle class="obj manhole manhole-hwa" data-info="Put H01|Riolering|Hemelwater (HWA)|Maaiveld: +0,40 m NAP|BOB: -0,92 m NAP|Diepte: 1,32 m" cx="160" cy="278.8" r="5.5" />
+                <circle class="obj manhole manhole-hwa" data-info="Put H02|Riolering|Hemelwater (HWA)|Maaiveld: +0,36 m NAP|BOB: -1,00 m NAP|Diepte: 1,36 m" cx="360" cy="272.3" r="5.5" />
+                <circle class="obj manhole manhole-hwa" data-info="Put H03|Riolering|Hemelwater (HWA)|Maaiveld: +0,33 m NAP|BOB: -1,08 m NAP|Diepte: 1,41 m" cx="560" cy="265.8" r="5.5" />
+                <circle class="obj manhole manhole-hwa" data-info="Put H04|Riolering|Hemelwater (HWA)|Maaiveld: +0,30 m NAP|BOB: -1,16 m NAP|Diepte: 1,46 m" cx="760" cy="259.3" r="5.5" />
               </g>
               <g data-group="cad">
                 <g class="dim">
