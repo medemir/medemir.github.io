@@ -130,6 +130,11 @@
     .map .bank { fill: #8a6a45; }
     .map .pipe { fill: none; stroke: #2b6cb0; stroke-width: 3; stroke-dasharray: 10 5; }
     .map .pipe:hover, .map .pipe.sel { stroke: #e3b505; fill: none; }
+    .map .obj:focus:not(:focus-visible) { outline: none; }
+    .map .sewer { fill: none; stroke: #7a4a2a; stroke-width: 3.5; }
+    .map .sewer:hover, .map .sewer.sel { stroke: #e3b505; fill: none; }
+    .map .manhole { fill: var(--white); stroke: #7a4a2a; stroke-width: 2.5; }
+    .map .sewer-lbl { fill: #7a4a2a; font-size: 10px; font-weight: 700; pointer-events: none; }
     .map .valve { fill: #2b6cb0; stroke: var(--white); stroke-width: 1.5; }
     .map .stake { stroke: #c0392b; stroke-width: 2; }
     .map .stake-hit { fill: transparent; }
@@ -296,6 +301,7 @@
               <h3>Beheer</h3>
               <button type="button" class="layer on" data-layer="bor" aria-pressed="true"><i style="background:var(--polder)"></i>BOR</button>
               <button type="button" class="layer" data-layer="kl" aria-pressed="false"><i style="background:#2b6cb0"></i>Leidingen</button>
+              <button type="button" class="layer" data-layer="riool" aria-pressed="false"><i style="background:#7a4a2a"></i>Riolering</button>
             </div>
             <div class="panel-group">
               <h3>Tekenen</h3>
@@ -351,6 +357,19 @@
                 <path class="obj pipe" data-info="Huisaansluiting|Leidingen|Materiaal: PE 32|Diepte: 0,8 m -mv|Adres: Kanaalweg 14" d="M285 276 L285 190" />
                 <rect class="obj valve" data-info="Afsluiter|Leidingen|Type: schuifafsluiter|Diameter: 110 mm" x="381" y="268" width="10" height="10" transform="rotate(45 386 273)" />
               </g>
+              <g data-group="riool" class="off">
+                <path class="obj sewer" data-info="Streng P01–P02|Riolering|Type: gemengd riool, beton 400 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M60 272.1 L260 265.6" />
+                <path class="obj sewer" data-info="Streng P02–P03|Riolering|Type: gemengd riool, beton 400 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M260 265.6 L460 259.1" />
+                <path class="obj sewer" data-info="Streng P03–P04|Riolering|Type: gemengd riool, beton 400 mm|Lengte: 20,0 m|Verhang: 6,5 mm/m" d="M460 259.1 L660 252.6" />
+                <circle class="obj manhole" data-info="Put P01|Riolering|Maaiveld: +0,42 m NAP|BOB: -1,18 m NAP|Diepte: 1,60 m" cx="60" cy="272.1" r="7" />
+                <text class="sewer-lbl" x="48" y="294.1">P01</text>
+                <circle class="obj manhole" data-info="Put P02|Riolering|Maaiveld: +0,38 m NAP|BOB: -1,31 m NAP|Diepte: 1,69 m" cx="260" cy="265.6" r="7" />
+                <text class="sewer-lbl" x="248" y="287.6">P02</text>
+                <circle class="obj manhole" data-info="Put P03|Riolering|Maaiveld: +0,35 m NAP|BOB: -1,44 m NAP|Diepte: 1,79 m" cx="460" cy="259.1" r="7" />
+                <text class="sewer-lbl" x="448" y="281.1">P03</text>
+                <circle class="obj manhole" data-info="Put P04|Riolering|Maaiveld: +0,31 m NAP|BOB: -1,57 m NAP|Diepte: 1,88 m" cx="660" cy="252.6" r="7" />
+                <text class="sewer-lbl" x="648" y="274.6">P04</text>
+              </g>
               <g data-group="cad">
                 <g class="dim">
                   <path class="draw" d="M60 186 L210 186" /><path d="M60 178 L60 194 M210 178 L210 194" />
@@ -373,7 +392,7 @@
         </div>
         <div class="identify" id="identify" aria-live="polite">
           <strong>Probeer maar</strong>
-          <span>klik op een pand, boom, leiding of meetpunt, of zet een laag aan en uit</span>
+          <span>klik op een pand, boom, put of meetpunt, of zet een laag aan en uit</span>
         </div>
       </figure>
     </div>
@@ -426,6 +445,11 @@
                 <h4>Volumes en 3D</h4>
                 <p>Volumeberekeningen van graafwerk en terreinen, ook op basis van drone- en lidardata. Wegontwerp in OpenRoads.</p>
                 <ul class="tags"><li>Civil 3D</li><li>OpenRoads</li><li>Lidar</li></ul>
+              </article>
+              <article class="service">
+                <h4>Rioolmetingen</h4>
+                <p>BOB-metingen, putten en strengen inmeten en rioolinspecties verwerken. Zo klopt je rioolbestand met wat er echt in de grond ligt.</p>
+                <ul class="tags"><li>BOB-metingen</li><li>Rioolinspectie</li><li>Putten en strengen</li></ul>
               </article>
               <article class="service">
                 <h4>Van tekening naar GIS</h4>
