@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <title>Van schakelaar tot processor: hoe je laptop rekent | Enes Demir</title>
+  <meta name="description" content="Logische poorten en de processor in je laptop, simpel uitgelegd: transistors, EN/OF/NIET-poorten om zelf te proberen, optellen in bits en de cyclus van ophalen, ontcijferen en uitvoeren." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>Van schakelaar tot processor: hoe je laptop rekent</h1>
+      <p class="meta">20 oktober 2026 · ongeveer 10 minuten lezen</p>
+
+      <p class="lead">Je laptop kan video's afspelen, kaarten tekenen en puntenwolken draaien. Toch kent hij maar twee dingen: aan en uit, 1 en 0. Hoe kom je van zo'n simpele schakelaar tot een processor? In vier stappen: <strong>schakelaar, poort, rekenen, processor.</strong></p>
+
+      <h2>1. De schakelaar: de transistor</h2>
+      <p>Een transistor is een piepklein schakelaartje zonder bewegende delen. Zet je er een klein stroompje op, dan laat hij stroom door. Zonder dat stroompje niet. Stroom betekent 1, geen stroom betekent 0.</p>
+      <p>Een moderne laptopchip heeft er tientallen miljarden van, elk maar een paar nanometer groot. Duizenden keren kleiner dan de dikte van een haar.</p>
+
+      <h2>2. Logische poorten: schakelaars die beslissen</h2>
+      <p>Zet je een paar transistors slim bij elkaar, dan krijg je een logische poort. Een poort kijkt naar één of twee ingangen en zet de uitgang op 1 of 0 volgens een vaste regel. Klik hieronder op A en B om ze aan en uit te zetten.</p>
+      <div class="gates" id="gates"></div>
+      <p>De NAND-poort is bijzonder: alleen met NAND-poorten kun je élke andere poort bouwen, en dus een hele computer. Een NOT-poort is in een chip twee transistors, een NAND-poort vier.</p>
+
+      <h2>3. Van poorten naar rekenen</h2>
+      <p>Computers rekenen in het tweetallige stelsel: niet met tientallen, maar met tweetallen. Elke plek is twee keer zoveel waard als de plek rechts ervan: 1, 2, 4, 8. Het getal 6 is dus 0110: een 4 en een 2.</p>
+      <p>Optellen gaat net als op de basisschool: per kolom, met een onthouden getal. 1 + 1 is in het tweetallige stelsel 10: je schrijft 0 op en onthoudt 1. Kijk nog eens naar de poorten: de XOR geeft precies de 0 die je opschrijft, en de AND het getal dat je onthoudt. Twee poorten, en je kunt optellen.</p>
+      <p>Zet hieronder de bits aan en uit. De rekenmachine bestaat uit vier van die optel-blokjes naast elkaar.</p>
+      <div class="viz adder" id="adder">
+        <div class="arow"><span class="alab">A</span><span class="bits" data-n="a"></span><span class="dec" id="a-dec"></span></div>
+        <div class="arow"><span class="alab">B</span><span class="bits" data-n="b"></span><span class="dec" id="b-dec"></span></div>
+        <div class="arow carry"><span class="alab">onthouden</span><span class="bits ro" id="c-bits"></span><span class="dec"></span></div>
+        <div class="arow sum"><span class="alab">A + B</span><span class="bits ro" id="s-bits"></span><span class="dec" id="s-dec"></span></div>
+        <p class="weights">waarde per plek: 16 · 8 · 4 · 2 · 1</p>
+      </div>
+      <p>Met hetzelfde idee bouw je ook aftrekken, vergelijken en vermenigvuldigen. Samen heet dat de rekeneenheid, of ALU (Arithmetic Logic Unit).</p>
+
+      <h2>4. De processor: ophalen, ontcijferen, uitvoeren</h2>
+      <p>Een processor doet eigenlijk steeds hetzelfde rondje, miljarden keren per seconde:</p>
+      <ol>
+        <li><strong>Ophalen:</strong> de volgende opdracht uit het geheugen halen.</li>
+        <li><strong>Ontcijferen:</strong> de besturing kijkt wat er moet gebeuren en zet de juiste poorten open.</li>
+        <li><strong>Uitvoeren:</strong> de rekeneenheid rekent, en het resultaat gaat naar een register, een klein geheugenplekje in de processor zelf.</li>
+      </ol>
+      <figure>
+        <img src="media/cpu-cyclus.gif" alt="Animatie: de processor haalt drie opdrachten uit het geheugen (laad 2, tel 3 op, bewaar A), ontcijfert ze en voert ze uit. Het register gaat van 2 naar 5 en de uitkomst 5 wordt in het geheugen gezet." width="720" height="360" style="width:100%;height:auto;border:1px solid var(--line);border-radius:8px" />
+        <figcaption>Een mini-programma van drie opdrachten: 2 + 3 uitrekenen en bewaren. <a href="media/cpu-cyclus.gif" download>Download deze gif</a></figcaption>
+      </figure>
+      <p>Het tempo wordt bepaald door de klok. Een processor van 3 GHz tikt drie miljard keer per seconde. In de tijd van één tik legt licht maar 10 centimeter af. Daarom zitten de onderdelen van een chip zo dicht op elkaar.</p>
+
+      <h2>Wat zit er nog meer in je laptop?</h2>
+      <p>De processor is snel, maar heeft weinig ruimte. Daarom werkt een laptop met lagen geheugen: hoe dichter bij de processor, hoe sneller en hoe kleiner. Zie het als een werkplaats.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Onderdeel</th><th scope="col">Vergelijk het met</th><th scope="col">Hoe snel, ruwweg</th><th scope="col">Als één tik 1 seconde was</th></tr></thead>
+          <tbody>
+            <tr><td>Registers</td><td>Wat je in je handen hebt</td><td>1 kloktik</td><td>1 seconde</td></tr>
+            <tr><td>Cache</td><td>Je bureau</td><td>1 tot 20 nanoseconden</td><td>een paar seconden tot een minuut</td></tr>
+            <tr><td>Werkgeheugen (RAM)</td><td>De kast in de kamer</td><td>zo'n 100 nanoseconden</td><td>ongeveer 5 minuten</td></tr>
+            <tr><td>SSD</td><td>Het archief in de kelder</td><td>zo'n 100 microseconden</td><td>ongeveer 3 dagen</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Een laptop heeft ook meerdere kernen: meerdere processors op één chip die tegelijk aan verschillende taken werken. En er zit een grafische processor (GPU) in, met duizenden kleine, simpele kernen die allemaal tegelijk hetzelfde trucje doen.</p>
+
+      <div class="aside">
+        <h2>Waarom dit voor mijn werk uitmaakt</h2>
+        <p>Een puntenwolk van honderden miljoenen punten past niet zomaar in het werkgeheugen, en dan moet de laptop steeds naar de SSD. Dat is het verschil tussen een paar minuten en een paar uur wachten. Daarom werken programma's voor puntenwolken met tegels en detailniveaus, en laten ze zwaar werk vaak door de GPU doen: duizenden punten tegelijk verschuiven is precies waar die goed in is.</p>
+        <p>Hetzelfde zie je bij Python: een lus die punt voor punt rekent is traag, terwijl NumPy hele reeksen in één keer naar de processor stuurt. Dat scheelt vaak een factor honderd.</p>
+      </div>
+
+      <p class="source">Om verder te lezen: Charles Petzold, Code: The Hidden Language of Computer Hardware and Software; Noam Nisan en Shimon Schocken, The Elements of Computing Systems (het project Nand2Tetris), waarin je van NAND-poorten tot een werkende computer bouwt. De gif en de interactieve poorten zijn van mij.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script>
+  (function () {
+    var GREEN = '#2f6f4e', LINE = '#cdd4d6', INK = '#14213d';
+    var shapes = {
+      AND: '<path d="M60 20H100A30 30 0 0 1 100 80H60Z"/>',
+      OR: '<path d="M55 20Q85 20 100 27Q125 37 140 50Q125 63 100 73Q85 80 55 80Q75 50 55 20Z"/>',
+      XOR: '<path d="M60 20Q88 20 103 27Q127 37 142 50Q127 63 103 73Q88 80 60 80Q80 50 60 20Z"/><path d="M50 20Q70 50 50 80" fill="none"/>',
+      NOT: '<path d="M62 25L122 50L62 75Z"/><circle cx="129" cy="50" r="6"/>',
+      NAND: '<path d="M60 20H96A30 30 0 0 1 96 80H60Z"/><circle cx="133" cy="50" r="6"/>'
+    };
+    var gates = [
+      { n: 'NOT', name: 'NIET', rule: 'Draait het om: 1 wordt 0, 0 wordt 1.', f: function (a) { return a ? 0 : 1; }, one: true },
+      { n: 'AND', name: 'EN', rule: 'Alleen 1 als A én B allebei 1 zijn.', f: function (a, b) { return a & b; } },
+      { n: 'OR', name: 'OF', rule: '1 als A of B (of allebei) 1 is.', f: function (a, b) { return a | b; } },
+      { n: 'XOR', name: 'OF-OF', rule: '1 als precies één van de twee 1 is.', f: function (a, b) { return a ^ b; } },
+      { n: 'NAND', name: 'NIET-EN', rule: 'Het omgekeerde van EN.', f: function (a, b) { return (a & b) ? 0 : 1; } }
+    ];
+    var wrap = document.getElementById('gates');
+    gates.forEach(function (g) {
+      var st = { a: 0, b: 0 };
+      var card = document.createElement('div'); card.className = 'gate';
+      card.innerHTML = '<h3>' + g.n + ' <span>(' + g.name + ')</span></h3><p class="rule">' + g.rule + '</p>' +
+        '<svg viewBox="0 0 200 100" role="img" aria-label="Symbool van de ' + g.n + '-poort"><g class="wires"></g><g fill="#fff" stroke="' + INK + '" stroke-width="2.5">' + shapes[g.n] + '</g><circle class="lamp" cx="182" cy="50" r="11" stroke="' + INK + '" stroke-width="2"/></svg>' +
+        '<div class="ins"><button type="button" data-k="a" aria-pressed="false">A = 0</button>' + (g.one ? '' : '<button type="button" data-k="b" aria-pressed="false">B = 0</button>') + '<span class="out">uit = <b></b></span></div>' +
+        '<table class="tt"><thead><tr><th>A</th>' + (g.one ? '' : '<th>B</th>') + '<th>uit</th></tr></thead><tbody></tbody></table>';
+      wrap.appendChild(card);
+      var tb = card.querySelector('tbody'), rows = [];
+      (g.one ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]]).forEach(function (r) { var tr = document.createElement('tr'); tr.innerHTML = r.map(function (v) { return '<td>' + v + '</td>'; }).join('') + '<td><b>' + g.f(r[0], r[1]) + '</b></td>'; tb.appendChild(tr); rows.push(r); });
+      function draw() {
+        var o = g.f(st.a, st.b), w = card.querySelector('.wires');
+        var ca = st.a ? GREEN : LINE, cb = st.b ? GREEN : LINE, co = o ? GREEN : LINE;
+        w.innerHTML = g.one ? '<path d="M8 50H62" stroke="' + ca + '" stroke-width="5"/><path d="M135 50H171" stroke="' + co + '" stroke-width="5"/>'
+          : '<path d="M8 35H62" stroke="' + ca + '" stroke-width="5"/><path d="M8 65H62" stroke="' + cb + '" stroke-width="5"/><path d="M135 50H171" stroke="' + co + '" stroke-width="5"/>';
+        card.querySelector('.lamp').setAttribute('fill', o ? '#7fd39b' : '#ffffff');
+        card.querySelector('.out b').textContent = o;
+        card.querySelectorAll('.ins button').forEach(function (b) { var k = b.dataset.k; b.textContent = k.toUpperCase() + ' = ' + st[k]; b.setAttribute('aria-pressed', st[k] ? 'true' : 'false'); });
+        rows.forEach(function (r, i) { tb.children[i].classList.toggle('now', r[0] === st.a && (g.one || r[1] === st.b)); });
+      }
+      card.querySelectorAll('.ins button').forEach(function (b) { b.addEventListener('click', function () { st[b.dataset.k] ^= 1; draw(); }); });
+      draw();
+    });
+
+    // Opteller
+    var A = [0, 1, 1, 0], B = [0, 0, 1, 1];
+    function bitsUI(el, arr) {
+      el.innerHTML = '<i></i>';
+      arr.forEach(function (v, i) { var b = document.createElement('button'); b.type = 'button'; b.className = 'bit'; b.addEventListener('click', function () { arr[i] ^= 1; update(); }); el.appendChild(b); });
+    }
+    function val(arr) { return arr.reduce(function (s, v) { return s * 2 + v; }, 0); }
+    function update() {
+      var sum = [], carry = [0, 0, 0, 0, 0], c = 0;
+      for (var i = 3; i >= 0; i--) { var s = A[i] ^ B[i] ^ c; var cn = (A[i] & B[i]) | (c & (A[i] ^ B[i])); sum[i + 1] = s; carry[i] = cn; c = cn; }
+      sum[0] = c;
+      document.querySelectorAll('.bits[data-n="a"] .bit').forEach(function (b, i) { b.textContent = A[i]; b.classList.toggle('on', !!A[i]); b.setAttribute('aria-label', 'bit A ' + (8 >> i) + ': ' + A[i]); });
+      document.querySelectorAll('.bits[data-n="b"] .bit').forEach(function (b, i) { b.textContent = B[i]; b.classList.toggle('on', !!B[i]); b.setAttribute('aria-label', 'bit B ' + (8 >> i) + ': ' + B[i]); });
+      document.getElementById('c-bits').innerHTML = carry.map(function (v) { return '<span class="cb' + (v ? ' on' : '') + '">' + (v ? '1' : '') + '</span>'; }).join('');
+      document.getElementById('s-bits').innerHTML = sum.map(function (v) { return '<span class="sb' + (v ? ' on' : '') + '">' + v + '</span>'; }).join('');
+      document.getElementById('a-dec').textContent = '= ' + val(A); document.getElementById('b-dec').textContent = '= ' + val(B); document.getElementById('s-dec').textContent = '= ' + val(sum);
+    }
+    bitsUI(document.querySelector('.bits[data-n="a"]'), A); bitsUI(document.querySelector('.bits[data-n="b"]'), B); update();
+  })();
+  </script>
+</body>
+</html>
