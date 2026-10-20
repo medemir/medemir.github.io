@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <title>GeoAI: kunstmatige intelligentie voor geodata | Notities, Enes Demir</title>
+  <meta name="description" content="Samenvatting van een reviewpaper over AI-methodes voor geodata: clustering, classificatie, objectdetectie en segmentatie van beelden en puntenwolken." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>GeoAI: kunstmatige intelligentie voor geodata</h1>
+      <p class="meta">Samenvatting van een reviewpaper, oorspronkelijk gelezen op 29 december 2022</p>
+
+      <p class="lead">Hoe wordt AI ingezet om geodata te interpreteren, zoals luchtfoto's, puntenwolken en satellietbeelden? Roberto Pierdicca en Marina Paolanti zochten het uit in een literatuurstudie. Dit zijn mijn aantekeningen.</p>
+
+      <h2>Waar gaat het paper over?</h2>
+      <p>De auteurs bekeken onderzoek uit de periode 2016 tot en met 2021 over AI en geodata, volgens de PRISMA-methode voor systematische reviews. Ze kijken naar vijf soorten data: RGB-beelden, thermische beelden, 3D-puntenwolken, trajecten en hyper- en multispectrale beelden.</p>
+      <p>Ze stellen vier vragen:</p>
+      <ol>
+        <li>Welke AI-methode wordt in de geomatica het meest gebruikt?</li>
+        <li>Bepaalt het soort data welke methode je kiest?</li>
+        <li>Voor welke taken worden geodata gebruikt?</li>
+        <li>Is er een verband tussen toepassingsgebied en soort data?</li>
+      </ol>
+
+      <h2>Wat is geomatica eigenlijk?</h2>
+      <p>Het paper gebruikt de definitie van Gomarasca (2010): geomatica is het automatisch verwerken en beheren van complexe 2D- en 3D-informatie. Je verzamelt, bewaart, combineert, modelleert en analyseert ruimtelijke data uit verschillende bronnen, digitaal en met een bekende nauwkeurigheid. Voor mij een mooie omschrijving van wat ik dagelijks doe.</p>
+
+      <h2>Machine learning en deep learning</h2>
+      <p>Machine learning (ML) is een programma dat beter wordt naarmate het meer ervaring opdoet met een taak. Deep learning (DL) is een tak daarvan die werkt met neurale netwerken, losjes gebaseerd op hoe ons brein informatie verwerkt.</p>
+      <p>Het grootste verschil zie je bij beelden. Bij ML kies je eerst zelf welke kenmerken belangrijk zijn, zoals kleur of vorm, en daarmee train je het model. Bij DL zoekt het netwerk die kenmerken zelf uit en leert het van begin tot eind.</p>
+
+      <h2>De taken die AI uitvoert</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Taak</th><th scope="col">Wat het doet</th><th scope="col">Voorbeeld</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Clustering</th><td>Groepeert punten of objecten die op elkaar lijken, zonder vooraf bekende klassen. Bekende methodes: hiërarchisch (linkage), k-means en spectraal clusteren.</td><td>Gebieden met vergelijkbaar grondgebruik groeperen</td></tr>
+            <tr><th scope="row">Classificatie en voorspelling</th><td>Leert een model dat invoer koppelt aan een vaste set labels, en dat ook nieuwe, onbekende data goed indeelt.</td><td>Boomsoorten of landgebruik herkennen</td></tr>
+            <tr><th scope="row">Objectdetectie</th><td>Vindt objecten in een beeld en zet er een kader omheen. Two-stage modellen werken in stappen van grof naar fijn, one-stage modellen in één keer.</td><td>Defecten in zonnepanelen opsporen</td></tr>
+            <tr><th scope="row">Segmentatie</th><td>Deelt een beeld of puntenwolk op in stukken die bij elkaar horen. Semantische segmentatie geeft elke pixel of elk punt een label, ook bij onregelmatige vormen.</td><td>Gebouwdelen of wegmarkeringen uit een puntenwolk halen</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Wat ze vonden</h2>
+      <ul>
+        <li><strong>Deep learning domineert.</strong> Vooral convolutionele neurale netwerken (CNN's) en daarvan afgeleide modellen zoals YOLO en Mask R-CNN.</li>
+        <li><strong>Het soort data stuurt de keuze.</strong> Voor puntenwolken gebruik je netwerken die direct met punten werken, zoals PointNet en DGCNN. Voor foto's en thermische beelden vooral CNN's. In één studie naar hyperspectrale data scoorde random forest, een klassieke ML-methode, juist het best.</li>
+        <li><strong>Toepassingen</strong> lopen van natuurbeheer en leefbaarheid in stad en platteland tot rampenbestrijding en het documenteren van erfgoed.</li>
+      </ul>
+
+      <h2>Wat nog niet goed gaat</h2>
+      <ul>
+        <li>Volledig automatisch verwerken is nog niet betrouwbaar genoeg. Er blijft handwerk of controle nodig.</li>
+        <li>Deep learning is vaak een black box. Je wilt kunnen uitleggen waarom het model iets besluit.</li>
+        <li>Modellen kunnen uitkomsten geven die fysiek niet kunnen. Vakkennis inbouwen helpt daartegen.</li>
+        <li>Je hebt veel gelabelde trainingsdata nodig, en die is duur. Semi-supervised en active learning kunnen dat verminderen.</li>
+      </ul>
+
+      <div class="aside">
+        <h2>Wat ik eruit meeneem</h2>
+        <p>Het punt over handwerk herken ik. Bij een 3D BAG-labproject werkte ik met pointclouddata, en ook daar bleef controle door een mens nodig. AI is dan vooral een hulpmiddel om sneller te zien waar iets niet klopt, niet een vervanging van het controleren zelf.</p>
+      </div>
+
+      <p class="source">Bron: Roberto Pierdicca en Marina Paolanti, <a href="https://gi.copernicus.org/articles/11/195/2022/">GeoAI: a review of artificial intelligence approaches for the interpretation of complex geomatics data</a>, Geoscientific Instrumentation, Methods and Data Systems 11, 195–218, 2022.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

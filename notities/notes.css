@@ -50,3 +50,9 @@ article.note { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
 footer { border-top: 1px solid var(--line); padding: 28px 0; font-size: 0.9rem; color: var(--ink-soft); }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 footer ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
+.note video { width: 100%; height: auto; display: block; background: var(--white); border: 1px solid var(--line); border-radius: 6px; }
+.note figure img.photo { border-radius: 6px; max-height: 460px; object-fit: cover; object-position: 50% 30%; }
+.project-block { border-top: 2px solid var(--ink); padding-top: 8px; margin-top: 56px; }
+.project-block h2 { margin-top: 12px; }
+.facts-line { color: var(--ink-soft); font-size: 0.95rem; margin: -4px 0 16px; }
+kbd { font-family: inherit; font-size: 0.9em; background: var(--white); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }

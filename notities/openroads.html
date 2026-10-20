@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <title>OpenRoads Designer: een terreinmodel uit een puntenwolk | Notities, Enes Demir</title>
+  <meta name="description" content="Werknotitie over het maken van een terreinmodel uit een puntenwolk (.pod) in OpenRoads Designer." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>OpenRoads Designer: een terreinmodel uit een puntenwolk</h1>
+      <p class="meta">Werknotitie</p>
+
+      <p class="lead">In OpenRoads Designer van Bentley heb ik een terreinmodel gemaakt op basis van een puntenwolk in .pod-formaat. Hier schrijf ik in grote lijnen op hoe dat gaat en waar je op moet letten.</p>
+
+      <h2>Wat is OpenRoads Designer?</h2>
+      <p>OpenRoads Designer is software van Bentley voor het ontwerpen van wegen en infrastructuur. Je werkt met een terreinmodel van de bestaande situatie, en daarop ontwerp je wegen, taluds en riolering. Een goed terreinmodel is dus het begin van alles.</p>
+
+      <h2>Van puntenwolk naar terreinmodel</h2>
+      <ol>
+        <li><strong>Puntenwolk koppelen.</strong> Een .pod-bestand is het puntenwolkformaat van Bentley. Je koppelt het aan je ontwerpbestand, net als een referentie.</li>
+        <li><strong>Controleren.</strong> Bekijk of de puntenwolk goed ligt in het juiste coördinatenstelsel, in Nederland meestal RD en NAP.</li>
+        <li><strong>Filteren.</strong> Een puntenwolk bevat ook auto's, bomen en gebouwen. Voor een terreinmodel wil je alleen het maaiveld, dus filter je op de grondpunten. Vaak dun je de punten ook uit, anders wordt het model onnodig zwaar.</li>
+        <li><strong>Terreinmodel maken.</strong> Van de overgebleven punten maak je een terreinmodel, opgebouwd uit driehoeken.</li>
+        <li><strong>Nalopen.</strong> Laat hoogtelijnen zien en zoek naar rare pieken of gaten. Die wijzen meestal op punten die er niet in horen.</li>
+      </ol>
+
+      <div class="aside">
+        <h2>Waar ik op let</h2>
+        <p>Het filteren bepaalt hoe goed je model wordt. Te weinig filteren geeft bulten waar auto's stonden, te veel uitdunnen laat kleine hoogteverschillen verdwijnen, zoals een stoeprand of een greppel. Ik controleer daarom altijd een paar dwarsprofielen voordat ik verder ontwerp of volumes bereken.</p>
+      </div>
+
+      <p class="source">Meer weten over de software: <a href="https://www.bentley.com/software/openroads-designer/">OpenRoads Designer op de website van Bentley</a>.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

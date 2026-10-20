@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <title>Portfolio | Enes Demir</title>
+  <meta name="description" content="Projecten van Enes Demir: een GIS-animatie van de toegang tot elektriciteit, machine learning op geluidsdata, de maatvoering van een glazen dak en een terreinmodel uit een puntenwolk." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>Portfolio</h1>
+      <p class="lead">Een paar projecten waar ik aan heb gewerkt, van een geanimeerde wereldkaart tot de maatvoering van een glazen dak. Werk voor gemeenten en bedrijven kan ik meestal niet laten zien, dit zijn projecten die ik wel mag delen.</p>
+
+      <section class="project-block" id="elektriciteit">
+        <h2>Toegang tot elektriciteit, 1990 tot 2022</h2>
+        <p class="facts-line">GIS-animatie · data van de Wereldbank</p>
+        <figure>
+          <video src="../ezgif.com-webp-to-mp4-converter.mp4" poster="../images/elektriciteit-poster.jpg" controls muted loop playsinline preload="none" width="1920" height="658">Je browser kan deze video niet afspelen.</video>
+          <figcaption>Elk beeld is een jaar. Hoe donkerder het land, hoe kleiner het deel van de bevolking met elektriciteit.</figcaption>
+        </figure>
+        <p>Deze kaart laat zien hoe de toegang tot elektriciteit wereldwijd groeide tussen 1990 en 2022. Ik gebruikte de cijfers van de Wereldbank en kleurde elk land per jaar naar het percentage van de bevolking met stroom.</p>
+        <p>Je ziet vooral in Afrika ten zuiden van de Sahara en delen van Azië dat de toegang lang achterbleef en daarna flink verbeterde. Zo'n animatie maakt een trend van dertig jaar in een halve minuut zichtbaar.</p>
+      </section>
+
+      <section class="project-block" id="machine-learning">
+        <h2>Geluidsopnames classificeren met machine learning</h2>
+        <p class="facts-line">Python · Support Vector Machine en k-means</p>
+        <figure>
+          <video src="../Applied%20Machine%20Learning.webm" poster="../images/ml-poster.jpg" controls preload="none" width="1280" height="604">Je browser kan deze video niet afspelen.</video>
+          <figcaption>Een korte rondleiding door het notebook.</figcaption>
+        </figure>
+        <p>In dit project heb ik 2000 geluidsopnames ingedeeld in vijf klassen. Ik haalde kenmerken uit het geluid en trainde daarmee twee modellen: een Support Vector Machine, die leert van gelabelde voorbeelden, en k-means, dat zelf groepen zoekt.</p>
+        <p>Daarna heb ik gekeken hoe de resultaten veranderen als je andere algoritmes, instellingen of kenmerken kiest. Het werk zit in een Python-notebook met onder andere librosa en scikit-learn.</p>
+      </section>
+
+      <section class="project-block" id="hilltown">
+        <h2>Glazen dak van Hilltown Mall, Izmir</h2>
+        <p class="facts-line">Maatvoering · hoofdlandmeter</p>
+        <figure>
+          <img class="photo" src="../images/roof.jpg" alt="Glazen dakconstructie van winkelcentrum Hilltown in Izmir" loading="lazy" />
+        </figure>
+        <p>Voor dit winkelcentrum was ik hoofdlandmeter bij het plaatsen van het glazen dak. Ik zette zo'n 2000 glas- en aluminiumdelen uit en deed het tekenwerk voor de kozijnen en zes glazen gevelconstructies. Een project waar elke millimeter telde.</p>
+      </section>
+
+      <section class="project-block" id="terreinmodel">
+        <h2>Terreinmodel uit een puntenwolk</h2>
+        <p class="facts-line">OpenRoads Designer · puntenwolk (.pod)</p>
+        <p>In OpenRoads Designer maakte ik een terreinmodel op basis van een puntenwolk. Hoe dat werkt en waar je op let, staat in <a href="openroads.html">mijn notitie over OpenRoads</a>.</p>
+      </section>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>
