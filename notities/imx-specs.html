@@ -27,7 +27,7 @@
     <article class="note">
       <a class="back" href="index.html">Alle notities</a>
       <h1>Hoe werkt een INS? Specificaties en praktijk, simpel uitgelegd</h1>
-      <p class="meta">20 oktober 2026 · ongeveer 15 minuten lezen</p>
+      <p class="meta">20 oktober 2026 · ongeveer 18 minuten lezen</p>
 
       <p class="lead">Een productblad van een inertiële sensor staat vol met termen als °/√hr, µg en CEP. Wat zeggen die getallen eigenlijk? Ik neem de specs van de IMX-6 van Inertial Sense als voorbeeld en vertaal ze naar iets wat je je kunt voorstellen. Daarna laat ik zien hoe een INS in de praktijk werkt: van opstarten tot nabewerken.</p>
       <p>Wat een IMU, AHRS en INS zijn, schreef ik al in <a href="imu-ahrs-ins.html">een eerdere notitie</a>. Kort gezegd: een gyroscoop meet draaiing, een versnellingsmeter meet versnelling, en GNSS geeft de positie. De IMX-6 heeft ze allemaal, plus een magnetometer en een luchtdruksensor.</p>
@@ -231,18 +231,72 @@
         </ul>
       </div>
 
-      <h2>De rest van het productblad in gewone taal</h2>
+      <h2>Het productblad regel voor regel</h2>
+      <p>Op het productblad staan twee tabellen: <em>Attitude Performance</em> (hoe goed de stand bepaald wordt) en <em>Sensor Suite</em> (wat elke losse sensor kan). Hieronder elke regel in gewone taal. Eerst de eenheden, want daar zit de meeste verwarring.</p>
+
+      <h3 class="sub">De eenheden</h3>
       <div class="table-wrap">
         <table>
-          <thead><tr><th scope="col">Spec</th><th scope="col">Waarde</th><th scope="col">Wat het betekent</th></tr></thead>
+          <thead><tr><th scope="col">Eenheid</th><th scope="col">Spreek uit als</th><th scope="col">Wat het is</th></tr></thead>
           <tbody>
-            <tr><td>Bereik gyroscoop</td><td>±4000 °/s</td><td>Meet tot ruim 11 rondjes per seconde, genoeg voor een tollende drone</td></tr>
-            <tr><td>Bereik versnellingsmeter</td><td>±16 g</td><td>Meet tot zestien keer de zwaartekracht, dus ook harde schokken</td></tr>
-            <tr><td>Niet-lineariteit</td><td>0,02 % van het bereik</td><td>Hoe recht de meting blijft over het hele bereik</td></tr>
-            <tr><td>Uitlijnfout</td><td>0,03°</td><td>Hoe scheef de sensoren in de behuizing kunnen zitten</td></tr>
-            <tr><td>Bias over temperatuur</td><td>0,3 °/s en 3,7 mg, van −40 tot 85 °C</td><td>Hoeveel de bias verschuift als het koud of warm wordt; daarom wordt er gecorrigeerd voor temperatuur</td></tr>
-            <tr><td>Magnetometer</td><td>±2500 µT, 50 Hz</td><td>Een elektronisch kompas; het aardmagneetveld is ongeveer 50 µT</td></tr>
-            <tr><td>Luchtdruk</td><td>30–125 kPa, resolutie 0,03 Pa</td><td>Meet hoogteverschillen; volgens de fabrikant komt dat neer op zo'n 2 cm</td></tr>
+            <tr><td>°</td><td>graad</td><td>Een hoek. Een rondje is 360°.</td></tr>
+            <tr><td>°/s, dps</td><td>graden per seconde</td><td>Hoe snel iets draait. 360 °/s is één rondje per seconde. Dps is hetzelfde (degrees per second).</td></tr>
+            <tr><td>°/hr</td><td>graden per uur</td><td>Een heel langzame draaiing. Gebruikt voor de bias: hoeveel graden je richting per uur wegloopt.</td></tr>
+            <tr><td>√hr, √Hz</td><td>wortel uur, wortel hertz</td><td>Hoort bij ruis. Ruis middelt deels weg, daardoor groeit hij met de wortel van de tijd, niet gewoon met de tijd.</td></tr>
+            <tr><td>g, mg, µg</td><td>g, milli-g, micro-g</td><td>Versnelling, uitgedrukt in de zwaartekracht. 1 g = 9,81 m/s². 1 mg is een duizendste g, 1 µg een miljoenste g.</td></tr>
+            <tr><td>m/s</td><td>meter per seconde</td><td>Snelheid. 1 m/s is 3,6 km/u.</td></tr>
+            <tr><td>µT</td><td>microtesla</td><td>Sterkte van een magneetveld. Het aardmagneetveld is in Nederland ongeveer 50 µT.</td></tr>
+            <tr><td>Pa, kPa</td><td>pascal, kilopascal</td><td>Luchtdruk. Op zeeniveau is dat ongeveer 101 kPa. Per meter hoger daalt de druk zo'n 12 Pa.</td></tr>
+            <tr><td>Hz, kHz</td><td>hertz, kilohertz</td><td>Keer per seconde. 1 kHz is 1000 keer per seconde.</td></tr>
+            <tr><td>% FSR</td><td>procent van het volle bereik</td><td>FSR is full scale range: een fout uitgedrukt als deel van het grootste meetbare getal.</td></tr>
+            <tr><td>RMS</td><td>root mean square</td><td>Een soort gemiddelde fout. Ongeveer twee op de drie metingen zitten binnen deze waarde.</td></tr>
+            <tr><td>CEP</td><td>circular error probable</td><td>De straal van een cirkel waar de helft van de posities binnen valt.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">Tabel 1: Attitude Performance</h3>
+      <p>Attitude betekent de stand: hoe de sensor gekanteld en gedraaid staat.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Op het productblad</th><th scope="col">Waarde</th><th scope="col">Simpel gezegd</th></tr></thead>
+          <tbody>
+            <tr><td>INS Dynamic Roll/Pitch (RMS)</td><td>0,03°</td><td>Kanteling naar links/rechts en voor/achter, tijdens beweging met GNSS</td></tr>
+            <tr><td>Static Roll/Pitch (RMS)</td><td>0,1°</td><td>Dezelfde kanteling, maar stilstaand. Dan helpt alleen de zwaartekracht</td></tr>
+            <tr><td>INS Dynamic Heading (RMS)</td><td>0,09°</td><td>De kijkrichting tijdens beweging, met een externe GNSS-ontvanger</td></tr>
+            <tr><td>Static Heading w/ Dual Compass (RMS)</td><td>0,4°</td><td>Kijkrichting stilstaand, met twee GNSS-antennes op 1 meter van elkaar. "Compass" is hier dus geen magnetisch kompas</td></tr>
+            <tr><td>Static Heading w/ Magnetometer (RMS)</td><td>1,0°</td><td>Kijkrichting stilstaand met alleen het elektronische kompas</td></tr>
+            <tr><td>Position w/ RTK-GNSS (CEP)</td><td>3 cm</td><td>Positie met RTK-correcties: de helft van de metingen valt binnen 3 cm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">Tabel 2: Sensor Suite</h3>
+      <p>Hier staan de vier sensoren naast elkaar: gyroscoop (draaiing), versnellingsmeter (versnelling), magnetometer (kompas) en luchtdruk (hoogte). Per regel wat het betekent en de waarden.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Op het productblad</th><th scope="col">Simpel gezegd</th><th scope="col">Waarden</th></tr></thead>
+          <tbody>
+            <tr><td>Operating Range</td><td>Het grootste wat de sensor kan meten. Meer dan dit en de meting zit "vol".</td><td>Gyro ±4000 °/s (ruim 11 rondjes per seconde)<br>Versnelling ±16 g<br>Kompas ±2500 µT<br>Druk 30–125 kPa (van zeeniveau tot zo'n 9 km hoogte)</td></tr>
+            <tr><td>In-Run Bias Stability</td><td>Hoe stil de nulfout blijft staan tijdens gebruik. Hoe lager, hoe minder je meting wegloopt.</td><td>Gyro &lt; 0,95 °/uur<br>Versnelling &lt; 4,0 µg</td></tr>
+            <tr><td>Random Walk</td><td>Hoeveel de opgetelde ruis na verloop van tijd uitmaakt. Zie de animatie bij punt 3.</td><td>Gyro 0,10 °/√uur<br>Versnelling 0,011 m/s/√uur</td></tr>
+            <tr><td>Non-linearity</td><td>Hoe recht de meting blijft. Een sensor die bij kleine waarden klopt, kan bij grote waarden iets afwijken.</td><td>0,02 % van het bereik: bij de gyro maximaal zo'n 0,8 °/s, bij de versnellingsmeter zo'n 3 mg</td></tr>
+            <tr><td>Noise Density</td><td>Hoeveel ruis er op elke meting zit. Per √Hz, omdat de ruis groter wordt als je snellere metingen wilt.</td><td>Gyro 1,3 mdps/√Hz (milligraden per seconde)<br>Versnelling 27 µg/√Hz<br>Kompas 20 µT/√Hz<br>Druk 0,18 Pa/√Hz</td></tr>
+            <tr><td>Bias Error over −40 °C tot 85 °C</td><td>Hoeveel de nulfout verschuift als de temperatuur verandert, over het hele bereik van vrieskou tot hitte. Veel groter dan de in-run stabiliteit, dus de sensor moet hiervoor gecorrigeerd worden.</td><td>Gyro 0,3 °/s<br>Versnelling 3,7 mg</td></tr>
+            <tr><td>Max Output Rate</td><td>Hoe vaak per seconde je een meting krijgt.</td><td>Gyro en versnelling 1 kHz (1000×)<br>Kompas en druk 50 Hz (50×)</td></tr>
+            <tr><td>Bandwidth</td><td>Hoe snelle veranderingen de sensor nog kan volgen. Snellere trillingen worden weggefilterd.</td><td>Gyro 539 Hz<br>Versnelling 416 Hz<br>Kompas 50 Hz<br>Druk 5 Hz</td></tr>
+            <tr><td>Alignment Error</td><td>Hoe scheef de meetassen in de behuizing kunnen zitten.</td><td>Gyro en versnelling 0,03°<br>Kompas 0,05°</td></tr>
+            <tr><td>Sampling Rate</td><td>Hoe vaak de sensor intern meet. Dat is vaker dan wat eruit komt: de extra metingen worden gemiddeld, zodat er minder ruis overblijft. Dat heet oversampling.</td><td>Gyro 8 kHz<br>Versnelling 4 kHz<br>Kompas 300 Hz<br>Druk 200 Hz</td></tr>
+            <tr><td>Resolution</td><td>Het kleinste stapje dat de sensor kan laten zien. Bij gyro en versnelling geldt dat bij 1000 metingen per seconde, na oversampling.</td><td>Gyro 0,0076 °/s<br>Versnelling 122 µg<br>Kompas 0,3 µT<br>Druk 0,03 Pa (volgens de fabrikant 2 cm hoogte)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">Overige specs</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Spec</th><th scope="col">Waarde</th><th scope="col">Simpel gezegd</th></tr></thead>
+          <tbody>
             <tr><td>Stroomverbruik</td><td>105–120 mW bij 3,3 V</td><td>Minder dan een tiende van een gemiddeld ledlampje</td></tr>
             <tr><td>Aansluitingen</td><td>USB, 3× UART, SPI</td><td>Standaard manieren om de data naar een computer of controller te sturen</td></tr>
             <tr><td>Uitvoer</td><td>Quaternionen, Euler-hoeken, DCM</td><td>Drie manieren om dezelfde stand op te schrijven; Euler-hoeken zijn roll, pitch en heading</td></tr>
