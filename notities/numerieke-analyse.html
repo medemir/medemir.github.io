@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <title>Numerieke analyse in de geomatica, simpel uitgelegd | Enes Demir</title>
+  <meta name="description" content="Numerieke analyse voor geomatica in gewone taal: afronden van coördinaten, foutvoortplanting, kleinste kwadraten, interpoleren, iteratief oplossen en volumes berekenen. Met gif en voorbeelden om zelf te proberen." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>Numerieke analyse in de geomatica, simpel uitgelegd</h1>
+      <p class="meta">20 oktober 2026 · ongeveer 12 minuten lezen</p>
+
+      <p class="lead">Een computer kan niet exact rekenen. Hij rondt af, benadert en probeert. Numerieke analyse is het vak dat uitzoekt hoe je met die benaderingen toch betrouwbare antwoorden krijgt, en hoe groot de fout is. In de geomatica kom je het overal tegen: van coördinaten opslaan tot een netwerk vereffenen of een volume berekenen.</p>
+      <p>Ik kreeg dit vak tijdens mijn studie Geomatics Engineering. Hieronder de onderwerpen die ik in de praktijk het vaakst terugzie, elk met een voorbeeld om zelf te proberen.</p>
+
+      <h2>1. Afronden: waarom je coördinaten centimeters kwijt kunnen raken</h2>
+      <p>Een computer bewaart een kommagetal met een vast aantal cijfers. Bij het veelgebruikte 32-bits formaat (float32) zijn dat er ongeveer zeven. Voor een getal als 1,234567 is dat ruim genoeg. Maar een RD-coördinaat als 557460,456 heeft al zes cijfers vóór de komma. Dan blijft er bijna niets over voor de millimeters.</p>
+      <div class="viz" id="v-float">
+        <div class="floatform">
+          <label for="fx">RD X (m)</label><input id="fx" type="text" inputmode="decimal" value="233000,123">
+          <label for="fy">RD Y (m)</label><input id="fy" type="text" inputmode="decimal" value="557460,456">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col"></th><th scope="col">Ingevoerd</th><th scope="col">Opgeslagen als float32</th><th scope="col">Verschil</th><th scope="col">Kleinste stap</th></tr></thead>
+            <tbody id="ftab"></tbody>
+          </table>
+        </div>
+      </div>
+      <p>Bij de Y-coördinaat ben je zo bijna 2 centimeter kwijt, alleen door het opslaan. De kleinste stap die float32 daar nog kan maken, is ruim 6 centimeter. Daarom slaat het LAS-formaat voor puntenwolken coördinaten op als gehele getallen, met een schaalfactor en een verschuiving in de kop van het bestand. En daarom trekken veel programma's eerst een vaste waarde van je coördinaten af voordat ze gaan rekenen.</p>
+
+      <h2>2. Foutvoortplanting: hoe meetfouten doorwerken</h2>
+      <p>Elke meting heeft een onzekerheid. Reken je ermee verder, dan neemt de uitkomst die onzekerheid mee. Een total station meet een afstand en een hoek. Een fout in de afstand schuift het punt in de kijkrichting, een fout in de hoek schuift het punt opzij. En die laatste wordt groter naarmate het punt verder weg ligt.</p>
+      <div class="viz" id="v-prop">
+        <canvas width="680" height="300" aria-label="Simulatie van 400 metingen van één punt met een total station. De punten vormen een ellips: smal in de kijkrichting en breder opzij naarmate de afstand of de hoekfout groter is."></canvas>
+        <div class="slider-row">
+          <label for="pd">Afstand tot het punt <b id="pd-v"></b></label><input type="range" id="pd" min="10" max="500" step="10" value="150">
+          <label for="ps">Onzekerheid afstandsmeting <b id="ps-v"></b></label><input type="range" id="ps" min="1" max="10" step="0.5" value="2">
+          <label for="pa">Onzekerheid hoekmeting <b id="pa-v"></b></label><input type="range" id="pa" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        <div class="viz-bar"><span>In de kijkrichting <b data-o="l">–</b> · opzij <b data-o="t">–</b></span><span>400 gesimuleerde metingen, 1σ-ellips</span></div>
+      </div>
+      <p>De regel daarachter heet de wet van foutvoortplanting. Opzij geldt: fout = afstand × hoekfout (in radialen). Bij 1 mgon op 100 meter is dat 1,6 mm. Daarom zet je een total station liever dicht bij de punten die het nauwkeurigst moeten.</p>
+
+      <h2>3. Kleinste kwadraten: het hart van het vereffenen</h2>
+      <p>Landmeters meten bewust meer dan strikt nodig is. Dat geeft controle, maar ook een probleem: de metingen spreken elkaar altijd een beetje tegen. Welke uitkomst is dan de beste? Het antwoord dat Gauss en Legendre rond 1800 gaven: kies de oplossing waarbij de som van de kwadraten van alle afwijkingen het kleinst is.</p>
+      <figure>
+        <img src="media/kleinste-kwadraten.gif" alt="Animatie: een lijn draait en schuift tussen meetpunten tot de som van de rode kwadraten van de afwijkingen het kleinst is." width="720" height="360" style="width:100%;height:auto;border:1px solid var(--line);border-radius:8px" />
+        <figcaption>De beste lijn heeft de kleinste rode vierkantjes. <a href="media/kleinste-kwadraten.gif" download>Download deze gif</a></figcaption>
+      </figure>
+      <p>Bij het vereffenen van een meetnet of een waterpassing gebeurt precies hetzelfde, alleen met veel meer onbekenden tegelijk. Maar kleinste kwadraten heeft een zwakke plek: één grove meetfout trekt de hele oplossing scheef. Probeer het hieronder.</p>
+      <div class="viz" id="v-ls">
+        <canvas width="680" height="280" aria-label="Meetpunten met een best passende lijn. Met een grove fout erbij kantelt de lijn duidelijk naar die ene foute meting toe."></canvas>
+        <div class="key"><span><i style="background:#2f6f4e"></i>lijn zonder fout</span><span><i style="background:#c0392b"></i>lijn met de grove fout</span></div>
+        <div class="viz-bar"><span>Grootste afwijking <b data-o="r">–</b></span><button class="replay" type="button" id="ls-btn" aria-pressed="false">Voeg een grove fout toe</button></div>
+      </div>
+      <p>Kwadrateren maakt grote afwijkingen extra zwaar: een fout van 10 telt honderd keer zo zwaar als een fout van 1. Daarom kijk je na een vereffening altijd naar de grootste afwijkingen en test je op grove fouten. In Nederland gebeurt dat volgens de Delftse methode van Baarda, met toetsen die per meting laten zien of hij verdacht is.</p>
+
+      <h2>4. Interpoleren: hoogtes tussen de meetpunten</h2>
+      <p>Je meet hoogtes op losse punten, maar je wilt een doorlopend terreinmodel. Dan moet je ertussen schatten: interpoleren. De simpelste manier is een rechte lijn tussen twee buurpunten, of in 2D een driehoek tussen drie punten (een TIN). Dat lijkt grof, maar is vaak verrassend goed.</p>
+      <p>De verleiding is om één vloeiende formule door alle punten te leggen. Hieronder zie je waarom dat gevaarlijk is.</p>
+      <div class="viz" id="v-interp">
+        <canvas width="680" height="260" aria-label="Negen gemeten hoogtes langs een profiel, met een talud in het midden. Een lineaire interpolatie volgt de punten netjes. Eén polynoom door alle punten gaat door elk punt, maar schiet aan de randen ver omhoog en omlaag."></canvas>
+        <div class="key"><span><i style="background:#14213d;height:8px;width:8px;border-radius:50%"></i>gemeten hoogte</span><span><i style="background:#2f6f4e"></i>rechte lijnen tussen de punten</span><span><i style="background:#c0392b"></i>één polynoom door alle punten</span></div>
+      </div>
+      <p>De rode lijn gaat keurig door elk meetpunt, maar schiet aan de randen alle kanten op. Dat heet het verschijnsel van Runge. In een terreinmodel betekent het heuvels en kuilen die er niet zijn. De les: kies een methode die alleen naar de buren kijkt, zoals lineaire interpolatie, een TIN, inverse afstandsweging of kriging.</p>
+
+      <h2>5. Iteratief oplossen: steeds een beetje beter</h2>
+      <p>Sommige vergelijkingen kun je niet in één keer oplossen. Dan gok je, kijkt hoe ver je ernaast zit, en verbetert je gok. De bekendste methode is die van Newton: je trekt een raaklijn aan de kromme en kijkt waar die de nul raakt. Dat punt is je nieuwe gok.</p>
+      <p>Een GNSS-ontvanger doet dit elke seconde. De afstanden tot de satellieten hangen niet-lineair af van je positie, dus de ontvanger begint met een ruwe gok en verbetert die een paar keer tot de positie niet meer verandert. Hieronder het principe met een simpel voorbeeld: de wortel uit 2 zoeken.</p>
+      <div class="viz" id="v-newton">
+        <canvas width="680" height="260" aria-label="De kromme x kwadraat min 2 met raaklijnen. Bij elke stap komt de schatting dichter bij de wortel uit 2, ongeveer 1,41421."></canvas>
+        <div class="viz-bar"><span>Stap <b data-o="k">0</b> · schatting <b data-o="x">2</b> · fout <b data-o="e">–</b></span><span style="display:flex;gap:8px"><button class="replay" type="button" id="nw-next">Volgende stap</button><button class="replay" type="button" id="nw-reset">Opnieuw</button></span></div>
+      </div>
+      <p>Na drie stappen klopt de schatting al tot op vijf decimalen. Dat is de kracht van Newton: het aantal goede cijfers verdubbelt ongeveer bij elke stap, zolang je eerste gok niet te ver weg ligt.</p>
+
+      <h2>6. Numeriek integreren: volumes berekenen</h2>
+      <p>Bij grondwerk wil je weten hoeveel kuub er weg moet. De vorm van het terrein is geen nette formule, dus je benadert het: je knipt het op in stukjes en telt die op. Bij de trapeziumregel verbind je de gemeten punten met rechte lijnen. Hoe meer stukjes, hoe kleiner de fout.</p>
+      <div class="viz" id="v-trap">
+        <canvas width="680" height="260" aria-label="Een gebogen terreinprofiel met daaronder trapeziums. Met meer trapeziums sluit de benadering beter aan en wordt de fout in de oppervlakte kleiner."></canvas>
+        <div class="slider-row">
+          <label for="tn">Aantal stukjes <b id="tn-v"></b></label><input type="range" id="tn" min="1" max="24" step="1" value="3">
+        </div>
+        <div class="viz-bar"><span>Oppervlakte benaderd <b data-o="a">–</b> · echt <b data-o="t">–</b> · fout <b data-o="e">–</b></span></div>
+      </div>
+      <p>Dezelfde gedachte zit achter de methode van gemiddelde eindoppervlakten in grondwerk: je meet dwarsprofielen, berekent hun oppervlakte en vermenigvuldigt het gemiddelde van twee buren met de afstand ertussen. Software als Civil 3D doet het met driehoeken tussen twee terreinmodellen, maar het principe is gelijk: kleine stukjes optellen.</p>
+
+      <div class="aside">
+        <h2>Wat ik eruit meeneem</h2>
+        <ul>
+          <li>Elke uitkomst is een benadering. De vraag is niet óf er een fout in zit, maar hoe groot.</li>
+          <li>Kijk naar je getallen voordat je rekent. Grote coördinaten in float32, een tijdkolom die terugspringt: kleine dingen met grote gevolgen.</li>
+          <li>Meet overtallig en vereffen, maar controleer altijd de grootste afwijkingen. Kleinste kwadraten verbergt een grove fout niet, hij smeert hem uit.</li>
+          <li>Simpel is vaak beter: rechte lijnen tussen buurpunten zijn betrouwbaarder dan één ingewikkelde formule door alles heen.</li>
+        </ul>
+      </div>
+
+      <p class="source">Om verder te lezen: Charles D. Ghilani, Adjustment Computations: Spatial Data Analysis (Wiley); Richard L. Burden en J. Douglas Faires, Numerical Analysis; W. Baarda, A Testing Procedure for Use in Geodetic Networks (Nederlandse Commissie voor Geodesie, 1968). De gif en voorbeelden zijn van mij.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script>
+  (function () {
+    var INK = '#14213d', SOFT = '#46506a', LINE = '#cdd4d6', GREEN = '#2f6f4e', RED = '#c0392b', PAPER = '#f6f7f4';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function nl(v, d) { return v.toLocaleString('nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+    function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
+    function gauss(r) { var u = r() || 1e-9, v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+    function font(ctx, s, w) { ctx.font = (w || 400) + ' ' + s + 'px Archivo, sans-serif'; }
+
+
+    function canvas(id) { var cv = document.querySelector('#' + id + ' canvas'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height, d = window.devicePixelRatio || 1; cv.width = W * d; cv.height = H * d; ctx.scale(d, d); return { ctx: ctx, W: W, H: H }; }
+    function outs(id) { var o = {}; document.querySelectorAll('#' + id + ' [data-o]').forEach(function (e) { o[e.dataset.o] = e; }); return o; }
+    function pathXY(ctx, xs, ys, col, w, dash) { ctx.strokeStyle = col; ctx.lineWidth = w || 2; ctx.setLineDash(dash || []); ctx.beginPath(); for (var i = 0; i < xs.length; i++) { if (i) ctx.lineTo(xs[i], ys[i]); else ctx.moveTo(xs[i], ys[i]); } ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1; }
+
+    // 1. float32
+    (function () {
+      var fx = document.getElementById('fx'), fy = document.getElementById('fy'), tb = document.getElementById('ftab'), f32 = new Float32Array(1);
+      function parse(s) { return parseFloat(String(s).replace(/\s/g, '').replace(',', '.')); }
+      function spacing(v) { f32[0] = v; var a = f32[0], b = new Float32Array([a]), i = new Int32Array(b.buffer); i[0] += 1; return Math.abs(b[0] - a); }
+      function row(lab, v) {
+        if (!isFinite(v)) return '<tr><th scope="row">' + lab + '</th><td colspan="4">Geen geldig getal</td></tr>';
+        f32[0] = v; var s = f32[0], d = (s - v) * 1000;
+        return '<tr><th scope="row">' + lab + '</th><td>' + nl(v, 3) + '</td><td>' + nl(s, 4) + '</td><td><b>' + (d >= 0 ? '+' : '') + nl(d, 1) + ' mm</b></td><td>' + nl(spacing(v) * 1000, 1) + ' mm</td></tr>';
+      }
+      function draw() { tb.innerHTML = row('X', parse(fx.value)) + row('Y', parse(fy.value)); }
+      fx.addEventListener('input', draw); fy.addEventListener('input', draw); draw();
+    })();
+
+    // 2. foutvoortplanting
+    (function () {
+      var c = canvas('v-prop'), ctx = c.ctx, W = c.W, H = c.H, o = outs('v-prop');
+      var pd = document.getElementById('pd'), ps = document.getElementById('ps'), pa = document.getElementById('pa');
+      var r = rng(21), N = []; for (var i = 0; i < 400; i++) N.push([gauss(r), gauss(r)]);
+      function draw() {
+        var d = +pd.value, sd = +ps.value, sa = +pa.value, st = d * sa * 1e-3 * Math.PI / 200 * 1000; // mm
+        document.getElementById('pd-v').textContent = d + ' m'; document.getElementById('ps-v').textContent = nl(sd, 1) + ' mm'; document.getElementById('pa-v').textContent = nl(sa, 1) + ' mgon';
+        ctx.clearRect(0, 0, W, H);
+        // instrument links, punt rechts; inzet met schaal in mm
+        var ix = 40, iy = H / 2, cx = 470, cy = H / 2, scale = 110 / 25; // 25 mm = 110 px
+        ctx.strokeStyle = LINE; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(ix, iy); ctx.lineTo(cx - 130, cy); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = INK; ctx.beginPath(); ctx.moveTo(ix - 10, iy + 14); ctx.lineTo(ix + 10, iy + 14); ctx.lineTo(ix, iy - 4); ctx.fill(); font(ctx, 12, 600); ctx.fillText('total station', ix - 30, iy + 32);
+        font(ctx, 12); ctx.fillStyle = SOFT; ctx.fillText(d + ' m (niet op schaal)', ix + 90, iy - 10);
+        ctx.strokeStyle = LINE; ctx.strokeRect(cx - 130, cy - 130, 260, 260);
+        ctx.strokeStyle = '#eef0f1'; ctx.beginPath(); ctx.moveTo(cx - 130, cy); ctx.lineTo(cx + 130, cy); ctx.moveTo(cx, cy - 130); ctx.lineTo(cx, cy + 130); ctx.stroke();
+        ctx.save(); ctx.beginPath(); ctx.rect(cx - 130, cy - 130, 260, 260); ctx.clip();
+        ctx.fillStyle = GREEN; ctx.globalAlpha = 0.45;
+        N.forEach(function (n) { ctx.beginPath(); ctx.arc(cx + n[0] * sd * scale, cy + n[1] * st * scale, 1.8, 0, 7); ctx.fill(); });
+        ctx.globalAlpha = 1; ctx.strokeStyle = RED; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy, Math.max(sd * scale, 0.5), Math.max(st * scale, 0.5), 0, 0, 7); ctx.stroke(); ctx.lineWidth = 1;
+        ctx.restore();
+        font(ctx, 11); ctx.fillStyle = SOFT; ctx.fillText('vak van 6 × 6 cm rond het punt', cx - 130, cy + 148);
+        ctx.fillStyle = INK; ctx.fillRect(cx + 70, cy + 120, 10 * scale, 4); ctx.fillText('1 cm', cx + 70, cy + 114);
+        o.l.textContent = nl(sd, 1) + ' mm'; o.t.textContent = nl(st, 1) + ' mm';
+      }
+      [pd, ps, pa].forEach(function (e) { e.addEventListener('input', draw); }); draw();
+    })();
+
+    // 3. kleinste kwadraten met grove fout
+    (function () {
+      var c = canvas('v-ls'), ctx = c.ctx, W = c.W, H = c.H, o = outs('v-ls'), btn = document.getElementById('ls-btn'), on = false;
+      var r = rng(8), P = []; for (var i = 0; i < 12; i++) { var x = 0.4 + i * 0.58; P.push([x, 1 + 0.5 * x + 0.25 * gauss(r)]); }
+      var bad = [5.6, 0.3];
+      function fit(pts) { var n = pts.length, mx = 0, my = 0; pts.forEach(function (p) { mx += p[0]; my += p[1]; }); mx /= n; my /= n; var sxy = 0, sxx = 0; pts.forEach(function (p) { sxy += (p[0] - mx) * (p[1] - my); sxx += (p[0] - mx) * (p[0] - mx); }); var b = sxy / sxx; return [my - b * mx, b]; }
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var x0 = 30, x1 = W - 20, yb = H - 20, yt = 20, XM = 7.2, YM = 5.5;
+        function X(x) { return x0 + (x1 - x0) * x / XM; } function Y(y) { return yb - (yb - yt) * y / YM; }
+        ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(x0, yb); ctx.lineTo(x1, yb); ctx.moveTo(x0, yb); ctx.lineTo(x0, yt); ctx.stroke();
+        var f0 = fit(P), pts = on ? P.concat([bad]) : P, f1 = fit(pts);
+        ctx.strokeStyle = GREEN; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(X(0), Y(f0[0])); ctx.lineTo(X(XM), Y(f0[0] + f0[1] * XM)); ctx.stroke();
+        if (on) { ctx.strokeStyle = RED; ctx.beginPath(); ctx.moveTo(X(0), Y(f1[0])); ctx.lineTo(X(XM), Y(f1[0] + f1[1] * XM)); ctx.stroke(); }
+        ctx.lineWidth = 1; ctx.fillStyle = INK;
+        P.forEach(function (p) { ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 5, 0, 7); ctx.fill(); });
+        if (on) { ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(X(bad[0]), Y(bad[1]), 7, 0, 7); ctx.fill(); font(ctx, 12, 700); ctx.fillText('grove fout', X(bad[0]) + 12, Y(bad[1]) + 4); }
+        var mr = 0, mi = -1; pts.forEach(function (p, i) { var rr = Math.abs(p[1] - (f1[0] + f1[1] * p[0])); if (rr > mr) { mr = rr; mi = i; } });
+        o.r.textContent = nl(mr, 2) + (on && mi === pts.length - 1 ? ', bij de foute meting' : '');
+        btn.textContent = on ? 'Haal de grove fout weg' : 'Voeg een grove fout toe'; btn.setAttribute('aria-pressed', on);
+      }
+      btn.addEventListener('click', function () { on = !on; draw(); }); draw();
+    })();
+
+    // 4. interpolatie
+    (function () {
+      var c = canvas('v-interp'), ctx = c.ctx, W = c.W, H = c.H;
+      var P = [[0, 2.0], [1, 2.1], [2, 2.0], [3, 2.2], [4, 4.8], [5, 5.0], [6, 4.9], [7, 5.0], [8, 4.9]];
+      var x0 = 40, x1 = W - 20, yb = H - 24, yt = 16, XM = 8, ymin = -1, ymax = 8;
+      function X(x) { return x0 + (x1 - x0) * x / XM; } function Y(y) { return yb - (yb - yt) * (Math.max(ymin, Math.min(ymax, y)) - ymin) / (ymax - ymin); }
+      function lag(x) { var s = 0; for (var i = 0; i < P.length; i++) { var l = 1; for (var j = 0; j < P.length; j++) if (j !== i) l *= (x - P[j][0]) / (P[i][0] - P[j][0]); s += l * P[i][1]; } return s; }
+      font(ctx, 11); ctx.fillStyle = SOFT;
+      [0, 2, 4, 6].forEach(function (v) { ctx.fillText(v + ' m', 4, Y(v) + 4); ctx.strokeStyle = '#eef0f1'; ctx.beginPath(); ctx.moveTo(x0, Y(v)); ctx.lineTo(x1, Y(v)); ctx.stroke(); });
+      var xs = [], ys = []; for (var i = 0; i <= 300; i++) { var x = XM * i / 300; xs.push(X(x)); ys.push(Y(lag(x))); }
+      ctx.save(); ctx.beginPath(); ctx.rect(x0, yt, x1 - x0, yb - yt); ctx.clip(); pathXY(ctx, xs, ys, RED, 2.5); ctx.restore();
+      pathXY(ctx, P.map(function (p) { return X(p[0]); }), P.map(function (p) { return Y(p[1]); }), GREEN, 3);
+      ctx.fillStyle = INK; P.forEach(function (p) { ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 6, 0, 7); ctx.fill(); });
+      ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(x0, yb); ctx.lineTo(x1, yb); ctx.stroke();
+      font(ctx, 11); ctx.fillStyle = SOFT; ctx.fillText('afstand langs het profiel', x1 - 140, H - 6);
+    })();
+
+    // 5. Newton
+    (function () {
+      var c = canvas('v-newton'), ctx = c.ctx, W = c.W, H = c.H, o = outs('v-newton'), steps = [2];
+      for (var i = 0; i < 4; i++) { var x = steps[i]; steps.push(x - (x * x - 2) / (2 * x)); }
+      var k = 0, x0 = 40, x1 = W - 20, yb = H - 30, yt = 16, XA = 0.8, XB = 2.2, YA = -1.5, YB = 2.5;
+      function X(x) { return x0 + (x1 - x0) * (x - XA) / (XB - XA); } function Y(y) { return yb - (yb - yt) * (y - YA) / (YB - YA); }
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(x0, Y(0)); ctx.lineTo(x1, Y(0)); ctx.stroke();
+        font(ctx, 11); ctx.fillStyle = SOFT; [1, 1.5, 2].forEach(function (v) { ctx.fillText(nl(v, 1), X(v) - 8, Y(0) + 16); });
+        var xs = [], ys = []; for (var i = 0; i <= 200; i++) { var x = XA + (XB - XA) * i / 200; xs.push(X(x)); ys.push(Y(x * x - 2)); } pathXY(ctx, xs, ys, INK, 2.5);
+        ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(X(Math.SQRT2), Y(0), 4, 0, 7); ctx.fill();
+        for (i = 0; i < k; i++) {
+          var a = steps[i], fa = a * a - 2, b = steps[i + 1];
+          ctx.strokeStyle = RED; ctx.globalAlpha = i === k - 1 ? 1 : 0.35; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(a), Y(0)); ctx.lineTo(X(a), Y(fa)); ctx.stroke(); ctx.setLineDash([]);
+          ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(X(a), Y(fa)); ctx.lineTo(X(b), Y(0)); ctx.stroke(); ctx.lineWidth = 1; ctx.globalAlpha = 1;
+        }
+        var cur = steps[k]; ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(X(cur), Y(0), 6, 0, 7); ctx.fill();
+        font(ctx, 12, 600); ctx.fillStyle = SOFT; ctx.fillText('y = x² − 2', X(2.0) - 30, Y(2.2));
+        o.k.textContent = k; o.x.textContent = nl(cur, 6); o.e.textContent = k ? nl(Math.abs(cur - Math.SQRT2), 6) : nl(Math.abs(cur - Math.SQRT2), 3);
+        document.getElementById('nw-next').disabled = k >= 4;
+      }
+      document.getElementById('nw-next').addEventListener('click', function () { if (k < 4) { k++; draw(); } });
+      document.getElementById('nw-reset').addEventListener('click', function () { k = 0; draw(); });
+      draw();
+    })();
+
+    // 6. trapeziumregel
+    (function () {
+      var c = canvas('v-trap'), ctx = c.ctx, W = c.W, H = c.H, o = outs('v-trap'), tn = document.getElementById('tn');
+      var L = 40; function h(x) { return 3 + 1.5 * Math.sin(Math.PI * x / L) + 0.8 * Math.sin(3 * Math.PI * x / L); }
+      var exact = 3 * L + 1.5 * 2 * L / Math.PI + 0.8 * 2 * L / (3 * Math.PI);
+      var x0 = 40, x1 = W - 20, yb = H - 26, yt = 16, YM = 6.5;
+      function X(x) { return x0 + (x1 - x0) * x / L; } function Y(y) { return yb - (yb - yt) * y / YM; }
+      function draw() {
+        var n = +tn.value; document.getElementById('tn-v').textContent = n;
+        ctx.clearRect(0, 0, W, H);
+        var A = 0, dx = L / n;
+        for (var i = 0; i < n; i++) { var a = i * dx, b = a + dx; A += (h(a) + h(b)) / 2 * dx; ctx.fillStyle = i % 2 ? '#d6e6db' : '#dfeae2'; ctx.beginPath(); ctx.moveTo(X(a), Y(0)); ctx.lineTo(X(a), Y(h(a))); ctx.lineTo(X(b), Y(h(b))); ctx.lineTo(X(b), Y(0)); ctx.closePath(); ctx.fill(); ctx.strokeStyle = GREEN; ctx.stroke(); }
+        var xs = [], ys = []; for (i = 0; i <= 300; i++) { var x = L * i / 300; xs.push(X(x)); ys.push(Y(h(x))); } pathXY(ctx, xs, ys, INK, 2.5);
+        ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(x0, Y(0)); ctx.lineTo(x1, Y(0)); ctx.stroke();
+        font(ctx, 11); ctx.fillStyle = SOFT; ctx.fillText('0 m', x0 - 4, H - 8); ctx.fillText('40 m', x1 - 22, H - 8);
+        o.a.textContent = nl(A, 1) + ' m²'; o.t.textContent = nl(exact, 1) + ' m²'; o.e.textContent = nl(Math.abs(A - exact), 2) + ' m² (' + nl(100 * Math.abs(A - exact) / exact, 2) + '%)';
+      }
+      tn.addEventListener('input', draw); draw();
+    })();
+  })();
+  </script>
+</body>
+</html>

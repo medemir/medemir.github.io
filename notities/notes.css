@@ -106,3 +106,7 @@ kbd { font-family: inherit; font-size: 0.9em; background: var(--white); border: 
 .dec { font-weight: 700; color: var(--ink-soft); }
 .weights { font-size: 0.82rem; color: var(--ink-soft); margin: 10px 0 0; }
 @media (max-width: 480px) { .arow { grid-template-columns: 1fr; gap: 4px; } }
+.floatform { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; align-items: center; max-width: 420px; margin-bottom: 8px; font-size: 0.95rem; }
+.floatform input { font: inherit; padding: 6px 10px; border: 1px solid var(--ink-soft); border-radius: 6px; background: var(--paper); color: var(--ink); font-variant-numeric: tabular-nums; }
+.floatform input:focus-visible { outline: 3px solid var(--polder); outline-offset: 1px; }
+.replay[disabled] { opacity: 0.45; cursor: default; }
