@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <title>Het Kalmanfilter, simpel uitgelegd | Enes Demir</title>
+  <meta name="description" content="Het Kalmanfilter in gewone taal: voorspellen, meten en combineren. Met een gif, een simulatie om zelf mee te spelen en voorbeelden uit de praktijk." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>Het Kalmanfilter, simpel uitgelegd</h1>
+      <p class="meta">20 oktober 2026 · ongeveer 10 minuten lezen</p>
+
+      <p class="lead">Het Kalmanfilter zit in je telefoon, in elke drone, in de navigatie van auto's en vliegtuigen en in de GNSS-ontvanger van een landmeter. Het klinkt ingewikkeld, maar het idee past in één zin: <strong>combineer wat je verwacht met wat je meet, en vertrouw het meest op wat het zekerst is.</strong></p>
+
+      <figure>
+        <img src="media/kalman-uitleg.gif" alt="Animatie van drie stappen die zich herhalen: voorspellen (de klokkromme schuift op en wordt breder), meten (een tweede klokkromme verschijnt) en combineren (een nieuwe, smallere klokkromme ontstaat tussen de twee in)." width="720" height="340" style="width:100%;height:auto;border:1px solid var(--line);border-radius:8px" />
+        <figcaption>De drie stappen van een Kalmanfilter, steeds opnieuw. <a href="media/kalman-uitleg.gif" download>Download deze gif</a></figcaption>
+      </figure>
+
+      <h2>Een voorbeeld: lopen met je ogen dicht</h2>
+      <p>Stel, je loopt met je ogen dicht door een lange gang. Je weet ongeveer hoe groot je stappen zijn, dus je kunt tellen hoe ver je bent. Maar elke stap is net anders, dus hoe verder je loopt, hoe minder zeker je bent van waar je precies staat.</p>
+      <p>Af en toe doe je even je ogen open en zie je een deur waarvan je weet waar hij zit. Dan weet je weer beter waar je bent. Maar ook dat is niet perfect: je ziet de deur misschien maar half.</p>
+      <p>Wat doe je dan? Je gooit je schatting niet weg, en je gelooft ook niet blind wat je ziet. Je combineert ze. Dat is precies wat een Kalmanfilter doet, alleen dan met getallen en heel vaak per seconde.</p>
+
+      <h2>De drie stappen</h2>
+      <h3 class="sub">1. Voorspellen</h3>
+      <p>Het filter gebruikt wat het weet over de beweging, bijvoorbeeld de snelheid, om te voorspellen waar je nu bent. Bij elke voorspelling wordt de onzekerheid groter, want het model is nooit perfect. In de gif zie je dat de rode kromme opschuift én breder wordt.</p>
+      <h3 class="sub">2. Meten</h3>
+      <p>Er komt een meting binnen, bijvoorbeeld van GPS. Die heeft zijn eigen onzekerheid. Dat is de gestippelde kromme.</p>
+      <h3 class="sub">3. Combineren</h3>
+      <p>Het filter legt de twee over elkaar. De nieuwe schatting ligt ertussenin, dichter bij de kant die het zekerst is. En het mooiste: de nieuwe schatting is smaller dan allebei. Twee onzekere bronnen samen zijn zekerder dan elk apart.</p>
+      <p>Daarna begint het weer opnieuw bij stap 1. Steeds voorspellen, meten, combineren.</p>
+
+      <h2>De Kalman-gain: een schuifregelaar</h2>
+      <p>Hoe ver de nieuwe schatting naar de meting schuift, heet de Kalman-gain, meestal geschreven als K. Het is een getal tussen 0 en 1.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Situatie</th><th scope="col">Kalman-gain</th><th scope="col">Wat het filter doet</th></tr></thead>
+          <tbody>
+            <tr><td>De voorspelling is erg onzeker, de meting is goed</td><td>bijna 1</td><td>Volgt vooral de meting</td></tr>
+            <tr><td>Allebei even zeker</td><td>0,5</td><td>Neemt precies het midden</td></tr>
+            <tr><td>De meting is erg onzeker, de voorspelling is goed</td><td>bijna 0</td><td>Houdt vooral vast aan de voorspelling</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Het filter rekent die gain bij elke stap opnieuw uit. Daardoor past het zich vanzelf aan: als GNSS even slecht is, leunt het meer op het model.</p>
+
+      <h2>Probeer het zelf</h2>
+      <p>Hieronder volgt een Kalmanfilter de hoogte van een drone die op en neer vliegt. De stippen zijn de metingen, met ruis. De groene lijn is de schatting van het filter, met daaromheen de onzekerheid. De stippellijn is de echte hoogte, die het filter niet kent.</p>
+      <div class="viz" id="v-sim">
+        <canvas width="680" height="320" aria-label="Simulatie: de echte hoogte van een drone als stippellijn, metingen met ruis als stippen, en de Kalmanschatting als groene lijn met een band van onzekerheid. De schatting ligt dichter bij de echte hoogte dan de losse metingen."></canvas>
+        <div class="slider-row">
+          <label for="r">Ruis van de sensor (R) <b id="r-v"></b></label><input type="range" id="r" min="0.5" max="6" step="0.25" value="3">
+          <label for="q">Hoe beweeglijk mag de drone zijn (Q) <b id="q-v"></b></label><input type="range" id="q" min="0" max="1" step="0.01" value="0.55">
+        </div>
+        <div class="key"><span><i style="background:#14213d;opacity:.5"></i>echte hoogte</span><span><i style="background:#c0392b;height:7px;width:7px;border-radius:50%"></i>meting</span><span><i style="background:#2f6f4e"></i>Kalman-schatting</span><span><i style="background:#dfeae2;height:10px"></i>onzekerheid</span></div>
+        <div class="viz-bar"><span>Gemiddelde fout van de metingen <b data-o="m">–</b> · van het filter <b data-o="f">–</b></span><button class="replay" type="button">Opnieuw afspelen</button></div>
+      </div>
+      <p>Wat je ziet als je met de schuifjes speelt:</p>
+      <ul>
+        <li><strong>Beweeglijkheid laag:</strong> het filter vertrouwt zijn model sterk. De lijn wordt mooi glad, maar loopt achter bij snelle bewegingen.</li>
+        <li><strong>Beweeglijkheid hoog:</strong> het filter vertrouwt vooral de metingen. Het reageert snel, maar wordt ook onrustig.</li>
+        <li><strong>Meer sensorruis:</strong> de stippen springen alle kanten op, maar het filter blijft verrassend dicht bij de echte hoogte.</li>
+      </ul>
+      <p>Die twee instellingen heten in de vakliteratuur R (de ruis van de meting) en Q (de ruis van het model, of procesruis). Ze goed kiezen heet tunen, en dat is in de praktijk het meeste werk.</p>
+
+      <h2>In formules, voor wie wil</h2>
+      <p>Voor één getal, bijvoorbeeld de hoogte, zijn dit alle stappen. P is de onzekerheid van je schatting, R die van de meting, Q hoeveel onzekerheid er per stap bijkomt.</p>
+      <div class="formula">
+        <p><span>Voorspellen</span>schatting = vorige schatting + snelheid × tijd<br>P = P + Q</p>
+        <p><span>Gain</span>K = P / (P + R)</p>
+        <p><span>Combineren</span>schatting = schatting + K × (meting − schatting)<br>P = (1 − K) × P</p>
+      </div>
+      <p>Meer is het niet. In echte systemen zijn het matrices in plaats van losse getallen, omdat je positie, snelheid en stand tegelijk bijhoudt. Maar het idee blijft precies hetzelfde.</p>
+
+      <h2>Waar je het in de praktijk tegenkomt</h2>
+      <ul>
+        <li><strong>GNSS-ontvangers</strong>, ook die van landmeters, gebruiken een Kalmanfilter om metingen van satellieten te combineren tot een rustige positie.</li>
+        <li><strong>Inertiële navigatie</strong> in drones, meetauto's en vliegtuigen voegt gyroscoop, versnellingsmeter en GNSS samen. Zie <a href="imx-specs.html">hoe een INS werkt</a>.</li>
+        <li><strong>Voetgangersnavigatie</strong>, waarbij het filter bij elke stap de snelheid op nul zet. Zie <a href="voetgangersnavigatie.html">mijn eindopdracht</a>.</li>
+        <li><strong>Je telefoon</strong>, als je kaart-app je blauwe stip netjes over de weg laat bewegen in plaats van te laten springen.</li>
+        <li><strong>De ruimtevaart</strong>: het filter werd in de jaren zestig al gebruikt in de navigatie van de Apollo-missies naar de maan.</li>
+      </ul>
+
+      <h2>Als het niet recht is: varianten</h2>
+      <p>Het gewone Kalmanfilter werkt perfect als alles lineair is: rechte lijnen, geen bochten in de wiskunde. De echte wereld draait en kantelt. Daarvoor zijn er varianten:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Variant</th><th scope="col">Simpel gezegd</th></tr></thead>
+          <tbody>
+            <tr><td>Extended Kalman Filter (EKF)</td><td>Doet alsof een bocht lokaal een recht stukje is. Het meest gebruikt in navigatie.</td></tr>
+            <tr><td>Unscented Kalman Filter (UKF)</td><td>Stuurt een handvol slim gekozen testpunten door de bocht en kijkt waar ze uitkomen.</td></tr>
+            <tr><td>Particle filter</td><td>Gebruikt duizenden gokjes tegelijk. Werkt ook als er meerdere mogelijke antwoorden zijn, maar kost veel rekenkracht.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aside">
+        <h2>Wat ik zelf heb geleerd</h2>
+        <p>Toen ik het Kalmanfilter voor het eerst tegenkwam, zag ik vooral matrices. Het klikte pas toen ik het zag als twee klokkrommes die je over elkaar legt. Mijn tip: begin met één getal, zoals hierboven, en speel met Q en R. Als je snapt waarom de lijn glad of onrustig wordt, snap je het filter.</p>
+        <p>En nog één les uit de praktijk: een filter is zo goed als de data die erin gaat. Klopt je tijd of je eenheid niet, dan helpt geen enkel filter. Dat heb ik zelf gemerkt bij <a href="voetgangersnavigatie.html">mijn eindopdracht</a>.</p>
+      </div>
+
+      <p class="source">Bronnen: R.E. Kalman, A New Approach to Linear Filtering and Prediction Problems, Journal of Basic Engineering, 1960; Roger Labbe, <a href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">Kalman and Bayesian Filters in Python</a>. De gif en simulatie zijn van mij.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script>
+  (function () {
+    var INK = '#14213d', SOFT = '#46506a', LINE = '#cdd4d6', GREEN = '#2f6f4e', RED = '#c0392b', PAPER = '#f6f7f4';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function nl(v, d) { return v.toLocaleString('nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+    function setup(id, draw, duration) {
+      var box = document.getElementById(id); if (!box) return;
+      var cv = box.querySelector('canvas'), ctx = cv.getContext('2d');
+      var W = cv.width, H = cv.height, dpr = window.devicePixelRatio || 1;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+      var out = {}; box.querySelectorAll('[data-o]').forEach(function (el) { out[el.dataset.o] = el; });
+      var start = null, raf = null, state = draw.init ? draw.init() : {};
+      function frame(ts) {
+        if (start === null) start = ts;
+        var p = Math.min(1, (ts - start) / duration);
+        ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, p, out, state);
+        if (p < 1) raf = requestAnimationFrame(frame);
+      }
+      function play() {
+        cancelAnimationFrame(raf); start = null; state = draw.init ? draw.init() : {};
+        if (reduce) { ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, 1, out, state); return; }
+        raf = requestAnimationFrame(frame);
+      }
+      box.querySelector('.replay').addEventListener('click', play);
+      ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, reduce ? 1 : 0, out, state);
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { play(); io.disconnect(); } }, { threshold: 0.4 });
+        io.observe(box);
+      } else play();
+      function drawNow() { cancelAnimationFrame(raf); state = draw.init ? draw.init() : {}; ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, 1, out, state); }
+      return { play: play, box: box, draw: drawNow };
+    }
+    function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
+    function gauss(r) { var u = r() || 1e-9, v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+    function font(ctx, s, w) { ctx.font = (w || 400) + ' ' + s + 'px Archivo, sans-serif'; }
+
+
+    var rIn = document.getElementById('r'), qIn = document.getElementById('q');
+    function qval() { return 0.2 * Math.pow(500, +qIn.value); }
+    function simulate() {
+      var R = +rIn.value, q = qval(), dt = 0.1, N = 300, r = rng(5), out = { t: [], h: [], z: [], e: [], s: [] };
+      var x = null, v = 0, P00 = 0, P01 = 0, P11 = 0, se = 0, sm = 0, nm = 0;
+      for (var k = 0; k <= N; k++) {
+        var t = k * dt, h = 15 + 9 * Math.sin(2 * Math.PI * t / 20) + 3 * Math.sin(2 * Math.PI * t / 10);
+        var meas = (k % 2 === 0), z = meas ? h + R * gauss(r) : null;
+        if (x === null) { x = z; v = 0; P00 = R * R; P01 = 0; P11 = 25; }
+        else {
+          x = x + v * dt;
+          var q2 = q * q, a = P00 + dt * (2 * P01 + dt * P11) + q2 * Math.pow(dt, 4) / 4, b = P01 + dt * P11 + q2 * Math.pow(dt, 3) / 2, c = P11 + q2 * dt * dt;
+          P00 = a; P01 = b; P11 = c;
+          if (meas) {
+            var S = P00 + R * R, K0 = P00 / S, K1 = P01 / S, y = z - x;
+            x += K0 * y; v += K1 * y;
+            var n00 = (1 - K0) * P00, n01 = (1 - K0) * P01, n11 = P11 - K1 * P01;
+            P00 = n00; P01 = n01; P11 = n11;
+          }
+        }
+        if (meas) { sm += (z - h) * (z - h); se += (x - h) * (x - h); nm++; }
+        out.t.push(t); out.h.push(h); out.z.push(z); out.e.push(x); out.s.push(Math.sqrt(Math.max(P00, 0)));
+      }
+      out.rm = Math.sqrt(sm / nm); out.rf = Math.sqrt(se / nm);
+      return out;
+    }
+    var sim = setup('v-sim', {
+      init: function () { return simulate(); },
+      render: function (ctx, W, H, p, o, D) {
+        var x0 = 46, x1 = W - 12, top = 12, yb = H - 26, ymin = -5, ymax = 35, n = D.t.length, k = Math.max(2, Math.round(n * p));
+        function X(t) { return x0 + (x1 - x0) * t / 30; } function Y(h) { return yb - (yb - top) * (h - ymin) / (ymax - ymin); }
+        font(ctx, 11); ctx.fillStyle = SOFT;
+        [0, 10, 20, 30].forEach(function (v) { var y = Y(v); ctx.fillText(v + ' m', 4, y + 4); ctx.strokeStyle = '#eef0f1'; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); });
+        for (var s = 0; s <= 30; s += 5) ctx.fillText(s + ' s', X(s) - 8, H - 6);
+        ctx.fillStyle = '#dfeae2'; ctx.beginPath();
+        for (var i = 0; i < k; i++) ctx.lineTo(X(D.t[i]), Y(D.e[i] + 2 * D.s[i]));
+        for (i = k - 1; i >= 0; i--) ctx.lineTo(X(D.t[i]), Y(D.e[i] - 2 * D.s[i]));
+        ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = INK; ctx.globalAlpha = 0.5; ctx.setLineDash([5, 4]); ctx.beginPath();
+        for (i = 0; i < n; i++) { if (i) ctx.lineTo(X(D.t[i]), Y(D.h[i])); else ctx.moveTo(X(D.t[i]), Y(D.h[i])); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.fillStyle = RED; for (i = 0; i < k; i++) if (D.z[i] !== null) { ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.arc(X(D.t[i]), Y(Math.max(ymin, Math.min(ymax, D.z[i]))), 3, 0, 7); ctx.fill(); }
+        ctx.globalAlpha = 1; ctx.strokeStyle = GREEN; ctx.lineWidth = 2.5; ctx.beginPath();
+        for (i = 0; i < k; i++) { if (i) ctx.lineTo(X(D.t[i]), Y(D.e[i])); else ctx.moveTo(X(D.t[i]), Y(D.e[i])); } ctx.stroke(); ctx.lineWidth = 1;
+        o.m.textContent = p >= 1 ? nl(D.rm, 1) + ' m' : '…'; o.f.textContent = p >= 1 ? nl(D.rf, 1) + ' m' : '…';
+      } }, 7000);
+    function labels() { document.getElementById('r-v').textContent = '± ' + nl(+rIn.value, 2) + ' m'; var v = +qIn.value; document.getElementById('q-v').textContent = v < 0.3 ? 'laag' : (v > 0.8 ? 'hoog' : 'gemiddeld'); }
+    labels();
+    [rIn, qIn].forEach(function (el) { el.addEventListener('input', function () { labels(); if (sim) sim.draw(); }); });
+  })();
+  </script>
+</body>
+</html>

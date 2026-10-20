@@ -73,3 +73,6 @@ kbd { font-family: inherit; font-size: 0.9em; background: var(--white); border: 
 .slider-row b { color: var(--ink); font-variant-numeric: tabular-nums; }
 .slider-row input { width: 100%; accent-color: var(--polder); }
 @media (max-width: 560px) { .slider-row { grid-template-columns: 1fr; } }
+.formula { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 6px 20px; margin: 20px 0; }
+.formula p { margin: 14px 0; font-variant-numeric: tabular-nums; }
+.formula span { display: block; font-size: 0.82rem; font-weight: 700; color: var(--polder); margin-bottom: 2px; }

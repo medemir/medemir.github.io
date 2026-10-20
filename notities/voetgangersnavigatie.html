@@ -55,7 +55,7 @@
       <p>Je ziet het ritme van het lopen: een piek bij elke stap, en daartussen een rustig stuk waar de voet op de grond staat.</p>
 
       <h2>Het filter: Bayes in een notendop</h2>
-      <p>Het rekenwerk doet een Kalmanfilter. Dat houdt negen dingen bij: de fout in de stand (3), in de positie (3) en in de snelheid (3). Bij elke meting voorspelt het filter hoe die fouten groeien. Bij elke stilstand stuurt het bij.</p>
+      <p>Het rekenwerk doet een Kalmanfilter (hoe dat werkt, leg ik uit in <a href="kalmanfilter.html">het Kalmanfilter, simpel uitgelegd</a>). Dat houdt negen dingen bij: de fout in de stand (3), in de positie (3) en in de snelheid (3). Bij elke meting voorspelt het filter hoe die fouten groeien. Bij elke stilstand stuurt het bij.</p>
       <p>Een Kalmanfilter is eigenlijk de regel van Bayes, toegepast op normale verdelingen. Je hebt een voorspelling met een bepaalde onzekerheid, de prior. Je hebt een meting met een eigen onzekerheid, de likelihood. Vermenigvuldig je die, dan krijg je een nieuwe schatting die beter is dan allebei: de posterior. Speel er hieronder zelf mee.</p>
       <div class="viz" id="v-bayes">
         <svg viewBox="0 0 680 260" role="img" aria-label="Drie klokkrommes: de voorspelling, de meting en de gecombineerde schatting, die smaller is en tussen de twee in ligt." id="bayes-svg"></svg>
