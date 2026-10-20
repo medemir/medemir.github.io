@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <title>IMU, AHRS en INS: wat is het verschil? | Notities, Enes Demir</title>
+  <meta name="description" content="Samenvatting: het verschil tussen een IMU, een AHRS en een INS, met GPS, Kalmanfilter, RTK en compassing." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>IMU, AHRS en INS: wat is het verschil?</h1>
+      <p class="meta">Samenvatting, 20 oktober 2026 · ongeveer 4 minuten lezen</p>
+
+      <p class="lead">Bij drones, lidar en mobile mapping kom je ze steeds tegen: IMU, AHRS en INS. Ze lijken op elkaar, maar ze leveren iets heel anders op. Dit zijn mijn aantekeningen bij een uitleg van Inertial Sense.</p>
+
+      <figure>
+        <img src="imu-ahrs-ins.svg" alt="Schema: een IMU bevat versnellingsmeter, gyroscoop en soms een magnetometer. Een AHRS voegt daar GPS aan toe. Een INS voegt daar weer een Kalmanfilter aan toe." width="640" height="300" />
+        <figcaption>Zoals het artikel het indeelt: elke stap voegt iets toe aan de vorige.</figcaption>
+      </figure>
+
+      <h2>IMU: alleen de sensoren</h2>
+      <p>Een IMU (Inertial Measurement Unit) bestaat uit een versnellingsmeter, een gyroscoop en vaak een magnetometer. Er zit geen rekenwerk in: je krijgt de ruwe metingen en moet zelf uitzoeken wat je ermee doet.</p>
+      <p>Dat is genoeg als je alleen wilt weten hoe iets gekanteld staat. Het artikel noemt een vaste camera als voorbeeld: die hoeft alleen te weten of hij naar de vloer of naar het plafond wijst. Een IMU is ook veel goedkoper dan een compleet navigatiesysteem.</p>
+
+      <h2>AHRS: sensoren plus GPS</h2>
+      <p>Volgens het artikel is een AHRS (Attitude and Heading Reference System) een IMU met GPS erbij. Je krijgt dan naast de sensordata ook een positie. Er zit nog geen Kalmanfilter in, dus dit past bij teams die zelf al een filter hebben om alles samen te voegen.</p>
+
+      <h2>INS: alles samengevoegd</h2>
+      <p>Een INS (Inertial Navigation System) heeft dezelfde sensoren en GPS, plus een Kalmanfilter. Dat filter is software die alle metingen combineert tot één antwoord: waar ben ik en hoe sta ik gedraaid. Het systeem dat de INS gebruikt, hoeft daar zelf niets meer voor te rekenen.</p>
+      <p>Het artikel benadrukt dat een INS dus geen GPS is. GPS is maar één van de bronnen.</p>
+
+      <h2>Naast elkaar</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col"></th><th scope="col">Wat zit erin</th><th scope="col">Wat krijg je eruit</th><th scope="col">Wanneer handig</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">IMU</th><td>Versnellingsmeter, gyroscoop, soms magnetometer</td><td>Ruwe sensordata</td><td>Alleen kanteling of draaiing nodig, laag budget</td></tr>
+            <tr><th scope="row">AHRS</th><td>IMU-sensoren plus GPS</td><td>Sensordata en GPS-positie</td><td>Je hebt zelf al een filter</td></tr>
+            <tr><th scope="row">INS</th><td>IMU-sensoren, GPS en Kalmanfilter</td><td>Positie en oriëntatie, kant-en-klaar</td><td>Navigatie van robots, voertuigen en drones</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>RTK en compassing</h2>
+      <ul>
+        <li><strong>Gewone GPS</strong> haalt volgens het artikel moeilijk een nauwkeurigheid beter dan ongeveer één meter.</li>
+        <li><strong>RTK</strong> (Real-Time Kinematic): een basisstation stuurt correcties naar de rover. Daarmee kom je op centimeterniveau. Voor landmeters bekend terrein, want zo werken we in Nederland ook met een netwerk als 06-GPS of NETPOS.</li>
+        <li><strong>Compassing</strong>: met twee GPS-antennes op één apparaat bepaal je de rijrichting uit de lijn tussen de antennes. Dat werkt beter dan een magnetometer, want die laat zich storen door metaal en elektronica in de buurt. Je positie wordt er niet nauwkeuriger van, alleen je richting.</li>
+      </ul>
+
+      <div class="aside">
+        <h2>Mijn kanttekening</h2>
+        <p>Het artikel komt van een fabrikant en is dus ook een beetje reclame. Let op de definitie van AHRS: in veel andere bronnen is een AHRS juist een IMU met eigen rekenkracht die de oriëntatie berekent, zonder GPS. De indeling hierboven is die van dit artikel.</p>
+        <p>Voor mijn werk is vooral het INS-deel interessant. Bij volumeberekeningen met drone- en lidardata bepaalt de INS aan boord hoe goed elk gemeten punt op de juiste plek terechtkomt.</p>
+      </div>
+
+      <p class="source">Bron: Tom Bennett, <a href="https://inertialsense.com/difference-between-imu-ahrs-ins/">The Difference Between IMU, AHRS, and INS</a>, Inertial Sense, 12 maart 2021.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

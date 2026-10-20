@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" role="img" aria-label="IMU, AHRS en INS als lagen: de IMU bevat de sensoren, AHRS voegt GPS toe, INS voegt daar een Kalmanfilter aan toe">
+  <style>text{font-family:Archivo,Helvetica,Arial,sans-serif;fill:#14213d}.t{font-size:17px;font-weight:700}.s{font-size:13px;fill:#46506a}.c{font-size:13px}</style>
+  <rect x="1" y="1" width="638" height="298" rx="12" fill="#f6f7f4" stroke="#14213d"/>
+  <text class="t" x="22" y="32">INS</text><text class="s" x="62" y="32">positie en oriëntatie, direct bruikbaar</text>
+  <rect x="20" y="48" width="430" height="232" rx="10" fill="#ffffff" stroke="#14213d"/>
+  <text class="t" x="40" y="78">AHRS</text><text class="s" x="92" y="78">sensordata plus GPS-positie</text>
+  <rect x="38" y="94" width="250" height="168" rx="8" fill="#dfeae2" stroke="#2f6f4e"/>
+  <text class="t" x="56" y="124">IMU</text><text class="s" x="100" y="124">ruwe sensordata</text>
+  <g class="c"><text x="56" y="160">Versnellingsmeter</text><text x="56" y="188">Gyroscoop</text><text x="56" y="216">Magnetometer (soms)</text></g>
+  <rect x="306" y="140" width="128" height="56" rx="8" fill="#ffffff" stroke="#14213d" stroke-dasharray="5 4"/>
+  <text class="c" x="345" y="173">GPS</text>
+  <rect x="470" y="140" width="150" height="56" rx="8" fill="#14213d"/>
+  <text x="490" y="166" style="font-size:13px;fill:#fff;font-weight:700">Kalmanfilter</text>
+  <text x="490" y="184" style="font-size:12px;fill:#c9d3e6">voegt alles samen</text>
+</svg>
