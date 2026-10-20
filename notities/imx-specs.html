@@ -2,8 +2,8 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
-  <title>Specificaties van een inertiële sensor, simpel uitgelegd | Enes Demir</title>
-  <meta name="description" content="Wat betekenen gyro-bias, random walk, RTK en CEP? De specificaties van de Inertial Sense IMX-6 uitgelegd met bewegende voorbeelden." />
+  <title>Hoe werkt een INS? Specificaties en praktijk, simpel uitgelegd | Enes Demir</title>
+  <meta name="description" content="Wat betekenen gyro-bias, random walk, RTK en CEP, en hoe werkt een INS in de praktijk? Uitgelegd met bewegende voorbeelden, aan de hand van de Inertial Sense IMX-6." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,10 +26,10 @@
   <main>
     <article class="note">
       <a class="back" href="index.html">Alle notities</a>
-      <h1>Specificaties van een inertiële sensor, simpel uitgelegd</h1>
-      <p class="meta">20 oktober 2026 · ongeveer 8 minuten lezen</p>
+      <h1>Hoe werkt een INS? Specificaties en praktijk, simpel uitgelegd</h1>
+      <p class="meta">20 oktober 2026 · ongeveer 15 minuten lezen</p>
 
-      <p class="lead">Een productblad van een inertiële sensor staat vol met termen als °/√hr, µg en CEP. Wat zeggen die getallen eigenlijk? Ik neem de specs van de IMX-6 van Inertial Sense als voorbeeld en vertaal ze naar iets wat je je kunt voorstellen.</p>
+      <p class="lead">Een productblad van een inertiële sensor staat vol met termen als °/√hr, µg en CEP. Wat zeggen die getallen eigenlijk? Ik neem de specs van de IMX-6 van Inertial Sense als voorbeeld en vertaal ze naar iets wat je je kunt voorstellen. Daarna laat ik zien hoe een INS in de praktijk werkt: van opstarten tot nabewerken.</p>
       <p>Wat een IMU, AHRS en INS zijn, schreef ik al in <a href="imu-ahrs-ins.html">een eerdere notitie</a>. Kort gezegd: een gyroscoop meet draaiing, een versnellingsmeter meet versnelling, en GNSS geeft de positie. De IMX-6 heeft ze allemaal, plus een magnetometer en een luchtdruksensor.</p>
 
       <h2>1. Hoe klein is het?</h2>
@@ -118,6 +118,119 @@
         <div class="viz-bar"><span>Vertraagd afgespeeld</span><button class="replay" type="button">Opnieuw afspelen</button></div>
       </div>
 
+      <h2>Zo werkt een INS in de praktijk</h2>
+      <p>Tot nu toe ging het over losse getallen. Maar in een drone, een meetauto of een graafmachine werken al die sensoren samen. Hoe dat gaat, leg ik hieronder stap voor stap uit.</p>
+
+      <h3 class="sub">8. De rekenlus: voorspellen en bijsturen</h3>
+      <p>Een INS doet eigenlijk steeds twee dingen. Duizend keer per seconde <strong>voorspelt</strong> hij met de gyroscoop en versnellingsmeter waar hij nu is, hoe snel hij gaat en hoe hij staat. Dat heet dead reckoning: vanaf je laatste bekende plek doorrekenen met wat je voelt.</p>
+      <p>Telkens als er een GNSS-positie binnenkomt, <strong>stuurt</strong> het Kalmanfilter bij. Het vergelijkt de voorspelling met de GNSS-positie en weegt af wie het meest te vertrouwen is. Het slimme deel: het filter leert daarbij ook de bias van de sensoren kennen en trekt die voortaan zelf af.</p>
+      <div class="viz">
+        <svg viewBox="0 0 660 270" role="img" aria-label="Schema: de IMU levert duizend keer per seconde metingen aan de stap voorspellen. Die geeft positie, snelheid en stand. GNSS levert een paar keer per seconde een positie aan het Kalmanfilter, dat de voorspelling bijstuurt en de sensorbias schat. Het resultaat gaat naar de gebruiker.">
+          <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#14213d"/></marker></defs>
+          <g font-family="Archivo, sans-serif" font-size="13" fill="#14213d">
+            <rect x="6" y="30" width="184" height="62" rx="8" fill="#dfeae2" stroke="#2f6f4e"/>
+            <text x="98" y="56" text-anchor="middle" font-weight="700">IMU</text>
+            <text x="98" y="76" text-anchor="middle" fill="#46506a" font-size="12">1000 metingen per seconde</text>
+            <rect x="250" y="30" width="170" height="62" rx="8" fill="#ffffff" stroke="#14213d"/>
+            <text x="335" y="56" text-anchor="middle" font-weight="700">Voorspellen</text>
+            <text x="335" y="76" text-anchor="middle" fill="#46506a" font-size="12">positie, snelheid, stand</text>
+            <rect x="500" y="30" width="150" height="62" rx="8" fill="#14213d"/>
+            <text x="575" y="56" text-anchor="middle" font-weight="700" fill="#ffffff">Navigatie</text>
+            <text x="575" y="76" text-anchor="middle" fill="#c9d3e6" font-size="12">naar scanner of machine</text>
+            <rect x="6" y="176" width="184" height="62" rx="8" fill="#ffffff" stroke="#14213d" stroke-dasharray="5 4"/>
+            <text x="98" y="202" text-anchor="middle" font-weight="700">GNSS</text>
+            <text x="98" y="222" text-anchor="middle" fill="#46506a" font-size="12">een paar keer per seconde</text>
+            <rect x="250" y="176" width="170" height="62" rx="8" fill="#ffffff" stroke="#14213d"/>
+            <text x="335" y="202" text-anchor="middle" font-weight="700">Bijsturen</text>
+            <text x="335" y="222" text-anchor="middle" fill="#46506a" font-size="12">Kalmanfilter, schat ook bias</text>
+            <g stroke="#14213d" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+              <path d="M190 61H246"/>
+              <path d="M420 61H496"/>
+              <path d="M190 207H246"/>
+              <path d="M310 176V96"/>
+              <path d="M360 96V172"/>
+            </g>
+            <text x="368" y="140" fill="#46506a" font-size="12">voorspelling</text>
+            <text x="248" y="140" fill="#46506a" font-size="12">correctie</text>
+            <path d="M420 207C470 207 470 120 440 100" stroke="#2f6f4e" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+            <text x="452" y="166" fill="#2f6f4e" font-size="12">bias eraf</text>
+          </g>
+        </svg>
+      </div>
+      <p>In de simulatie hieronder rijdt een voertuig een bocht. De stippellijn is de echte route, de groene lijn is wat de INS denkt. Tussen twee GNSS-posities loopt de schatting een klein beetje weg, en de cirkel van onzekerheid groeit. Bij elke GNSS-positie trekt het filter de schatting terug. Zet de tunnel aan om te zien wat er gebeurt als GNSS een tijdje wegvalt.</p>
+      <div class="viz" id="v-loop">
+        <canvas width="680" height="300" aria-label="Simulatie: een voertuig rijdt een bocht. De geschatte route volgt de echte route en wordt bij elke GNSS-positie bijgestuurd. Met de tunnel aan loopt de schatting zonder GNSS weg en springt hij na de tunnel terug."></canvas>
+        <div class="key"><span><i style="background:#14213d;opacity:.5"></i>echte route</span><span><i style="background:#2f6f4e"></i>schatting van de INS</span><span><i style="background:#14213d;height:8px;width:8px;border-radius:50%"></i>GNSS-positie</span><span><i style="background:#c0392b;height:8px;width:8px;border-radius:50%;opacity:.4"></i>onzekerheid</span></div>
+        <div class="viz-bar"><span>GNSS <b data-o="g">aan</b> · afwijking <b data-o="e">0 cm</b></span><span style="display:flex;gap:8px"><button class="replay" type="button">Opnieuw afspelen</button><button class="replay" type="button" data-toggle aria-pressed="false">Tunnel aanzetten</button></span></div>
+      </div>
+      <p>De afstanden in deze simulatie zijn vereenvoudigd en uitvergroot. Het gaat om het patroon: met GNSS blijft de fout klein en stabiel, zonder GNSS groeit hij steeds sneller.</p>
+
+      <h3 class="sub">9. Opstarten: weten hoe je staat</h3>
+      <p>Voordat een INS kan navigeren, moet hij weten hoe hij staat. Dat heet de initialisatie of alignment.</p>
+      <ul>
+        <li><strong>Roll en pitch</strong> zijn makkelijk. Als de sensor stilstaat, voelt de versnellingsmeter alleen de zwaartekracht, en die wijst recht naar beneden. Daaruit volgt de kanteling. Dat is de 0,1° stilstaand uit het productblad.</li>
+        <li><strong>Heading</strong> is lastiger, want zwaartekracht zegt niets over het noorden. Er zijn drie manieren: de magnetometer (1,0°, maar gevoelig voor metaal), twee GNSS-antennes (0,4°) of gewoon gaan bewegen. Tijdens het rijden ziet het filter in welke richting je GNSS-positie verschuift, en dan haal je 0,09°.</li>
+      </ul>
+      <p>Daarom zie je meetauto's en drones vaak eerst een stukje rechtdoor gaan of een paar bochten maken voordat het echte meten begint. Dat is geen opwarmen, dat is de heading vinden.</p>
+
+      <h3 class="sub">10. De hefboomarm: waar zit wat?</h3>
+      <p>De IMU, de GNSS-antenne en de scanner zitten nooit op precies dezelfde plek. GNSS meet de positie van de antenne, maar jij wilt weten waar de scanner is. Het verschil daartussen heet de hefboomarm, in het Engels lever arm.</p>
+      <div class="viz">
+        <svg viewBox="0 0 660 230" role="img" aria-label="Zijaanzicht van een meetauto met een GNSS-antenne op het dak, de IMU in de auto en een laserscanner achterop. Stippellijnen tussen de IMU en de antenne en tussen de IMU en de scanner zijn de hefboomarmen.">
+          <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#c0392b"/></marker></defs>
+          <g font-family="Archivo, sans-serif" font-size="13" fill="#14213d">
+            <path d="M150 170 L150 120 Q155 95 190 92 L300 92 Q330 92 350 70 L470 70 Q500 70 515 100 L560 110 Q580 114 580 135 L580 170 Z" fill="#ffffff" stroke="#14213d" stroke-width="1.5"/>
+            <circle cx="210" cy="172" r="24" fill="#14213d"/><circle cx="210" cy="172" r="9" fill="#cdd4d6"/>
+            <circle cx="500" cy="172" r="24" fill="#14213d"/><circle cx="500" cy="172" r="9" fill="#cdd4d6"/>
+            <path d="M0 196H660" stroke="#cdd4d6"/>
+            <rect x="380" y="56" width="40" height="8" rx="3" fill="#14213d"/><rect x="396" y="46" width="8" height="10" fill="#14213d"/>
+            <text x="400" y="36" text-anchor="middle" font-weight="700">GNSS-antenne</text>
+            <rect x="340" y="118" width="26" height="20" rx="3" fill="#2f6f4e"/>
+            <text x="353" y="160" text-anchor="middle" font-weight="700">IMU</text>
+            <path d="M150 96 L188 96" stroke="#14213d" stroke-width="4"/><rect x="118" y="62" width="34" height="40" rx="5" fill="#14213d"/><circle cx="135" cy="82" r="9" fill="#a9cbe0"/>
+            <text x="135" y="48" text-anchor="middle" font-weight="700">Laserscanner</text>
+            <g stroke="#c0392b" stroke-width="1.8" stroke-dasharray="5 4" fill="none">
+              <path d="M356 118 L397 68" marker-end="url(#ar2)"/>
+              <path d="M340 124 L156 86" marker-end="url(#ar2)"/>
+            </g>
+            <text x="420" y="104" fill="#c0392b" font-weight="600">hefboomarm</text>
+            <text x="190" y="128" fill="#c0392b" font-weight="600">hefboomarm</text>
+          </g>
+        </svg>
+      </div>
+      <p>Deze afstanden moet je nauwkeurig inmeten, in drie richtingen. Een fout van 2 cm in de hefboomarm wordt een fout van 2 cm in elk gemeten punt. En als het voertuig kantelt in een bocht, verandert de richting van die fout ook nog mee. Voor een landmeter is dit vertrouwd werk: het is gewoon nauwkeurig inmeten, alleen dan op een voertuig.</p>
+
+      <h3 class="sub">11. Tijd: alles moet op hetzelfde moment kloppen</h3>
+      <p>Een scanner maakt duizenden metingen per seconde, en van elke meting moet je weten waar en hoe de sensor op dat moment stond. Daarvoor krijgen alle metingen een tijdstempel in dezelfde klok, meestal de GNSS-tijd. Het productblad noemt daarom strobe-ingangen: een signaal waarmee bijvoorbeeld een camera laat weten "nu maak ik een foto".</p>
+      <p>Hoe belangrijk dat is? Rijd je 100 km/u en zit de tijd 10 milliseconden fout, dan staat elk punt 28 cm verkeerd.</p>
+
+      <h3 class="sub">12. Achteraf rekenen: beter dan live</h3>
+      <p>Tijdens het meten kan de INS alleen terugkijken. Achteraf heb je de hele rit, dus kun je ook vooruit en achteruit rekenen. Een stuk zonder GNSS wordt dan van twee kanten bijgestuurd: vanaf het begin én vanaf het eind van de tunnel. Daardoor wordt de grootste fout veel kleiner. Bij mobile mapping en drone-lidar wordt de route daarom vaak nabewerkt voordat er een puntenwolk van wordt gemaakt.</p>
+
+      <h3 class="sub">Voorbeelden uit de praktijk</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Toepassing</th><th scope="col">Waarom een INS</th><th scope="col">Lastigste moment</th></tr></thead>
+          <tbody>
+            <tr><td>Drone met laserscanner</td><td>Elke laserpuls heeft de exacte positie en stand nodig</td><td>Snelle bochten en trillingen</td></tr>
+            <tr><td>Meetauto (mobile mapping)</td><td>Rijdt door straten waar GNSS vaak even wegvalt</td><td>Tunnels, bruggen, hoge gebouwen en bomen</td></tr>
+            <tr><td>Machinebesturing</td><td>Een graafmachine moet weten hoe zijn bak staat, op centimeters</td><td>Trillingen en veel metaal rond de magnetometer</td></tr>
+            <tr><td>Robotmaaier of bezorgrobot</td><td>Moet zelf zijn weg vinden, ook onder bomen</td><td>Weinig open lucht en lage snelheid</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aside">
+        <h2>Waar ik op let bij data van een INS</h2>
+        <ul>
+          <li>Was er onderweg GNSS-uitval, bijvoorbeeld bij bomen, bruggen of hoge gebouwen? Daar is de data het zwakst.</li>
+          <li>Is de hefboomarm goed ingemeten en ingevoerd?</li>
+          <li>Is de initialisatie goed gedaan, met genoeg beweging voor de heading?</li>
+          <li>Is de route achteraf nabewerkt?</li>
+          <li>Zijn er controlepunten ingemeten? Een paar punten met een GNSS-rover of total station vertellen je meer dan elk productblad.</li>
+        </ul>
+      </div>
+
       <h2>De rest van het productblad in gewone taal</h2>
       <div class="table-wrap">
         <table>
@@ -184,6 +297,7 @@
         var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { play(); io.disconnect(); } }, { threshold: 0.4 });
         io.observe(box);
       } else play();
+      return { play: play, box: box };
     }
     function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
     function gauss(r) { var u = r() || 1e-9, v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
@@ -284,6 +398,41 @@
       ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(xc - 16, y + 9, 4, 0, 7); ctx.arc(xc + 2, y + 9, 4, 0, 7); ctx.fill();
       font(ctx, 12); ctx.fillStyle = SOFT; ctx.fillText('GNSS', 4, y - 46); ctx.fillText('sensor', 4, y + 54);
     } }, 6000);
+
+
+    // 8. Voorspellen en bijsturen
+    var tunnel = false;
+    var loop = setup('v-loop', {
+      init: function () {
+        var r = rng(11), N = 600, tr = [], est = [], fix = [], sig = [];
+        var ex = 0, ey = 0, vx = 0, vy = 0, bx = 0.0016, by = 0.0022, since = 0;
+        for (var k = 0; k <= N; k++) {
+          var t = k / N, x = 40 + 600 * t, y = 150 + 80 * Math.sin(2 * Math.PI * t * 1.1);
+          var inT = tunnel && t > 0.42 && t < 0.68;
+          vx += bx + 0.02 * gauss(r); vy += by + 0.02 * gauss(r); ex += vx; ey += vy; since++;
+          var s = 3 + 0.12 * since + (inT ? 0.5 * 0.004 * since * since : 0);
+          if (!inT && since >= 20) { var gx = x + 2 * gauss(r), gy = y + 2 * gauss(r); fix.push([k, gx, gy]); ex *= 0.15; ey *= 0.15; vx *= 0.25; vy *= 0.25; since = 0; s = 3; }
+          tr.push([x, y]); est.push([x + ex, y + ey]); sig.push(s);
+        }
+        return { tr: tr, est: est, fix: fix, sig: sig, N: N };
+      },
+      render: function (ctx, W, H, p, o, st) {
+        var n = Math.round(st.N * p);
+        if (tunnel) { var tx0 = 40 + 600 * 0.42, tx1 = 40 + 600 * 0.68; ctx.fillStyle = '#eef0f1'; ctx.fillRect(tx0, 10, tx1 - tx0, H - 20); font(ctx, 12, 600); ctx.fillStyle = SOFT; ctx.fillText('tunnel, geen GNSS', tx0 + 8, 28); }
+        ctx.strokeStyle = INK; ctx.globalAlpha = 0.45; ctx.setLineDash([5, 5]); ctx.beginPath();
+        st.tr.forEach(function (q, i) { if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.strokeStyle = GREEN; ctx.lineWidth = 2.5; ctx.beginPath();
+        for (var i = 0; i <= n; i++) { var q = st.est[i]; if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); } ctx.stroke(); ctx.lineWidth = 1;
+        ctx.fillStyle = INK; st.fix.forEach(function (f) { if (f[0] <= n) { ctx.beginPath(); ctx.arc(f[1], f[2], 3.5, 0, 7); ctx.fill(); } });
+        var h = st.est[n]; ctx.fillStyle = RED; ctx.globalAlpha = 0.15; ctx.beginPath(); ctx.arc(h[0], h[1], st.sig[n], 0, 7); ctx.fill(); ctx.globalAlpha = 0.6; ctx.strokeStyle = RED; ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(h[0], h[1], 5, 0, 7); ctx.fill();
+        var t = n / st.N, inT = tunnel && t > 0.42 && t < 0.68, d = Math.hypot(h[0] - st.tr[n][0], h[1] - st.tr[n][1]);
+        o.g.textContent = inT ? 'weg' : 'aan'; o.e.textContent = Math.round(d * 2) + ' cm';
+      } }, 10000);
+    if (loop) {
+      var tg = loop.box.querySelector('[data-toggle]');
+      tg.addEventListener('click', function () { tunnel = !tunnel; tg.setAttribute('aria-pressed', tunnel); tg.textContent = tunnel ? 'Tunnel uitzetten' : 'Tunnel aanzetten'; loop.play(); });
+    }
 
     // 5. staafdiagram (statisch)
     var bars = [['0,03° roll/pitch, in beweging', 0.0262], ['0,09° heading, in beweging', 0.0785], ['0,1° roll/pitch, stilstaand', 0.0873], ['0,4° heading, twee antennes', 0.349], ['1,0° heading, magnetometer', 0.873]];

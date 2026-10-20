@@ -67,3 +67,5 @@ kbd { font-family: inherit; font-size: 0.9em; background: var(--white); border: 
 .key span { display: inline-flex; align-items: center; gap: 6px; }
 .key i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
 .spec { display: inline-block; font-weight: 700; background: var(--polder-soft); color: var(--polder); padding: 1px 8px; border-radius: 4px; font-size: 0.95em; white-space: nowrap; }
+.note h3.sub { font-size: 1.2rem; font-weight: 700; margin: 36px 0 10px; }
+.aside ul { margin: 0; }
