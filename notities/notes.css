@@ -56,3 +56,14 @@ footer ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
 .project-block h2 { margin-top: 12px; }
 .facts-line { color: var(--ink-soft); font-size: 0.95rem; margin: -4px 0 16px; }
 kbd { font-family: inherit; font-size: 0.9em; background: var(--white); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.viz { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 24px 0 8px; }
+.viz canvas, .viz svg { width: 100%; height: auto; display: block; }
+.viz-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-top: 10px; font-size: 0.92rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.viz-bar b { color: var(--ink); font-weight: 600; }
+.replay { font: inherit; font-size: 0.88rem; font-weight: 600; color: var(--ink); background: var(--paper); border: 1px solid var(--ink); border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+.replay:hover { background: var(--polder-soft); }
+.replay:focus-visible { outline: 3px solid var(--polder); outline-offset: 2px; }
+.key { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.88rem; color: var(--ink-soft); margin-top: 8px; }
+.key span { display: inline-flex; align-items: center; gap: 6px; }
+.key i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.spec { display: inline-block; font-weight: 700; background: var(--polder-soft); color: var(--polder); padding: 1px 8px; border-radius: 4px; font-size: 0.95em; white-space: nowrap; }

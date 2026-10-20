@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <title>Specificaties van een inertiële sensor, simpel uitgelegd | Enes Demir</title>
+  <meta name="description" content="Wat betekenen gyro-bias, random walk, RTK en CEP? De specificaties van de Inertial Sense IMX-6 uitgelegd met bewegende voorbeelden." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>Specificaties van een inertiële sensor, simpel uitgelegd</h1>
+      <p class="meta">20 oktober 2026 · ongeveer 8 minuten lezen</p>
+
+      <p class="lead">Een productblad van een inertiële sensor staat vol met termen als °/√hr, µg en CEP. Wat zeggen die getallen eigenlijk? Ik neem de specs van de IMX-6 van Inertial Sense als voorbeeld en vertaal ze naar iets wat je je kunt voorstellen.</p>
+      <p>Wat een IMU, AHRS en INS zijn, schreef ik al in <a href="imu-ahrs-ins.html">een eerdere notitie</a>. Kort gezegd: een gyroscoop meet draaiing, een versnellingsmeter meet versnelling, en GNSS geeft de positie. De IMX-6 heeft ze allemaal, plus een magnetometer en een luchtdruksensor.</p>
+
+      <h2>1. Hoe klein is het?</h2>
+      <p>De IMX-6 meet <span class="spec">15,6 × 12,5 × 2,9 mm</span> en weegt <span class="spec">0,9 g</span>. Hieronder op schaal naast een munt van 2 euro, die 25,75 mm groot is en 8,5 gram weegt.</p>
+      <div class="viz">
+        <svg viewBox="0 0 560 210" role="img" aria-label="De sensor naast een 2-euromunt op schaal: de sensor is ongeveer 60 procent van de breedte van de munt">
+          <g font-family="Archivo, sans-serif" font-size="13" fill="#14213d">
+            <circle cx="150" cy="96" r="77" fill="#e9d9b8" stroke="#14213d"/>
+            <circle cx="150" cy="96" r="52" fill="#d9dee2" stroke="#14213d"/>
+            <text x="150" y="101" text-anchor="middle" font-weight="700" font-size="22">2</text>
+            <text x="150" y="196" text-anchor="middle" fill="#46506a">2 euro: 25,75 mm, 8,5 g</text>
+            <rect x="330" y="59" width="94" height="75" rx="4" fill="#14213d"/>
+            <rect x="345" y="72" width="30" height="22" rx="2" fill="#2f6f4e"/>
+            <g fill="#c9a24a"><rect x="330" y="140" width="0" height="0"/></g>
+            <g stroke="#c9a24a" stroke-width="3"><path d="M336 134v6M346 134v6M356 134v6M366 134v6M376 134v6M386 134v6M396 134v6M406 134v6M416 134v6"/></g>
+            <text x="377" y="117" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">IMX-6</text>
+            <path d="M330 48h94M330 43v10M424 43v10" stroke="#14213d" fill="none"/>
+            <text x="377" y="38" text-anchor="middle">15,6 mm</text>
+            <path d="M436 59v75M431 59h10M431 134h10" stroke="#14213d" fill="none"/>
+            <text x="446" y="101">12,5 mm</text>
+            <text x="377" y="196" text-anchor="middle" fill="#46506a">sensor: 0,9 g</text>
+          </g>
+        </svg>
+      </div>
+      <p>Daardoor past hij in een kleine drone of handheld scanner zonder dat het gewicht uitmaakt.</p>
+
+      <h2>2. Gyro-bias: de draaiing die er niet is</h2>
+      <p>Een gyroscoop meet altijd een heel klein beetje draaiing, ook als hij stilligt. Dat heet de bias. Als je die metingen optelt om je richting te bepalen, loopt je richting langzaam weg. De IMX-6 heeft een bias-stabiliteit van <span class="spec">0,9 °/uur</span>. Na een uur zonder correctie kan je richting dus 0,9 graad afwijken.</p>
+      <div class="viz" id="v-bias">
+        <canvas width="680" height="300" aria-label="Animatie: een richtingslijn naar een punt op 100 meter loopt in een uur 0,9 graad weg, wat 1,57 meter afwijking geeft"></canvas>
+        <div class="viz-bar"><span>Tijd <b data-o="t">0 min</b> · hoekfout <b data-o="a">0,00°</b> · afwijking op 100 m <b data-o="d">0,00 m</b></span><button class="replay" type="button">Opnieuw afspelen</button></div>
+      </div>
+      <p>0,9 graad klinkt weinig, maar op 100 meter afstand is dat al 1,57 meter. Daarom krijgt de sensor steeds hulp van GNSS, zodat die fout telkens wordt rechtgezet. In de animatie is de hoek tien keer vergroot, anders zie je hem niet.</p>
+
+      <h2>3. Random walk: ruis die steeds verder dwaalt</h2>
+      <p>Naast de vaste bias heeft elke meting ook toevallige ruis. Opgeteld wordt die ruis een soort dronkemanswandeling: elke stap gaat een willekeurige kant op. Voor de gyroscoop is dat <span class="spec">0,10 °/√uur</span>.</p>
+      <p>Die wortel in de eenheid betekent dat de fout niet gelijk oploopt met de tijd, maar met de wortel van de tijd. Na 1 uur is de typische fout 0,10°, na 4 uur pas 0,20°, want √4 = 2. Hieronder dertig gesimuleerde metingen van vier uur.</p>
+      <div class="viz" id="v-rw">
+        <canvas width="680" height="300" aria-label="Animatie: dertig willekeurige paden die met de tijd uit elkaar waaieren, binnen een trechter die groeit met de wortel van de tijd"></canvas>
+        <div class="key"><span><i style="background:#2f6f4e"></i>gesimuleerde metingen</span><span><i style="background:#c0392b"></i>typische fout: 0,10° × √uren</span></div>
+        <div class="viz-bar"><span>Tijd <b data-o="t">0,0 uur</b> · typische fout <b data-o="s">0,000°</b></span><button class="replay" type="button">Opnieuw afspelen</button></div>
+      </div>
+      <p>Voor de versnellingsmeter heet hetzelfde de velocity random walk: <span class="spec">0,011 m/s/√uur</span>. Dat is ruis in de snelheid in plaats van in de hoek.</p>
+
+      <h2>4. Versnellingsmeter-bias en waarom GNSS nodig is</h2>
+      <p>Ook de versnellingsmeter heeft een bias: <span class="spec">4,0 µg</span>, dat is vier miljoenste van de zwaartekracht. Belachelijk weinig. Maar om je positie te berekenen tel je de versnelling twee keer op, en dan groeit de fout met de tijd in het kwadraat.</p>
+      <p>Stel, je rijdt een tunnel in en verliest GNSS. Hieronder wat alleen deze bias al met je positie doet: na 1 minuut 7 cm, na 5 minuten 1,8 meter, na 10 minuten 7 meter.</p>
+      <div class="viz" id="v-acc">
+        <canvas width="680" height="300" aria-label="Grafiek: de positiefout blijft een paar centimeter met GNSS, groeit in de tunnel van vijf minuten tot 1,8 meter en zakt daarna weer terug"></canvas>
+        <div class="key"><span><i style="background:#c0392b"></i>positiefout</span><span><i style="background:#cdd4d6;height:10px"></i>tunnel, geen GNSS</span></div>
+        <div class="viz-bar"><span>Tijd <b data-o="t">0:00</b> · fout <b data-o="e">3 cm</b></span><button class="replay" type="button">Opnieuw afspelen</button></div>
+      </div>
+      <p>In de praktijk gaat het nog sneller, want ook een kleine hoekfout zorgt ervoor dat een stukje van de zwaartekracht als versnelling wordt gezien. Dit is precies waarom een INS de sensoren combineert met GNSS: de sensoren vullen de gaten, GNSS houdt ze eerlijk.</p>
+
+      <h2>5. Hoe nauwkeurig is de stand?</h2>
+      <p>De stand van een sensor bestaat uit drie hoeken: roll (kantelen naar links of rechts), pitch (voorover of achterover) en heading (de kijkrichting). Het productblad geeft:</p>
+      <ul>
+        <li><span class="spec">0,03°</span> roll en pitch tijdens beweging, <span class="spec">0,1°</span> stilstaand</li>
+        <li><span class="spec">0,09°</span> heading tijdens beweging, met GNSS</li>
+        <li><span class="spec">0,4°</span> heading stilstaand met twee GNSS-antennes op 1 meter van elkaar</li>
+        <li><span class="spec">1,0°</span> heading stilstaand met alleen de magnetometer</li>
+      </ul>
+      <p>Wat betekent dat voor een meting? Stel dat een laserscanner op een drone een punt meet op 50 meter afstand. Een hoekfout schuift dat punt dan zo ver op:</p>
+      <div class="viz">
+        <svg viewBox="0 0 640 250" role="img" aria-label="Staafdiagram van de verschuiving op 50 meter: 2,6 cm bij 0,03 graad, 7,9 cm bij 0,09 graad, 8,7 cm bij 0,1 graad, 35 cm bij 0,4 graad en 87 cm bij 1,0 graad">
+          <g font-family="Archivo, sans-serif" font-size="13" fill="#14213d">
+            <g id="bars"></g>
+          </g>
+        </svg>
+      </div>
+      <p>Het verschil tussen een sensor die beweegt met GNSS en een stilstaande sensor met alleen een kompas is dus ruim een factor 30. Voor een puntenwolk is dat het verschil tussen een strak gebouw en een wazige muur.</p>
+
+      <h2>6. RTK en CEP: hoe nauwkeurig is de positie?</h2>
+      <p>Met RTK-correcties haalt de IMX een positie van <span class="spec">3 cm CEP</span>. CEP staat voor circular error probable: de helft van alle metingen valt binnen een cirkel van 3 cm rond de echte plek, de andere helft erbuiten.</p>
+      <p>Links zie je metingen met gewone GNSS, waarbij je volgens de fabrikant rond de 1 meter zit. In het midden RTK op dezelfde schaal: alles valt op één stip. Rechts is die stip uitvergroot.</p>
+      <div class="viz" id="v-cep">
+        <canvas width="680" height="300" aria-label="Animatie: links een grote wolk van GNSS-metingen van ongeveer een meter, in het midden een piepklein puntje bij RTK, rechts ingezoomd: de helft van de RTK-punten valt binnen een cirkel van 3 centimeter"></canvas>
+        <div class="viz-bar"><span>Metingen <b data-o="n">0</b> · binnen de CEP-cirkel <b data-o="p">0%</b></span><button class="replay" type="button">Opnieuw afspelen</button></div>
+      </div>
+
+      <h2>7. Duizend metingen per seconde</h2>
+      <p>De sensoren geven <span class="spec">1 kHz</span>, dus duizend metingen per seconde. Een auto die 100 km/u rijdt, komt tussen twee metingen maar 2,8 cm vooruit. GNSS geeft veel minder vaak een positie. De sensoren vullen die tussenliggende momenten in.</p>
+      <div class="viz" id="v-rate">
+        <canvas width="680" height="150" aria-label="Animatie: een auto rijdt langs een weg; GNSS geeft af en toe een positie, de sensor geeft er tientallen tussendoor"></canvas>
+        <div class="key"><span><i style="background:#2f6f4e"></i>sensormeting (vereenvoudigd, 1 op de 10 getekend)</span><span><i style="background:#14213d;height:10px;width:10px;border-radius:50%"></i>GNSS-positie</span></div>
+        <div class="viz-bar"><span>Vertraagd afgespeeld</span><button class="replay" type="button">Opnieuw afspelen</button></div>
+      </div>
+
+      <h2>De rest van het productblad in gewone taal</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Spec</th><th scope="col">Waarde</th><th scope="col">Wat het betekent</th></tr></thead>
+          <tbody>
+            <tr><td>Bereik gyroscoop</td><td>±4000 °/s</td><td>Meet tot ruim 11 rondjes per seconde, genoeg voor een tollende drone</td></tr>
+            <tr><td>Bereik versnellingsmeter</td><td>±16 g</td><td>Meet tot zestien keer de zwaartekracht, dus ook harde schokken</td></tr>
+            <tr><td>Niet-lineariteit</td><td>0,02 % van het bereik</td><td>Hoe recht de meting blijft over het hele bereik</td></tr>
+            <tr><td>Uitlijnfout</td><td>0,03°</td><td>Hoe scheef de sensoren in de behuizing kunnen zitten</td></tr>
+            <tr><td>Bias over temperatuur</td><td>0,3 °/s en 3,7 mg, van −40 tot 85 °C</td><td>Hoeveel de bias verschuift als het koud of warm wordt; daarom wordt er gecorrigeerd voor temperatuur</td></tr>
+            <tr><td>Magnetometer</td><td>±2500 µT, 50 Hz</td><td>Een elektronisch kompas; het aardmagneetveld is ongeveer 50 µT</td></tr>
+            <tr><td>Luchtdruk</td><td>30–125 kPa, resolutie 0,03 Pa</td><td>Meet hoogteverschillen; volgens de fabrikant komt dat neer op zo'n 2 cm</td></tr>
+            <tr><td>Stroomverbruik</td><td>105–120 mW bij 3,3 V</td><td>Minder dan een tiende van een gemiddeld ledlampje</td></tr>
+            <tr><td>Aansluitingen</td><td>USB, 3× UART, SPI</td><td>Standaard manieren om de data naar een computer of controller te sturen</td></tr>
+            <tr><td>Uitvoer</td><td>Quaternionen, Euler-hoeken, DCM</td><td>Drie manieren om dezelfde stand op te schrijven; Euler-hoeken zijn roll, pitch en heading</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aside">
+        <h2>Mijn kanttekening</h2>
+        <p>Dit is een productblad, geen onafhankelijke test. Getallen als 0,03° gelden onder gunstige omstandigheden, in beweging en met goede GNSS-ontvangst. Er zit ook een kleine slordigheid in: de gyro-bias staat er één keer als 0,9 °/uur en één keer als minder dan 0,95 °/uur. En 0,03 Pa luchtdruk komt eigenlijk overeen met een paar millimeter hoogte, dus die 2 cm is waarschijnlijk wat in de praktijk haalbaar is.</p>
+        <p>Wat ik vooral meeneem: bij drone- en lidardata bepaalt de stand van de sensor net zo goed de kwaliteit als de positie. Een paar honderdste graad verschil zie je terug in centimeters op de grond.</p>
+      </div>
+
+      <p class="source">Bron: <a href="https://inertialsense.com/our-products-high-precision-sensors-inertialsense/">High-Precision Inertial Sensors Overview</a>, Inertial Sense, geraadpleegd op 20 oktober 2026. De berekeningen en animaties zijn van mij en vereenvoudigd.</p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script>
+  (function () {
+    var INK = '#14213d', SOFT = '#46506a', LINE = '#cdd4d6', GREEN = '#2f6f4e', RED = '#c0392b', PAPER = '#f6f7f4';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function nl(v, d) { return v.toLocaleString('nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+    function setup(id, draw, duration) {
+      var box = document.getElementById(id); if (!box) return;
+      var cv = box.querySelector('canvas'), ctx = cv.getContext('2d');
+      var W = cv.width, H = cv.height, dpr = window.devicePixelRatio || 1;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
+      var out = {}; box.querySelectorAll('[data-o]').forEach(function (el) { out[el.dataset.o] = el; });
+      var start = null, raf = null, state = draw.init ? draw.init() : {};
+      function frame(ts) {
+        if (start === null) start = ts;
+        var p = Math.min(1, (ts - start) / duration);
+        ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, p, out, state);
+        if (p < 1) raf = requestAnimationFrame(frame);
+      }
+      function play() {
+        cancelAnimationFrame(raf); start = null; state = draw.init ? draw.init() : {};
+        if (reduce) { ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, 1, out, state); return; }
+        raf = requestAnimationFrame(frame);
+      }
+      box.querySelector('.replay').addEventListener('click', play);
+      ctx.clearRect(0, 0, W, H); draw.render(ctx, W, H, reduce ? 1 : 0, out, state);
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { play(); io.disconnect(); } }, { threshold: 0.4 });
+        io.observe(box);
+      } else play();
+    }
+    function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
+    function gauss(r) { var u = r() || 1e-9, v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+    function font(ctx, s, w) { ctx.font = (w || 400) + ' ' + s + 'px Archivo, sans-serif'; }
+
+    // 2. Gyro-bias
+    setup('v-bias', { render: function (ctx, W, H, p, o) {
+      var min = 60 * p, ang = 0.9 * p, off = 100 * Math.tan(ang * Math.PI / 180);
+      var x0 = 60, y0 = H - 60, L = W - 140;
+      ctx.strokeStyle = LINE; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + L, y0); ctx.stroke(); ctx.setLineDash([]);
+      var vis = ang * 10 * Math.PI / 180, ex = x0 + L * Math.cos(vis), ey = y0 - L * Math.sin(vis);
+      ctx.strokeStyle = RED; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(ex, ey); ctx.stroke(); ctx.lineWidth = 1;
+      ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(x0, y0, 7, 0, 7); ctx.fill();
+      ctx.strokeStyle = GREEN; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x0 + L, y0, 9, 0, 7); ctx.stroke(); ctx.lineWidth = 1;
+      ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(ex, ey, 5, 0, 7); ctx.fill();
+      if (p > 0.02) { ctx.strokeStyle = SOFT; ctx.beginPath(); ctx.moveTo(x0 + L + 22, y0); ctx.lineTo(x0 + L + 22, ey); ctx.stroke(); font(ctx, 12, 600); ctx.fillStyle = SOFT; ctx.fillText(nl(off, 2) + ' m', x0 + L + 28, (y0 + ey) / 2 + 4); }
+      font(ctx, 13, 600); ctx.fillStyle = INK; ctx.fillText('sensor', x0 - 22, y0 + 28); ctx.fillText('doel op 100 m', x0 + L - 46, y0 + 30);
+      font(ctx, 12); ctx.fillStyle = SOFT; ctx.fillText('hoek 10× vergroot', x0, 24);
+      // klok
+      var cx = W - 50, cy = 46; ctx.strokeStyle = INK; ctx.beginPath(); ctx.arc(cx, cy, 24, 0, 7); ctx.stroke();
+      var a = -Math.PI / 2 + 2 * Math.PI * p; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 18 * Math.cos(a), cy + 18 * Math.sin(a)); ctx.stroke(); ctx.lineWidth = 1;
+      o.t.textContent = Math.round(min) + ' min'; o.a.textContent = nl(ang, 2) + '°'; o.d.textContent = nl(off, 2) + ' m';
+    } }, 7000);
+
+    // 3. Random walk
+    setup('v-rw', {
+      init: function () { var r = rng(42), N = 30, S = 240, paths = []; for (var i = 0; i < N; i++) { var y = 0, pth = [0]; for (var k = 1; k <= S; k++) { y += 0.10 * Math.sqrt(4 / S) * gauss(r); pth.push(y); } paths.push(pth); } return { paths: paths, S: S }; },
+      render: function (ctx, W, H, p, o, st) {
+        var x0 = 56, x1 = W - 16, ym = H / 2 - 6, sc = (H / 2 - 30) / 0.45;
+        ctx.strokeStyle = LINE; ctx.beginPath(); ctx.moveTo(x0, ym); ctx.lineTo(x1, ym); ctx.stroke();
+        font(ctx, 11); ctx.fillStyle = SOFT;
+        [-0.4, -0.2, 0.2, 0.4].forEach(function (v) { var y = ym - v * sc; ctx.fillText((v > 0 ? '+' : '') + nl(v, 1) + '°', 8, y + 4); ctx.strokeStyle = '#eef0f1'; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); });
+        for (var h = 0; h <= 4; h++) { var xx = x0 + (x1 - x0) * h / 4; ctx.fillText(h + ' uur', xx - 14, H - 6); }
+        var n = Math.round(st.S * p);
+        ctx.globalAlpha = 0.55; ctx.strokeStyle = GREEN;
+        st.paths.forEach(function (pth) { ctx.beginPath(); for (var k = 0; k <= n; k++) { var x = x0 + (x1 - x0) * k / st.S, y = ym - pth[k] * sc; if (k) ctx.lineTo(x, y); else ctx.moveTo(x, y); } ctx.stroke(); });
+        ctx.globalAlpha = 1; ctx.strokeStyle = RED; ctx.lineWidth = 2;
+        [1, -1].forEach(function (sg) { ctx.beginPath(); for (var k = 0; k <= n; k++) { var t = 4 * k / st.S, x = x0 + (x1 - x0) * k / st.S, y = ym - sg * 0.10 * Math.sqrt(t) * sc; if (k) ctx.lineTo(x, y); else ctx.moveTo(x, y); } ctx.stroke(); });
+        ctx.lineWidth = 1;
+        var t = 4 * p; o.t.textContent = nl(t, 1) + ' uur'; o.s.textContent = nl(0.10 * Math.sqrt(t), 3) + '°';
+      } }, 7000);
+
+    // 4. Versnellingsmeter-bias in tunnel
+    setup('v-acc', { render: function (ctx, W, H, p, o) {
+      var x0 = 60, x1 = W - 34, yb = H - 34, yt = 16, T = 600, Emax = 200;
+      var b = 4e-6 * 9.80665, tin = 120, tout = 420;
+      function err(t) { if (t < tin || t > tout) return 3; var d = t - tin; return 3 + 100 * 0.5 * b * d * d; }
+      function X(t) { return x0 + (x1 - x0) * t / T; } function Y(e) { return yb - (yb - yt) * e / Emax; }
+      ctx.fillStyle = '#eef0f1'; ctx.fillRect(X(tin), yt, X(tout) - X(tin), yb - yt);
+      font(ctx, 12, 600); ctx.fillStyle = SOFT; ctx.fillText('tunnel', (X(tin) + X(tout)) / 2 - 18, yt + 16);
+      font(ctx, 11); [0, 50, 100, 150, 200].forEach(function (e) { ctx.fillText(e + ' cm', 6, Y(e) + 4); ctx.strokeStyle = '#eef0f1'; ctx.beginPath(); ctx.moveTo(x0, Y(e)); ctx.lineTo(x1, Y(e)); ctx.stroke(); });
+      for (var m = 0; m <= 10; m += 2) ctx.fillText(m + ' min', X(m * 60) - 14, H - 10);
+      ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(x0, yb); ctx.lineTo(x1, yb); ctx.stroke();
+      var tn = T * p; ctx.strokeStyle = RED; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (var t = 0; t <= tn; t += 2) { var x = X(t), y = Y(err(t)); if (t) ctx.lineTo(x, y); else ctx.moveTo(x, y); } ctx.stroke(); ctx.lineWidth = 1;
+      var e = err(tn); ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(X(tn), Y(e), 4, 0, 7); ctx.fill();
+      var mm = Math.floor(tn / 60), ss = Math.floor(tn % 60);
+      o.t.textContent = mm + ':' + (ss < 10 ? '0' : '') + ss; o.e.textContent = e < 100 ? Math.round(e) + ' cm' : nl(e / 100, 2) + ' m';
+    } }, 8000);
+
+    // 6. CEP
+    setup('v-cep', {
+      init: function () { var r = rng(7), pts = []; for (var i = 0; i < 300; i++) pts.push([gauss(r), gauss(r)]); return { pts: pts }; },
+      render: function (ctx, W, H, p, o, st) {
+        var n = Math.round(st.pts.length * p), gap = 20, side = (W - 2 * gap) / 3, top = 30, inside = 0;
+        var boxes = [{ t: 'Gewone GNSS', sub: 'vak van 3 × 3 m', s: 0.85, m: 3, c: RED },
+                     { t: 'RTK', sub: 'zelfde vak, 3 × 3 m', s: 0.0255, m: 3, c: GREEN },
+                     { t: 'RTK ingezoomd', sub: 'vak van 20 × 20 cm', s: 0.0255, m: 0.2, c: GREEN, cep: true }];
+        boxes.forEach(function (bx, bi) {
+          var x = bi * (side + gap), cx = x + side / 2, cy = top + side / 2, sc = side / bx.m;
+          font(ctx, 13, 700); ctx.fillStyle = INK; ctx.fillText(bx.t, x, top - 10);
+          ctx.save(); ctx.beginPath(); ctx.rect(x, top, side, side); ctx.clip();
+          ctx.fillStyle = PAPER; ctx.fillRect(x, top, side, side);
+          ctx.strokeStyle = '#e3e7e9'; ctx.beginPath(); ctx.moveTo(x, cy); ctx.lineTo(x + side, cy); ctx.moveTo(cx, top); ctx.lineTo(cx, top + side); ctx.stroke();
+          ctx.fillStyle = bx.c; ctx.globalAlpha = 0.6;
+          for (var i = 0; i < n; i++) { var dx = st.pts[i][0] * bx.s, dy = st.pts[i][1] * bx.s; if (bx.cep && Math.hypot(dx, dy) <= 0.03) inside++; ctx.beginPath(); ctx.arc(cx + dx * sc, cy + dy * sc, 2, 0, 7); ctx.fill(); }
+          ctx.globalAlpha = 1;
+          if (bx.cep) { ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.arc(cx, cy, 0.03 * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1; }
+          ctx.strokeStyle = INK; ctx.beginPath(); ctx.moveTo(cx - 5, cy); ctx.lineTo(cx + 5, cy); ctx.moveTo(cx, cy - 5); ctx.lineTo(cx, cy + 5); ctx.stroke();
+          ctx.restore();
+          ctx.strokeStyle = LINE; ctx.strokeRect(x + 0.5, top + 0.5, side - 1, side - 1);
+          font(ctx, 12); ctx.fillStyle = SOFT; ctx.fillText(bx.sub, x, top + side + 18);
+          if (bx.cep) ctx.fillText('stippellijn: cirkel van 3 cm', x, top + side + 36);
+        });
+        o.n.textContent = n; o.p.textContent = n ? Math.round(100 * inside / n) + '%' : '0%';
+      } }, 6000);
+
+    // 7. 1 kHz
+    setup('v-rate', { render: function (ctx, W, H, p) {
+      var x0 = 30, x1 = W - 30, y = 80, xc = x0 + (x1 - x0) * p;
+      ctx.fillStyle = '#e9d9b8'; ctx.fillRect(0, y - 22, W, 44);
+      ctx.strokeStyle = '#ffffff'; ctx.setLineDash([16, 12]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1;
+      ctx.fillStyle = GREEN;
+      for (var x = x0; x <= xc; x += 6) { ctx.fillRect(x - 1, y + 26, 2, 12); }
+      ctx.fillStyle = INK;
+      for (var g = x0; g <= xc; g += 120) { ctx.beginPath(); ctx.arc(g, y - 34, 6, 0, 7); ctx.fill(); }
+      ctx.fillStyle = INK; ctx.fillRect(xc - 24, y - 12, 34, 20); ctx.fillStyle = '#a9cbe0'; ctx.fillRect(xc + 2, y - 9, 6, 14);
+      ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(xc - 16, y + 9, 4, 0, 7); ctx.arc(xc + 2, y + 9, 4, 0, 7); ctx.fill();
+      font(ctx, 12); ctx.fillStyle = SOFT; ctx.fillText('GNSS', 4, y - 46); ctx.fillText('sensor', 4, y + 54);
+    } }, 6000);
+
+    // 5. staafdiagram (statisch)
+    var bars = [['0,03° roll/pitch, in beweging', 0.0262], ['0,09° heading, in beweging', 0.0785], ['0,1° roll/pitch, stilstaand', 0.0873], ['0,4° heading, twee antennes', 0.349], ['1,0° heading, magnetometer', 0.873]];
+    var g = document.getElementById('bars'), NS = 'http://www.w3.org/2000/svg', bx = 230, bw = 340;
+    bars.forEach(function (b, i) {
+      var y = 20 + i * 44, w = Math.max(3, bw * b[1] / 0.9);
+      var t = document.createElementNS(NS, 'text'); t.setAttribute('x', 0); t.setAttribute('y', y + 17); t.textContent = b[0]; g.appendChild(t);
+      var r = document.createElementNS(NS, 'rect'); r.setAttribute('x', bx); r.setAttribute('y', y + 2); r.setAttribute('width', w); r.setAttribute('height', 22); r.setAttribute('rx', 3); r.setAttribute('fill', i < 3 ? GREEN : (i === 3 ? '#d39e00' : RED)); g.appendChild(r);
+      var v = document.createElementNS(NS, 'text'); v.setAttribute('x', bx + w + 8); v.setAttribute('y', y + 18); v.setAttribute('font-weight', '700');
+      v.textContent = b[1] < 1 ? (b[1] < 0.1 ? nl(b[1] * 100, 1) + ' cm' : Math.round(b[1] * 100) + ' cm') : nl(b[1], 2) + ' m'; g.appendChild(v);
+    });
+    var cap = document.createElementNS(NS, 'text'); cap.setAttribute('x', 0); cap.setAttribute('y', 244); cap.setAttribute('fill', SOFT); cap.setAttribute('font-size', '12'); cap.textContent = 'Verschuiving van een punt op 50 m afstand'; g.appendChild(cap);
+  })();
+  </script>
+</body>
+</html>
