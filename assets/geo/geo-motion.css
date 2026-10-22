@@ -1,0 +1,32 @@
+/* Geo-animaties: meetlijn-scheiders, gedigitaliseerde onderstrepingen en pagina-overgangen */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: geo-out 0.22s ease-in both; }
+::view-transition-new(root) { animation: geo-in 0.38s ease-out both; }
+@keyframes geo-out { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes geo-in { from { opacity: 0; transform: translateY(10px); } }
+
+.geo-divider { display: block; width: 100%; height: 46px; margin: 0 0 40px; overflow: visible; color: #14213d; }
+.geo-divider .base { stroke: currentColor; stroke-width: 1.2; fill: none; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.geo-divider .tick { stroke: #9aa5a0; stroke-width: 1; opacity: 0; }
+.geo-divider .km { font: 600 10px Archivo, system-ui, sans-serif; fill: #8a949a; opacity: 0; }
+.geo-divider .tp { fill: none; stroke: #2f6f4e; stroke-width: 1.6; opacity: 0; }
+.geo-divider .tpdot { fill: #2f6f4e; opacity: 0; }
+.geo-divider .prism { fill: #c0392b; opacity: 0; }
+.geo-divider.on .base { transition: stroke-dashoffset 1.4s cubic-bezier(.6,.1,.3,1); stroke-dashoffset: 0; }
+.geo-divider.on .tick, .geo-divider.on .km { transition: opacity .4s ease; opacity: 1; }
+.geo-divider.on .tp, .geo-divider.on .tpdot { transition: opacity .3s ease; opacity: 1; }
+.geo-divider.on .prism { animation: geo-prism 2.2s 0.5s ease-in-out both; }
+@keyframes geo-prism { 0% { opacity: 0; transform: translateX(0); } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; transform: translateX(var(--run)); } }
+
+.geo-digit { display: block; width: 150px; height: 14px; margin: 8px 0 0; overflow: visible; }
+.geo-digit .ln { fill: none; stroke: #2f6f4e; stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.geo-digit .vx { fill: #f6f7f4; stroke: #2f6f4e; stroke-width: 1.5; opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.4); }
+.geo-digit.on .vx { transition: opacity .2s ease, transform .25s ease; opacity: 1; transform: scale(1); }
+.geo-digit.on .ln { transition: stroke-dashoffset .7s ease .45s; stroke-dashoffset: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  .geo-divider .base, .geo-digit .ln { stroke-dashoffset: 0 !important; transition: none !important; }
+  .geo-divider .tick, .geo-divider .km, .geo-divider .tp, .geo-divider .tpdot, .geo-digit .vx { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .geo-divider .prism { display: none; }
+}
