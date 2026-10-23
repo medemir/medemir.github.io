@@ -3,14 +3,14 @@
   var NS = 'http://www.w3.org/2000/svg';
   function el(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (parent) parent.appendChild(e); return e; }
 
-  function divider(width) {
-    var W = Math.max(280, Math.round(width || 1000)), y = 24, svg = el('svg', { class: 'geo-divider', viewBox: '0 0 ' + W + ' 46', 'aria-hidden': 'true', focusable: 'false' });
+  function divider(width, compact) {
+    var W = compact ? 160 : Math.max(280, Math.round(width || 1000)), y = 24, svg = el('svg', { class: 'geo-divider', viewBox: '0 0 ' + W + ' 46', 'aria-hidden': 'true', focusable: 'false' });
     el('path', { class: 'base', d: 'M14 ' + y + 'H' + (W - 14), pathLength: 1 }, svg);
-    for (var i = 0; i <= 10; i++) {
+    for (var i = 0; i <= 10; i += (compact ? 5 : 1)) {
       var x = 14 + (W - 28) * i / 10, big = i % 5 === 0;
       var t = el('path', { class: 'tick', d: 'M' + x + ' ' + (y - (big ? 7 : 4)) + 'V' + (y + (big ? 7 : 4)) }, svg);
       t.style.transitionDelay = (0.12 * i) + 's';
-      if (big) { var tx = el('text', { class: 'km', x: x, y: y + 20, 'text-anchor': 'middle' }, svg); tx.textContent = '0+' + ('00' + i * 10).slice(-3); tx.style.transitionDelay = (0.12 * i) + 's'; }
+      if (big && !compact) { var tx = el('text', { class: 'km', x: x, y: y + 20, 'text-anchor': 'middle' }, svg); tx.textContent = '0+' + ('00' + i * 10).slice(-3); tx.style.transitionDelay = (0.12 * i) + 's'; }
     }
     [14, W - 14].forEach(function (x, j) {
       var tri = el('path', { class: 'tp', d: 'M' + x + ' ' + (y - 9) + 'L' + (x + 8) + ' ' + (y + 5) + 'L' + (x - 8) + ' ' + (y + 5) + 'Z' }, svg);
@@ -32,13 +32,13 @@
 
   var targets = [];
   // Scheiders tussen secties die direct op elkaar volgen (homepage)
-  document.querySelectorAll('main > section + section, main section + section').forEach(function (s) {
-    if (s.classList.contains('contact') || s.querySelector(':scope > .geo-divider')) return;
+  document.querySelectorAll('main > section + section').forEach(function (s) {
+    if (s.classList.contains('contact') || s.classList.contains('project-block')) return;
     var wrap = s.querySelector(':scope > .wrap') || s; var cs = getComputedStyle(wrap); var d = divider(wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight));
     var holder = document.createElement('div'); holder.className = wrap === s ? '' : 'wrap'; holder.appendChild(d); s.insertBefore(holder, s.firstChild); s.style.borderTop = '0'; s.style.paddingTop = '48px'; targets.push(d);
   });
   // Projectblokken in het portfolio
-  document.querySelectorAll('.project-block').forEach(function (b) { var d = divider(b.clientWidth); b.style.borderTop = '0'; b.insertBefore(d, b.firstChild); targets.push(d); });
+  document.querySelectorAll('.project-block').forEach(function (b) { var d = divider(0, true); d.classList.add('compact'); b.style.borderTop = '0'; b.insertBefore(d, b.firstChild); targets.push(d); });
   // Gedigitaliseerde lijn onder de hoofdkoppen
   document.querySelectorAll('.section-head h2, article.note > h2, .page-head h1').forEach(function (h) {
     if (h.closest('.aside')) return; var d = digit(); h.appendChild(d); targets.push(d);

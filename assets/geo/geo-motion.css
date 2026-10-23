@@ -6,6 +6,7 @@
 @keyframes geo-in { from { opacity: 0; transform: translateY(10px); } }
 
 .geo-divider { display: block; width: 100%; height: 46px; margin: 0 0 40px; overflow: visible; color: #14213d; }
+.geo-divider.compact { width: 160px; height: 30px; margin: 0 0 8px -14px; }
 .geo-divider .base { stroke: currentColor; stroke-width: 1.2; fill: none; stroke-dasharray: 1; stroke-dashoffset: 1; }
 .geo-divider .tick { stroke: #9aa5a0; stroke-width: 1; opacity: 0; }
 .geo-divider .km { font: 600 10px Archivo, system-ui, sans-serif; fill: #8a949a; opacity: 0; }
