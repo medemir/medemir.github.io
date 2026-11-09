@@ -6,7 +6,7 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var places = [
     { n: 'Izmir', c: [27.14, 38.42], label: true },
-    { n: 'Groningen', c: [6.57, 53.22] }, { n: 'Assen', c: [6.56, 52.99] }, { n: 'Almere', c: [5.21, 52.37] },
+    { n: 'Groningen', c: [6.57, 53.22] }, { n: 'Assen', c: [6.56, 52.99] }, { n: 'Almere', c: [5.21, 52.37] }, { n: 'Landsmeer', c: [4.92, 52.43] },
     { n: 'Rotterdam', c: [4.48, 51.92] }, { n: 'Zevenaar', c: [6.07, 51.93] }, { n: 'Nederland', c: [5.6, 52.6], label: true, hidden: true }
   ];
   var arc = { type: 'LineString', coordinates: [[27.14, 38.42], [5.21, 52.37]] };

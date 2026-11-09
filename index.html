@@ -270,6 +270,10 @@
     .contact .btn-ghost { color: var(--white); border-color: var(--white); }
     .contact .btn-ghost:hover { background: rgba(255,255,255,0.1); }
     .contact a:focus-visible { outline-color: var(--white); }
+    .contact-list { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 8px; max-width: 46ch; }
+    .contact-list li { display: grid; grid-template-columns: 7.5em 1fr; gap: 12px; color: #dfeee5; }
+    .contact-list span { font-weight: 700; color: var(--white); }
+    .contact-list a { color: var(--white); overflow-wrap: anywhere; }
 
     footer { padding: 28px 0; font-size: 0.9rem; color: var(--ink-soft); }
     footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
@@ -297,6 +301,7 @@
     <div class="wrap">
       <div class="intro">
         <div>
+          <p class="status">Beschikbaar als zzp'er voor projecten</p>
           <h1>Ik zorg dat je geodata klopt.</h1>
           <p class="role">Hoi, ik ben Enes, GIS-databeheerder, technisch tekenaar, landmeetkundig operator en landmeter. Ik houd BAG, BGT en BOR op orde, werk tekeningen uit in AutoCAD en weet hoe het er buiten bij ligt. Dat doe ik al bijna acht jaar, vooral voor gemeenten en netbeheerders.</p>
           <div class="actions">
@@ -305,7 +310,7 @@
           </div>
         </div>
         <figure class="globe" id="globe" data-src="assets/geo/vendor/countries-110m.json">
-          <canvas role="img" aria-label="Draaiende wereldbol met een gestippelde lijn van Izmir in Turkije naar Nederland, waar ik heb gewerkt in Groningen, Assen, Almere, Rotterdam en Zevenaar."></canvas>
+          <canvas role="img" aria-label="Draaiende wereldbol met een gestippelde lijn van Izmir in Turkije naar Nederland, waar ik heb gewerkt in Groningen, Assen, Almere, Landsmeer, Rotterdam en Zevenaar."></canvas>
           <figcaption>Van Izmir naar Nederland. Sleep om te draaien.</figcaption>
         </figure>
       </div>
@@ -509,6 +514,7 @@
       <div class="wrap">
         <p>Hier heb ik onder andere gewerkt</p>
         <ul>
+          <li>Gemeente Landsmeer</li>
           <li>Gemeente Almere</li>
           <li>Gemeente Zevenaar</li>
           <li>Gemeente Rotterdam</li>
@@ -528,6 +534,17 @@
           <p>Bijna acht jaar meten, tekenen en data beheren, in Nederland en daarvoor in Turkije.</p>
         </div>
         <ol class="timeline" reversed>
+          <li class="job">
+            <div class="when">2026 – heden</div>
+            <div class="body">
+              <h3>GIS-databeheerder</h3>
+              <p class="where">Gemeente Landsmeer</p>
+              <ul>
+                <li>Beheer en controle van de geodata van de gemeente, zoals BAG, BGT en BOR</li>
+                <li>Kaarten en analyses voor beheer en beleid</li>
+              </ul>
+            </div>
+          </li>
           <li class="job">
             <div class="when">2026 – heden</div>
             <div class="body">
@@ -609,7 +626,7 @@
             </div>
             <div>
               <h3>Werkgebied</h3>
-              <p>Op afstand of op locatie, in overleg. Rijbewijs B.</p>
+              <p>Als zzp'er beschikbaar voor projecten. Op afstand of op locatie, in overleg. Rijbewijs B.</p>
             </div>
           </div>
         </div>
@@ -667,7 +684,13 @@
           </g>
         </svg>
         <h2>Contact</h2>
-        <p>Een vraag over BAG, BGT, BOR of een tekening? Of gewoon even kennismaken? Stuur me een mailtje, ik reageer graag.</p>
+        <p>Ik werk als zzp'er en sta open voor projecten in GIS-databeheer, BAG/BGT/BOR en technisch tekenen, op afstand of op locatie. Een vraag, een opdracht of gewoon even kennismaken? Stuur me een mailtje, ik reageer graag.</p>
+        <ul class="contact-list">
+          <li><span>E-mail</span><a href="mailto:enesdemirpersonal@gmail.com">enesdemirpersonal@gmail.com</a></li>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/enesdemirln">linkedin.com/in/enesdemirln</a></li>
+          <li><span>Werkgebied</span>Op afstand of op locatie, in overleg</li>
+          <li><span>Rijbewijs</span>B</li>
+        </ul>
         <div class="actions">
           <a class="btn btn-primary" href="mailto:enesdemirpersonal@gmail.com">enesdemirpersonal@gmail.com</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a>
