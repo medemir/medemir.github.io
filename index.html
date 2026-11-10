@@ -256,6 +256,15 @@
     .project h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
     .project p { color: var(--ink-soft); font-size: 0.97rem; margin-bottom: 8px; }
     @media (max-width: 860px) { .projects { grid-template-columns: 1fr; } }
+    .article-card { position: relative; display: flex; flex-direction: column; }
+    .article-card .date { font-size: 0.85rem; font-weight: 600; color: var(--polder); margin-bottom: 4px; }
+    .article-card h3 a { color: var(--ink); text-decoration: none; }
+    .article-card h3 a::after { content: ""; position: absolute; inset: 0; }
+    .article-card .more { margin-top: auto; font-weight: 700; color: var(--polder); }
+    .article-card:hover h3 a, .article-card:focus-within h3 a { text-decoration: underline; }
+    .article-card img { height: auto; transition: transform .2s ease; }
+    .article-card:hover img { transform: translateY(-2px); }
+    .all-articles { margin-top: 28px; font-weight: 700; }
 
     /* Contact */
     .contact { background: var(--polder); color: var(--white); }
@@ -290,7 +299,7 @@
         <li><a href="#diensten">Diensten</a></li>
         <li><a href="#ervaring">Ervaring</a></li>
         <li><a href="#over">Over mij</a></li>
-        <li><a href="notities/index.html">Notities</a></li>
+        <li><a href="#artikelen">Artikelen</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
@@ -629,6 +638,39 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id="artikelen">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Artikelen</h2>
+          <p>Wat ik de laatste tijd heb geschreven over geo-informatie, meettechniek en software.</p>
+        </div>
+        <div class="projects articles">
+          <article class="project article-card">
+            <img src="notities/media/thumb-bureaustad.jpg" alt="Uitsnede van de kaart De Bureaustad: een bureau van bovenaf, verdeeld in zones" loading="lazy" width="900" height="600" />
+            <p class="date">10 november 2026</p>
+            <h3><a href="notities/bureaustad.html">De Bureaustad: een kaart van mijn bureau</a></h3>
+            <p>Ik besloot het gebied te karteren dat ik het beste ken: mijn eigen bureau. Een stad zonder reistijd, met één koffieknooppunt en een coördinatenstelsel dat altijd klopt.</p>
+            <span class="more" aria-hidden="true">Lees verder</span>
+          </article>
+          <article class="project article-card">
+            <img src="notities/media/thumb-processor.jpg" alt="Schema van een processor die opdrachten uit het geheugen haalt en uitvoert" loading="lazy" width="900" height="600" />
+            <p class="date">7 oktober 2026</p>
+            <h3><a href="notities/processor.html">Van schakelaar tot processor: hoe je laptop rekent</a></h3>
+            <p>Logische poorten om zelf aan te klikken, optellen in bits en wat de processor miljarden keren per seconde doet.</p>
+            <span class="more" aria-hidden="true">Lees verder</span>
+          </article>
+          <article class="project article-card">
+            <img src="notities/media/thumb-numerieke-analyse.jpg" alt="Grafiek: een lijn tussen meetpunten met de afwijkingen als kwadraten" loading="lazy" width="900" height="600" />
+            <p class="date">19 augustus 2026</p>
+            <h3><a href="notities/numerieke-analyse.html">Numerieke analyse in de geomatica, simpel uitgelegd</a></h3>
+            <p>Waarom coördinaten centimeters kwijtraken, hoe meetfouten doorwerken, kleinste kwadraten, interpoleren en volumes berekenen.</p>
+            <span class="more" aria-hidden="true">Lees verder</span>
+          </article>
+        </div>
+        <p class="all-articles"><a href="notities/index.html">Alle artikelen en notities</a></p>
       </div>
     </section>
 
