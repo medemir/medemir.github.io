@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <title>Geo-informatie in Nederland: een overzicht | Notities, Enes Demir</title>
+  <meta name="description" content="Een overzicht van geo-informatie in Nederland: het gedeelde fundament en tien werkvelden, van gemeenten en water tot weer, ondergrond, kabels, mobiliteit en veiligheid." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="notes.css" />
+  <link rel="stylesheet" href="../assets/geo/geo-motion.css" />
+  <meta property="og:title" content="Geo-informatie in Nederland: een overzicht" />
+  <meta property="og:image" content="https://medemir.github.io/notities/media/geo-nl-overzicht.png" />
+</head>
+<body>
+  <nav class="nav" aria-label="Hoofdmenu">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../logo.svg" alt="Enes Demir, geo-informatie en technisch tekenen" width="218" height="56" /></a>
+      <ul>
+        <li><a href="../index.html#diensten">Diensten</a></li>
+        <li><a href="../index.html#ervaring">Ervaring</a></li>
+        <li><a href="index.html" aria-current="page">Notities</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main>
+    <article class="note">
+      <a class="back" href="index.html">Alle notities</a>
+      <h1>Geo-informatie in Nederland: een overzicht</h1>
+      <p class="meta">Artikel, 19 november 2026 · ongeveer 9 minuten lezen</p>
+
+      <p class="lead">Bijna alles wat de overheid en bedrijven in Nederland doen, gebeurt ergens. Daarom zit geo-informatie overal: in de vuilniswagenroute van je gemeente, in de waterstand op de rivier, in de buienradar op je telefoon en in de tekening die een graafmachinist meekrijgt. In dit artikel loop ik de belangrijkste werkvelden langs. Ik begin met het fundament dat ze allemaal delen.</p>
+
+      <figure>
+        <a href="media/geo-nl-overzicht.svg"><img src="media/geo-nl-overzicht.png" alt="Schema: in het midden het fundament (RD en NAP, basisregistraties, AHN en luchtfoto's, PDOK en Nationaal Georegister). Daaromheen tien werkvelden: gemeenten, water en hydrografie, weer en klimaat, ondergrond, kabels en leidingen, mobiliteit, landbouw en natuur, veiligheid, statistiek en gezondheid, bouw en vastgoed." width="1200" height="820" /></a>
+        <figcaption>Eén gedeeld fundament, tien werkvelden.</figcaption>
+      </figure>
+
+      <h2>Het fundament</h2>
+      <p>Nederland heeft een van de best geregelde geo-fundamenten ter wereld. Vier bouwstenen komen in elk werkveld terug.</p>
+      <ul>
+        <li><strong>Coördinaten en hoogte.</strong> Het Rijksdriehoeksstelsel (RD) geeft een plek in meters, het Normaal Amsterdams Peil (NAP) geeft de hoogte. Wie met GNSS meet, rekent met RDNAPTRANS van wereldcoördinaten naar RD en NAP.</li>
+        <li><strong>Basisregistraties.</strong> Wettelijk vastgelegde bronnen die iedere overheid moet gebruiken. Voor geo zijn dat vooral de BRK (eigendom en percelen), de BAG (adressen en gebouwen), de BGT (een gedetailleerde kaart op schaal 1:500 tot 1:5000), de BRT (topografie), de BRO (de ondergrond) en de WOZ (waarde van onroerende zaken).</li>
+        <li><strong>Hoogte en beeld.</strong> Het AHN is een landsdekkende hoogtekaart, gemeten met laser vanuit vliegtuigen. Daarnaast wordt Nederland elk jaar opnieuw gefotografeerd vanuit de lucht. De <a href="https://data.overheid.nl/dataset/77581-luchtfoto-beeldmateriaal-2026-5cm---8cm-rgb-open-data">luchtfoto's van 2026</a> hebben een resolutie van 5 tot 8 centimeter en zijn open data.</li>
+        <li><strong>Delen en vinden.</strong> PDOK levert de landelijke datasets als kaartdiensten (WMS, WFS en API's). In het Nationaal Georegister vind je wat er bestaat. Geonovum beheert de standaarden, zoals NEN 3610 en IMGeo.</li>
+      </ul>
+      <p>De volgende grote stap is de <a href="https://vng.nl/artikelen/samenhangende-objectenregistratie-sor">Samenhangende Objectenregistratie (SOR)</a>. Daarin moeten de BGT, de BAG en de WOZ-gegevens samenkomen. Zo hoeft een gebouw nog maar één keer ingewonnen en bijgehouden te worden. De SOR is nog in ontwikkeling.</p>
+
+      <h2>1. Gemeenten</h2>
+      <p>Gemeenten zijn de grootste bijhouders van geo-informatie. Zij zijn bronhouder van de BAG en van een groot deel van de BGT.</p>
+      <ul>
+        <li><strong>Basisregistraties bijhouden:</strong> nieuwe gebouwen, adressen en wegen intekenen en controleren, vaak op basis van landmeetkundige metingen.</li>
+        <li><strong>Beheer openbare ruimte (BOR):</strong> elk object in de openbare ruimte krijgt een paspoort, van lantaarnpaal tot boom en bestrating. Daarmee plannen gemeenten onderhoud en budget.</li>
+        <li><strong>Omgevingswet:</strong> regels over wat waar mag, staan in het omgevingsplan en zijn met een kaart te raadplegen in het Omgevingsloket.</li>
+        <li><strong>Ruimtelijke ontwikkeling:</strong> uitgifte- en matenplannen, naamgeving van straten, huisnummering en uitzetten in het veld.</li>
+        <li><strong>WOZ en belastingen:</strong> de waardering van woningen gebruikt gebouwgegevens uit de BAG.</li>
+      </ul>
+
+      <h2>2. Water en hydrografie</h2>
+      <p>In een land waarvan een groot deel onder zeeniveau ligt, is waterbeheer misschien wel het belangrijkste geo-werkveld.</p>
+      <ul>
+        <li><strong>Rijkswaterstaat</strong> meet waterstanden, afvoeren en de bodem van rivieren en de kust. Die gegevens sturen de verwachtingen en de vaarwegen.</li>
+        <li><strong>Waterschappen</strong> beheren dijken, peilgebieden en sloten. Hun legger legt vast waar welk water en welke kering ligt, en wie die moet onderhouden.</li>
+        <li><strong>De <a href="https://www.defensie.nl/defensieonderdelen/koninklijke-marine/eenheden/dienst-der-hydrografie">Dienst der Hydrografie</a></strong> van de Koninklijke Marine doet dieptemetingen op zee, maakt zeekaarten en legt de Nederlandse zeegrenzen vast. Zo kan de scheepvaart veilig varen.</li>
+        <li><strong>Overstromingsrisico's</strong> worden gerekend met hoogtedata uit het AHN, gecombineerd met modellen van water en dijken.</li>
+      </ul>
+
+      <h2>3. Weer en klimaat</h2>
+      <p>Het KNMI meet het weer met stations, radar en satellieten. Dat zijn allemaal gegevens met een plek en een tijd. De neerslagradar en de <a href="https://www.knmi.nl/producten-en-diensten/verhalen/op-weg-naar-de-nationale-klimaatscenario-s-2023">KNMI'23-klimaatscenario's</a> zijn als open data te downloaden via het KNMI Data Platform. Gemeenten en waterschappen combineren die met hun eigen kaarten: waar valt de meeste regen, waar wordt het het heetst, welke straat loopt als eerste onder?</p>
+
+      <h2>4. Ondergrond</h2>
+      <p>Onder Nederland zit net zoveel informatie als erboven. In de BRO staan boringen, sonderingen, grondwaterstanden en bodemkaarten. Die zijn onder andere via DINOloket van TNO te raadplegen. Geo-informatie helpt bij funderingsonderzoek, grondwaterbeheer en het volgen van bodemdaling. Bodemdaling wordt steeds vaker met radarsatellieten (InSAR) op millimeters nauwkeurig gemeten. Ook archeologie en erfgoed hebben eigen kaarten van waar je beter niet zomaar kunt graven.</p>
+
+      <h2>5. Kabels en leidingen</h2>
+      <p>Wie in Nederland gaat graven, moet eerst een KLIC-melding doen bij het Kadaster. De netbeheerders laten dan zien welke kabels en leidingen er liggen. Bij netbeheerders, waterbedrijven en telecombedrijven is GIS het hart van het assetbeheer: waar ligt welke leiding, hoe oud is die en wanneer moet hij worden vervangen? Door de energietransitie groeit dit werkveld snel: denk aan het verzwaren van het stroomnet, warmtenetten en het vinden van plekken voor zonneparken en laadpalen.</p>
+
+      <h2>6. Mobiliteit en infrastructuur</h2>
+      <p>Het Nationaal Wegenbestand (NWB) bevat alle wegen met een straatnaam of nummer. Op het spoor beheert ProRail zijn eigen geodata. Bij het ontwerp van wegen, fietspaden en bruggen werken tekenaars in Civil 3D of OpenRoads, steeds vaker samen met BIM-modellen. Na de aanleg komt alles terug in de BGT en in de beheersystemen. Verkeersdata, zoals intensiteiten en files, wordt live op de kaart gezet.</p>
+
+      <h2>7. Landbouw en natuur</h2>
+      <p>Boeren geven hun percelen en gewassen jaarlijks op. Die kaart (BRP-gewaspercelen) is de basis voor subsidies en controles. Trekkers rijden met GNSS-sturing op enkele centimeters nauwkeurig en strooien precies waar het nodig is. In de natuur gaat het om begrenzingen van Natura 2000-gebieden, waarnemingen van planten en dieren, en de berekening van stikstofneerslag per gebied.</p>
+
+      <h2>8. Veiligheid en crisis</h2>
+      <p>Bij een brand, een overstroming of een groot ongeval moet iedereen hetzelfde beeld hebben. Veiligheidsregio's werken met gedeelde crisiskaarten. Meldkamers gebruiken de BAG om een 112-melding aan het juiste adres te koppelen. Defensie heeft eigen geodiensten voor oefeningen en missies, en politie en hulpdiensten gebruiken kaarten voor de inzet van eenheden.</p>
+
+      <h2>9. Statistiek en gezondheid</h2>
+      <p>Het CBS publiceert cijfers per wijk, buurt en vierkant van 100 bij 100 meter: inwoners, leeftijd, inkomen en woningen. Het RIVM zet gezondheid en leefomgeving op de kaart, zoals luchtkwaliteit, geluid en groen. Beleidsmakers combineren die lagen om te zien waar de leefomgeving extra aandacht nodig heeft.</p>
+
+      <h2>10. Bouw en vastgoed</h2>
+      <p>Het Kadaster legt vast wie wat bezit. Notarissen, makelaars, banken en verzekeraars gebruiken die gegevens dagelijks. Projectontwikkelaars en architecten werken met 3D-modellen van gebouwen, zoals de 3D BAG, voor zonnestudies, schaduw en zichtlijnen. Steeds vaker groeien GIS en BIM naar elkaar toe: het ontwerpmodel van een gebouw komt na oplevering terug in de kaart.</p>
+
+      <h2>In één oogopslag</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Werkveld</th><th scope="col">Belangrijkste partijen</th><th scope="col">Typische data</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Gemeenten</th><td>Gemeenten, VNG</td><td>BAG, BGT, BOR, WOZ, omgevingsplan</td></tr>
+            <tr><th scope="row">Water</th><td>Rijkswaterstaat, waterschappen, Dienst der Hydrografie</td><td>Waterstanden, dieptes, legger, zeekaarten</td></tr>
+            <tr><th scope="row">Weer en klimaat</th><td>KNMI</td><td>Neerslagradar, stations, klimaatscenario's</td></tr>
+            <tr><th scope="row">Ondergrond</th><td>TNO, BRO-bronhouders</td><td>Boringen, grondwater, bodemdaling</td></tr>
+            <tr><th scope="row">Kabels en leidingen</th><td>Kadaster (KLIC), netbeheerders, waterbedrijven</td><td>Ligging en leeftijd van netten</td></tr>
+            <tr><th scope="row">Mobiliteit</th><td>Rijkswaterstaat, ProRail, provincies</td><td>NWB, spoordata, ontwerptekeningen</td></tr>
+            <tr><th scope="row">Landbouw en natuur</th><td>RVO, provincies, natuurorganisaties</td><td>Gewaspercelen, Natura 2000, waarnemingen</td></tr>
+            <tr><th scope="row">Veiligheid</th><td>Veiligheidsregio's, meldkamers, Defensie</td><td>Crisiskaarten, adressen</td></tr>
+            <tr><th scope="row">Statistiek en gezondheid</th><td>CBS, RIVM</td><td>Buurtcijfers, leefomgeving</td></tr>
+            <tr><th scope="row">Bouw en vastgoed</th><td>Kadaster, ontwikkelaars, verzekeraars</td><td>BRK, 3D-gebouwen, BIM</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aside">
+        <h2>Wat ik hieruit meeneem</h2>
+        <p>Het mooie van dit vak is dat de basis overal hetzelfde is. Een perceel in de BGT, een leiding van een waterbedrijf en een boring in de BRO staan allemaal in RD en NAP, en volgen dezelfde standaarden. Wie die basis goed beheerst, kan in elk werkveld aan de slag. Zelf werkte ik voor gemeenten, een waterbedrijf en netbeheer, en steeds was het dezelfde vraag: klopt de data, en kan iemand anders er verder mee?</p>
+      </div>
+
+      <p class="sources">Bronnen: <a href="https://vng.nl/artikelen/samenhangende-objectenregistratie-sor">VNG, Samenhangende objectenregistratie</a> · <a href="https://www.defensie.nl/defensieonderdelen/koninklijke-marine/eenheden/dienst-der-hydrografie">Defensie, Dienst der Hydrografie</a> · <a href="https://www.knmi.nl/producten-en-diensten/verhalen/op-weg-naar-de-nationale-klimaatscenario-s-2023">KNMI, klimaatscenario's 2023</a> · <a href="https://data.overheid.nl/dataset/77581-luchtfoto-beeldmateriaal-2026-5cm---8cm-rgb-open-data">data.overheid.nl, luchtfoto's 2026</a></p>
+    </article>
+  </main>
+  <footer>
+    <div class="wrap">
+      <span>&copy; 2026 Enes Demir · bezoeken worden anoniem geteld, zonder cookies</span>
+      <ul>
+        <li><a href="https://github.com/medemir">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/enesdemirln">LinkedIn</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script data-goatcounter="https://medemir.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <script src="../assets/geo/geo-motion.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" width="1200" height="820" font-family="Archivo, Inter, Arial, sans-serif">
+<title>Overzicht: waar geo-informatie in Nederland wordt gebruikt</title>
+<rect width="1200" height="820" fill="#f6f7f4"/>
+<text x="600" y="52" text-anchor="middle" font-size="30" font-weight="800" fill="#14213d">Geo-informatie in Nederland</text>
+<text x="600" y="82" text-anchor="middle" font-size="17" fill="#46506a">Eén gedeeld fundament, tien werkvelden</text>
+<path d="M600 430 L600 145" stroke="#2f6f4e" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L853 199" stroke="#3f7fa6" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L1009 342" stroke="#5b7fbf" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L1009 518" stroke="#8a6d16" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L853 661" stroke="#c4661f" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L600 715" stroke="#46506a" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L347 661" stroke="#3e8a57" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L191 518" stroke="#b8433b" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L191 342" stroke="#7d64b3" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<path d="M600 430 L347 199" stroke="#9c6a3e" stroke-width="2" stroke-dasharray="6 5" opacity="0.6"/>
+<circle cx="600" cy="430" r="150" fill="#14213d"/>
+<circle cx="600" cy="430" r="138" fill="none" stroke="#9cc9a5" stroke-width="1.5" stroke-dasharray="3 5"/>
+<text x="600" y="368" text-anchor="middle" font-size="13" font-weight="700" fill="#9cc9a5" letter-spacing="1.5">FUNDAMENT</text>
+<text x="600" y="402" text-anchor="middle" font-size="24" font-weight="800" fill="#ffffff" letter-spacing="0">RD + NAP</text>
+<text x="600" y="436" text-anchor="middle" font-size="19" font-weight="700" fill="#ffffff" letter-spacing="0">Basisregistraties</text>
+<text x="600" y="466" text-anchor="middle" font-size="16" font-weight="500" fill="#dfeae2" letter-spacing="0">AHN · luchtfoto's</text>
+<text x="600" y="494" text-anchor="middle" font-size="16" font-weight="500" fill="#dfeae2" letter-spacing="0">PDOK · Georegister</text>
+<g><rect x="505" y="116" width="189" height="58" rx="12" fill="#ffffff" stroke="#2f6f4e" stroke-width="2.5"/><rect x="505" y="116" width="8" height="58" rx="4" fill="#2f6f4e"/><text x="604" y="141" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Gemeenten</text><text x="604" y="162" text-anchor="middle" font-size="13" fill="#46506a">BAG · BGT · BOR · WOZ</text></g>
+<g><rect x="706" y="170" width="293" height="58" rx="12" fill="#ffffff" stroke="#3f7fa6" stroke-width="2.5"/><rect x="706" y="170" width="8" height="58" rx="4" fill="#3f7fa6"/><text x="857" y="195" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Water en hydrografie</text><text x="857" y="216" text-anchor="middle" font-size="13" fill="#46506a">Waterstanden · dieptes · zeekaarten</text></g>
+<g><rect x="870" y="313" width="278" height="58" rx="12" fill="#ffffff" stroke="#5b7fbf" stroke-width="2.5"/><rect x="870" y="313" width="8" height="58" rx="4" fill="#5b7fbf"/><text x="1013" y="338" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Weer en klimaat</text><text x="1013" y="359" text-anchor="middle" font-size="13" fill="#46506a">Neerslagradar · klimaatscenario's</text></g>
+<g><rect x="888" y="489" width="241" height="58" rx="12" fill="#ffffff" stroke="#8a6d16" stroke-width="2.5"/><rect x="888" y="489" width="8" height="58" rx="4" fill="#8a6d16"/><text x="1013" y="514" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Ondergrond</text><text x="1013" y="535" text-anchor="middle" font-size="13" fill="#46506a">BRO · boringen · bodemdaling</text></g>
+<g><rect x="739" y="632" width="228" height="58" rx="12" fill="#ffffff" stroke="#c4661f" stroke-width="2.5"/><rect x="739" y="632" width="8" height="58" rx="4" fill="#c4661f"/><text x="857" y="657" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Kabels en leidingen</text><text x="857" y="678" text-anchor="middle" font-size="13" fill="#46506a">KLIC · netbeheer · energie</text></g>
+<g><rect x="476" y="686" width="249" height="58" rx="12" fill="#ffffff" stroke="#46506a" stroke-width="2.5"/><rect x="476" y="686" width="8" height="58" rx="4" fill="#46506a"/><text x="604" y="711" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Mobiliteit</text><text x="604" y="732" text-anchor="middle" font-size="13" fill="#46506a">Wegennet · spoor · wegontwerp</text></g>
+<g><rect x="230" y="632" width="234" height="58" rx="12" fill="#ffffff" stroke="#3e8a57" stroke-width="2.5"/><rect x="230" y="632" width="8" height="58" rx="4" fill="#3e8a57"/><text x="351" y="657" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Landbouw en natuur</text><text x="351" y="678" text-anchor="middle" font-size="13" fill="#46506a">Gewaspercelen · Natura 2000</text></g>
+<g><rect x="70" y="489" width="241" height="58" rx="12" fill="#ffffff" stroke="#b8433b" stroke-width="2.5"/><rect x="70" y="489" width="8" height="58" rx="4" fill="#b8433b"/><text x="195" y="514" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Veiligheid</text><text x="195" y="535" text-anchor="middle" font-size="13" fill="#46506a">Crisiskaarten · 112-adressen</text></g>
+<g><rect x="52" y="313" width="279" height="58" rx="12" fill="#ffffff" stroke="#7d64b3" stroke-width="2.5"/><rect x="52" y="313" width="8" height="58" rx="4" fill="#7d64b3"/><text x="195" y="338" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Statistiek en gezondheid</text><text x="195" y="359" text-anchor="middle" font-size="13" fill="#46506a">Buurtcijfers · leefomgeving</text></g>
+<g><rect x="249" y="170" width="197" height="58" rx="12" fill="#ffffff" stroke="#9c6a3e" stroke-width="2.5"/><rect x="249" y="170" width="8" height="58" rx="4" fill="#9c6a3e"/><text x="351" y="195" text-anchor="middle" font-size="17" font-weight="700" fill="#14213d">Bouw en vastgoed</text><text x="351" y="216" text-anchor="middle" font-size="13" fill="#46506a">Kadaster · 3D · BIM</text></g>
+<text x="600" y="800" text-anchor="middle" font-size="13" fill="#46506a">Enes Demir, 2026 · medemir.github.io</text></svg>
